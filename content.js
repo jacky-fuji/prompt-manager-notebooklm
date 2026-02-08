@@ -217,10 +217,11 @@
 
             // --- 2. お気に入りボタンの注入 ---
 
-            // A. 特定のラベル ID に基づく注入 (音声・動画)
+            // A. 特定のラベル ID に基づく注入 (音声・動画・インフォグラフィック)
             const focusLabels = [
                 { id: 'episodeFocus-label', category: 'audio' },
-                { id: 'videoFocus-label', category: 'video' }
+                { id: 'videoFocus-label', category: 'video' },
+                { id: 'userSteeringPrompt-label', category: 'infographic' }
             ];
 
             focusLabels.forEach(config => {
@@ -252,6 +253,29 @@
                         title.style.gap = '8px';
                         title.appendChild(favButtons);
                         console.log('CueCard: Injected report favorite buttons based on text content.');
+                    }
+                }
+                // 「希望するトピック」に合致する場合 (フラッシュカード or クイズ)
+                if (text.includes('希望するトピック') && !title.querySelector('.cuecard-fav-container')) {
+                    // ダイアログ全体のタイトル等からカテゴリを判別
+                    const dialog = title.closest('mat-dialog-container') || document.body;
+                    const dialogText = dialog.innerText || '';
+
+                    let targetCategory = 'flashcard'; // デフォルト
+                    if (dialogText.includes('クイズをカスタマイズ')) {
+                        targetCategory = 'quiz';
+                    } else if (dialogText.includes('フラッシュカードのカスタマイズ')) {
+                        targetCategory = 'flashcard';
+                    }
+
+                    const favButtons = createFavoriteButtons(targetCategory);
+                    if (favButtons) {
+                        title.style.display = 'inline-flex';
+                        title.style.alignItems = 'center';
+                        title.style.flexWrap = 'wrap';
+                        title.style.gap = '8px';
+                        title.appendChild(favButtons);
+                        console.log(`CueCard: Injected ${targetCategory} favorite buttons based on text content and dialog title.`);
                     }
                 }
             });
