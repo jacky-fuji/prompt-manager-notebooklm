@@ -200,35 +200,130 @@ textarea {
     outline: none;
 }
 
-/* タグクラウド */
-.tag-cloud {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 12px;
+/* スイッチ型トグル */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 36px;
+    height: 20px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #cbd5e1;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+}
+
+input:checked+.slider {
+    background-color: #6366f1;
+}
+
+input:checked+.slider:before {
+    transform: translateX(16px);
+}
+
+.slider.round {
+    border-radius: 20px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
 }
 
 .settings-panel {
     background: #f8fafc;
     padding: 10px;
-    border-radius: 8px;
+    border-radius: 12px;
     margin-bottom: 12px;
     border: 1px solid #e2e8f0;
 }
 
 .setting-item {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 8px;
-    font-size: 12px;
+    font-size: 13px;
     color: #475569;
-    cursor: pointer;
-    user-select: none;
 }
 
-.setting-item input {
-    width: auto;
-    margin: 0;
+/* カテゴリ・アコーディオン */
+.category-section {
+    margin-bottom: 8px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.category-header {
+    padding: 10px 12px;
+    background: #f8fafc;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    user-select: none;
+    transition: background 0.2s;
+}
+
+.category-header:hover {
+    background: #f1f5f9;
+}
+
+.category-header .arrow {
+    font-size: 8px;
+    transition: transform 0.2s;
+    color: #64748b;
+}
+
+.category-header.collapsed .arrow {
+    transform: rotate(-90deg);
+}
+
+.category-header .title {
+    font-weight: 600;
+    font-size: 13px;
+    color: #334155;
+}
+
+.category-content {
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.category-header.collapsed+.category-content {
+    display: none;
+}
+
+.tag-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
 }
 
 .tag-chip {
