@@ -10,20 +10,67 @@
 
     let lastFocusedElement = null;
     let autoDeepResearchEnabled = false;
+    let favoritePrompts = [];
 
-    // 設定をロードしてキャッシュ
+    // 基本スタイルの注入
+    const style = document.createElement('style');
+    style.textContent = `
+        .cuecard-fav-btn {
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 4px 6px;
+            font-size: 10px;
+            cursor: pointer;
+            color: #475569;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            width: calc(33.33% - 6px);
+            box-sizing: border-box;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .cuecard-fav-btn:hover {
+            background: #e2e8f0;
+            border-color: #94a3b8;
+        }
+        .cuecard-fav-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 12px;
+            width: 100%;
+            flex-basis: 100%; /* 強制的に次の行へ送る */
+            clear: both;
+        }
+    `;
+    document.head.appendChild(style);
+
+    // 設定とお気に入りをロードしてキャッシュ
     function refreshSettings() {
         if (!isContextValid()) return;
-        chrome.storage.local.get(['autoDeepResearch'], (result) => {
+        chrome.storage.local.get(['autoDeepResearch', 'prompts'], (result) => {
             if (chrome.runtime.lastError) return;
             autoDeepResearchEnabled = !!result.autoDeepResearch;
+            if (result.prompts) {
+                favoritePrompts = result.prompts.filter(p => p.isFavorite);
+            }
         });
     }
 
     // ストレージ変更を監視
     chrome.storage.onChanged.addListener((changes, area) => {
-        if (area === 'local' && changes.autoDeepResearch) {
-            autoDeepResearchEnabled = !!changes.autoDeepResearch.newValue;
+        if (area === 'local') {
+            if (changes.autoDeepResearch) {
+                autoDeepResearchEnabled = !!changes.autoDeepResearch.newValue;
+            }
+            if (changes.prompts) {
+                favoritePrompts = changes.prompts.newValue.filter(p => p.isFavorite);
+            }
         }
     });
 
@@ -70,7 +117,32 @@
     }
 
     /**
-     * NotebookLM 専用: Deep Research 自動選択
+     * お気に入りボタンの生成
+     */
+    function createFavoriteButtons() {
+        if (favoritePrompts.length === 0) return null;
+
+        const container = document.createElement('div');
+        container.className = 'cuecard-fav-container';
+
+        favoritePrompts.forEach((p, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'cuecard-fav-btn';
+            btn.innerText = `⭐${p.title}`;
+            btn.title = p.title + ": " + p.text.substring(0, 100) + (p.text.length > 100 ? '...' : '');
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                insertText(p.text);
+            });
+            container.appendChild(btn);
+        });
+
+        return container;
+    }
+
+    /**
+     * NotebookLM 専用: 各種自動化とUI注入
      */
     function setupObserver() {
         let isProcessing = false;
@@ -81,48 +153,81 @@
                 return;
             }
 
-            if (!autoDeepResearchEnabled) return;
+            // --- 1. Deep Research 自動選択 ---
+            if (autoDeepResearchEnabled) {
+                const deepBtn = document.querySelector('.research-option-deep-research');
+                if (deepBtn && deepBtn.getAttribute('data-auto-clicked') !== 'true') {
+                    deepBtn.setAttribute('data-auto-clicked', 'true');
+                    deepBtn.click();
+                    console.log('CueCard: Auto-selected Deep Research (Fast).');
+                }
+            }
 
-            // 1. メニュー内のオプション自体を探す（最優先）
-            const deepBtn = document.querySelector('.research-option-deep-research');
-            if (deepBtn && deepBtn.getAttribute('data-auto-clicked') !== 'true') {
-                // オプション選択時はロック中であっても即座に実行を試みる
-                deepBtn.setAttribute('data-auto-clicked', 'true');
-                deepBtn.click();
-                console.log('CueCard: Auto-selected Deep Research (Fast).');
-                return;
+            // --- 2. お気に入りボタンの注入 ---
+            // すべての .actions-options を対象にする（左ペインと中央モーダルの両方に対応）
+            const targetParents = document.querySelectorAll('.actions-options');
+
+            targetParents.forEach(parent => {
+                if (!parent.querySelector('.cuecard-fav-container')) {
+                    const favButtons = createFavoriteButtons();
+                    if (favButtons) {
+                        // 親のレイアウトを調整（改行許可と左揃え）
+                        parent.style.display = 'flex';
+                        parent.style.flexWrap = 'wrap';
+                        parent.style.justifyContent = 'flex-start';
+                        parent.style.alignItems = 'flex-start';
+
+                        parent.appendChild(favButtons);
+                        console.log('CueCard: Injected favorite buttons to an .actions-options container.');
+                    }
+                }
+            });
+
+            // フォールバック: .actions-options が見つからない場合（念のため）
+            if (targetParents.length === 0) {
+                const triggers = Array.from(document.querySelectorAll('button[aria-haspopup="menu"]'));
+                const resBtn = triggers.find(b => (b.innerText || '').includes('Research'));
+                if (resBtn && resBtn.parentElement && !resBtn.parentElement.querySelector('.cuecard-fav-container')) {
+                    const favButtons = createFavoriteButtons();
+                    if (favButtons) {
+                        const fallBackParent = resBtn.parentElement;
+                        fallBackParent.style.display = 'flex';
+                        fallBackParent.style.flexWrap = 'wrap';
+                        fallBackParent.appendChild(favButtons);
+                    }
+                }
             }
 
             if (isProcessing) return;
 
-            // 2. メニューを開くトリガーボタンを探す
-            const buttons = document.querySelectorAll('button');
-            for (const btn of buttons) {
-                const text = (btn.innerText || '').trim();
-                if (btn.getAttribute('aria-haspopup') === 'menu' &&
-                    text.includes('Research') &&
-                    !text.includes('Deep')) {
+            // --- 3. メニュー展開（設定有効時） ---
+            if (autoDeepResearchEnabled) {
+                const buttons = document.querySelectorAll('button');
+                for (const btn of buttons) {
+                    const text = (btn.innerText || '').trim();
+                    if (btn.getAttribute('aria-haspopup') === 'menu' &&
+                        text.includes('Research') &&
+                        !text.includes('Deep')) {
 
-                    if (btn.getAttribute('data-auto-opened') !== 'true') {
-                        isProcessing = true;
-                        btn.setAttribute('data-auto-opened', 'true');
-                        btn.click();
-                        console.log('CueCard: Auto-opening web research menu...');
-                        // メニューが開くまでの短いロック（100ms程度で十分）
-                        setTimeout(() => { isProcessing = false; }, 100);
-                        break;
+                        if (btn.getAttribute('data-auto-opened') !== 'true') {
+                            isProcessing = true;
+                            btn.setAttribute('data-auto-opened', 'true');
+                            btn.click();
+                            console.log('CueCard: Auto-opening web research menu...');
+                            setTimeout(() => { isProcessing = false; }, 100);
+                            break;
+                        }
                     }
                 }
             }
 
             // クリーンアップ
-            if (!deepBtn) {
-                document.querySelectorAll('[data-auto-clicked="true"]').forEach(el => {
-                    if (!document.body.contains(el) || el.offsetParent === null) {
-                        el.removeAttribute('data-auto-clicked');
-                    }
-                });
-            }
+            const clicked = document.querySelectorAll('[data-auto-clicked="true"]');
+            clicked.forEach(el => {
+                if (!document.body.contains(el) || el.offsetParent === null) {
+                    el.removeAttribute('data-auto-clicked');
+                }
+            });
         });
 
         observer.observe(document.body, { childList: true, subtree: true });
