@@ -210,17 +210,15 @@
             // --- 2. お気に入りボタンの注入 ---
             // A. 特定の入力箇所（音声解説: episodeFocus）
             const episodeFocusLabel = document.getElementById('episodeFocus-label');
-            if (episodeFocusLabel) {
-                const wrapper = episodeFocusLabel.parentElement;
-                if (wrapper && !wrapper.querySelector('.cuecard-fav-container')) {
-                    const favButtons = createFavoriteButtons('audio');
-                    if (favButtons) {
-                        wrapper.style.display = 'flex';
-                        wrapper.style.flexWrap = 'wrap';
-                        wrapper.style.alignItems = 'center';
-                        wrapper.appendChild(favButtons);
-                        console.log('CueCard: Injected audio favorite buttons specifically for #episodeFocus-label.');
-                    }
+            if (episodeFocusLabel && !episodeFocusLabel.querySelector('.cuecard-fav-container')) {
+                const favButtons = createFavoriteButtons('audio');
+                if (favButtons) {
+                    episodeFocusLabel.style.display = 'inline-flex';
+                    episodeFocusLabel.style.alignItems = 'center';
+                    episodeFocusLabel.style.flexWrap = 'wrap';
+                    episodeFocusLabel.style.gap = '8px';
+                    episodeFocusLabel.appendChild(favButtons);
+                    console.log('CueCard: Injected audio favorite buttons specifically inside #episodeFocus-label.');
                 }
             }
 
