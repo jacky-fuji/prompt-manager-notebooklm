@@ -174,7 +174,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // カテゴリごとに描画
         ['research', 'audio', 'video', 'report', 'flashcard', 'quiz', 'infographic', 'slide', 'datatable'].forEach(cat => {
-            const catPrompts = filtered.filter(p => p.category === cat);
+            const catPrompts = filtered.filter(p => {
+                if (cat === 'research') {
+                    return p.category === cat || !p.category;
+                }
+                return p.category === cat;
+            });
 
             // お気に入り優先ソート
             catPrompts.sort((a, b) => {

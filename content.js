@@ -155,7 +155,12 @@
     function createFavoriteButtons(categoryFilter = null) {
         let filtered = favoritePrompts;
         if (categoryFilter) {
-            filtered = favoritePrompts.filter(p => p.category === categoryFilter);
+            filtered = favoritePrompts.filter(p => {
+                // 特定のカテゴリに合致するか、'research'指定時はカテゴリ未設定のものも救済する
+                if (p.category === categoryFilter) return true;
+                if (categoryFilter === 'research' && !p.category) return true;
+                return false;
+            });
         }
 
         if (filtered.length === 0) return null;
