@@ -226,7 +226,7 @@
             const targetParents = document.querySelectorAll('.actions-options');
             targetParents.forEach(parent => {
                 if (!parent.querySelector('.cuecard-fav-container')) {
-                    const favButtons = createFavoriteButtons();
+                    const favButtons = createFavoriteButtons('research');
                     if (favButtons) {
                         // 親のレイアウトを調整（改行許可と左揃え）
                         parent.style.display = 'flex';
@@ -235,7 +235,7 @@
                         parent.style.alignItems = 'flex-start';
 
                         parent.appendChild(favButtons);
-                        console.log('CueCard: Injected favorite buttons to an .actions-options container.');
+                        console.log('CueCard: Injected research favorite buttons to an .actions-options container.');
                     }
                 }
             });
@@ -245,7 +245,7 @@
                 const triggers = Array.from(document.querySelectorAll('button[aria-haspopup="menu"]'));
                 const resBtn = triggers.find(b => (b.innerText || '').includes('Research'));
                 if (resBtn && resBtn.parentElement && !resBtn.parentElement.querySelector('.cuecard-fav-container')) {
-                    const favButtons = createFavoriteButtons();
+                    const favButtons = createFavoriteButtons('research');
                     if (favButtons) {
                         const fallBackParent = resBtn.parentElement;
                         fallBackParent.style.display = 'flex';
