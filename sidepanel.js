@@ -8,7 +8,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const listContainers = {
         research: document.getElementById('list-research'),
         audio: document.getElementById('list-audio'),
-        video: document.getElementById('list-video')
+        video: document.getElementById('list-video'),
+        report: document.getElementById('list-report'),
+        flashcard: document.getElementById('list-flashcard'),
+        quiz: document.getElementById('list-quiz'),
+        infographic: document.getElementById('list-infographic'),
+        slide: document.getElementById('list-slide'),
+        datatable: document.getElementById('list-datatable')
     };
 
     // ボタン
@@ -156,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // カテゴリごとに描画
-        ['research', 'audio', 'video'].forEach(cat => {
+        ['research', 'audio', 'video', 'report', 'flashcard', 'quiz', 'infographic', 'slide', 'datatable'].forEach(cat => {
             const catPrompts = filtered.filter(p => p.category === cat);
 
             // お気に入り優先ソート
