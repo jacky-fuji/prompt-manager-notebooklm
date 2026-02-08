@@ -38,6 +38,11 @@
             background: #e2e8f0;
             border-color: #94a3b8;
         }
+        .cuecard-fav-btn.inline {
+            width: auto;
+            max-width: 100px;
+            padding: 2px 6px;
+        }
         .cuecard-fav-container {
             display: flex;
             flex-wrap: wrap;
@@ -46,6 +51,16 @@
             width: 100%;
             flex-basis: 100%; /* 強制的に次の行へ送る */
             clear: both;
+        }
+        .cuecard-fav-container.inline {
+            display: inline-flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin: 0 0 0 12px;
+            width: auto;
+            flex-basis: auto;
+            clear: none;
+            margin-top: 0;
         }
     `;
     document.head.appendChild(style);
@@ -97,20 +112,37 @@
         return true;
     });
 
-    function insertText(text) {
-        if (!lastFocusedElement) {
-            const active = document.activeElement;
-            if (active && (active.tagName === 'TEXTAREA' || active.contentEditable === 'true')) {
-                lastFocusedElement = active;
+    function insertText(text, contextElement = null) {
+        let target = lastFocusedElement;
+
+        // ボタンの近傍から入力欄を探す
+        if (contextElement) {
+            const container = contextElement.closest('.control-wrapper') ||
+                contextElement.closest('.dialog-container') ||
+                contextElement.closest('mat-dialog-content');
+            if (container) {
+                const found = container.querySelector('textarea') || container.querySelector('[contenteditable="true"]');
+                if (found) target = found;
             }
         }
-        if (!lastFocusedElement) {
+
+        if (!target) {
+            const active = document.activeElement;
+            if (active && (active.tagName === 'TEXTAREA' || active.contentEditable === 'true')) {
+                target = active;
+            }
+        }
+
+        if (!target) {
             alert('入力欄をクリックしてから実行してください。');
             return;
         }
-        lastFocusedElement.focus();
+
+        target.focus();
         try {
             document.execCommand('insertText', false, text);
+            // lastFocusedElement を更新しておく
+            lastFocusedElement = target;
         } catch (err) {
             console.error('CueCard: Insertion failed', err);
         }
@@ -118,22 +150,34 @@
 
     /**
      * お気に入りボタンの生成
+     * @param {string} categoryFilter - カテゴリで絞り込む場合 ('audio', 'research'等)
      */
-    function createFavoriteButtons() {
-        if (favoritePrompts.length === 0) return null;
+    function createFavoriteButtons(categoryFilter = null) {
+        let filtered = favoritePrompts;
+        if (categoryFilter) {
+            filtered = favoritePrompts.filter(p => p.category === categoryFilter);
+        }
+
+        if (filtered.length === 0) return null;
 
         const container = document.createElement('div');
-        container.className = 'cuecard-fav-container';
+        container.className = 'cuecard-fav-container' + (categoryFilter ? ' inline' : '');
+        // コンテキスト埋め込み用にスタイルを微調整
+        if (categoryFilter) {
+            container.style.marginTop = '4px';
+            container.style.marginBottom = '8px';
+        }
 
-        favoritePrompts.forEach((p, index) => {
+        filtered.forEach((p) => {
             const btn = document.createElement('button');
-            btn.className = 'cuecard-fav-btn';
+            btn.className = 'cuecard-fav-btn' + (categoryFilter ? ' inline' : '');
             btn.innerText = `⭐${p.title}`;
             btn.title = p.title + ": " + p.text.substring(0, 100) + (p.text.length > 100 ? '...' : '');
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 e.preventDefault();
-                insertText(p.text);
+                // コンテキスト（ボタン自身）を渡して、近くの入力欄を探させる
+                insertText(p.text, btn);
             });
             container.appendChild(btn);
         });
@@ -164,9 +208,24 @@
             }
 
             // --- 2. お気に入りボタンの注入 ---
-            // すべての .actions-options を対象にする（左ペインと中央モーダルの両方に対応）
-            const targetParents = document.querySelectorAll('.actions-options');
+            // A. 特定の入力箇所（音声解説: episodeFocus）
+            const episodeFocusLabel = document.getElementById('episodeFocus-label');
+            if (episodeFocusLabel) {
+                const wrapper = episodeFocusLabel.parentElement;
+                if (wrapper && !wrapper.querySelector('.cuecard-fav-container')) {
+                    const favButtons = createFavoriteButtons('audio');
+                    if (favButtons) {
+                        wrapper.style.display = 'flex';
+                        wrapper.style.flexWrap = 'wrap';
+                        wrapper.style.alignItems = 'center';
+                        wrapper.appendChild(favButtons);
+                        console.log('CueCard: Injected audio favorite buttons specifically for #episodeFocus-label.');
+                    }
+                }
+            }
 
+            // B. 汎用的なアクションメニュー (.actions-options)
+            const targetParents = document.querySelectorAll('.actions-options');
             targetParents.forEach(parent => {
                 if (!parent.querySelector('.cuecard-fav-container')) {
                     const favButtons = createFavoriteButtons();

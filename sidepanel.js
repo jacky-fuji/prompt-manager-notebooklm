@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const adminModeBtn = document.getElementById('admin-mode-btn');
     const saveBtn = document.getElementById('save-btn');
     const cancelBtn = document.getElementById('cancel-btn');
+    const scrollToAdminBtn = document.getElementById('scroll-to-admin-btn');
 
     // フォーム入力
     const titleInput = document.getElementById('prompt-title');
@@ -58,6 +59,16 @@ document.addEventListener('DOMContentLoaded', () => {
             header.classList.toggle('collapsed');
         });
     });
+
+    /**
+     * クイックナビゲーション（プロンプト追加フォームへスクロール）
+     */
+    if (scrollToAdminBtn) {
+        scrollToAdminBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            adminSection.scrollIntoView({ behavior: 'smooth' });
+        });
+    }
 
     /**
      * 文字数カウントの更新
@@ -316,6 +327,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 resetForm();
                 adminSection.classList.remove('active');
                 adminModeBtn.innerText = '管理モード';
+                if (scrollToAdminBtn) scrollToAdminBtn.style.display = 'none';
                 loadAndRenderPrompts();
             });
         });
@@ -366,6 +378,7 @@ document.addEventListener('DOMContentLoaded', () => {
         adminSection.classList.toggle('active');
         const isActive = adminSection.classList.contains('active');
         adminModeBtn.innerText = isActive ? '戻る' : '管理モード';
+        if (scrollToAdminBtn) scrollToAdminBtn.style.display = isActive ? 'block' : 'none';
         if (!isActive) resetForm();
         loadAndRenderPrompts();
     };
@@ -373,6 +386,7 @@ document.addEventListener('DOMContentLoaded', () => {
     cancelBtn.onclick = () => {
         adminSection.classList.remove('active');
         adminModeBtn.innerText = '管理モード';
+        if (scrollToAdminBtn) scrollToAdminBtn.style.display = 'none';
         resetForm();
         loadAndRenderPrompts();
     };

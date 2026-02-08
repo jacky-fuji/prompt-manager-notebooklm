@@ -50,12 +50,12 @@ body {
 
 /* プロンプトリスト */
 .cue-list {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 8px;
-    max-height: calc(100vh - 100px);
-    /* 画面の高さに合わせて調整 */
+    max-height: calc(100vh - 120px);
     overflow-y: auto;
+    padding: 4px;
 }
 
 .cue-item {
@@ -67,6 +67,10 @@ body {
     transition: all 0.2s;
     position: relative;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 80px;
 }
 
 .cue-item:hover {
@@ -77,20 +81,25 @@ body {
 
 .cue-item-title {
     font-weight: 600;
-    font-size: 14px;
+    font-size: 13px;
     margin-bottom: 4px;
-    display: block;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
     color: #334155;
+    padding-right: 60px;
+    /* 操作ボタンとの重なり防止 */
 }
 
 .cue-item-text {
-    font-size: 12px;
+    font-size: 11px;
     color: #64748b;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    line-height: 1.5;
+    line-height: 1.4;
 }
 
 /* 管理モード用のスタイル */
