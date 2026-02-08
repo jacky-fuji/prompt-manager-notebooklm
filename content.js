@@ -202,7 +202,9 @@
                 return;
             }
 
-            // --- 1. Deep Research 自動選択 ---
+            // --- 1. 自動選択機能 (RPA的な動作) ---
+
+            // A. Deep Research 自動選択
             if (autoDeepResearchEnabled) {
                 const deepBtn = document.querySelector('.research-option-deep-research');
                 if (deepBtn && deepBtn.getAttribute('data-auto-clicked') !== 'true') {
@@ -212,20 +214,43 @@
                 }
             }
 
-            // --- 2. お気に入りボタンの注入 ---
-            // A. 特定の入力箇所（音声解説: episodeFocus）
-            const episodeFocusLabel = document.getElementById('episodeFocus-label');
-            if (episodeFocusLabel && !episodeFocusLabel.querySelector('.cuecard-fav-container')) {
-                const favButtons = createFavoriteButtons('audio');
-                if (favButtons) {
-                    episodeFocusLabel.style.display = 'inline-flex';
-                    episodeFocusLabel.style.alignItems = 'center';
-                    episodeFocusLabel.style.flexWrap = 'wrap';
-                    episodeFocusLabel.style.gap = '8px';
-                    episodeFocusLabel.appendChild(favButtons);
-                    console.log('CueCard: Injected audio favorite buttons specifically inside #episodeFocus-label.');
-                }
+            // B. 音声解説のデフォルトを「議論 (Discussion)」に変更
+            const audioDialog = document.querySelector('configurable-form-dialog');
+            if (audioDialog && (audioDialog.innerText || '').includes('音声解説')) {
+                // 「議論」カードを探してクリック
+                const cards = audioDialog.querySelectorAll('.form-option-card');
+                cards.forEach(card => {
+                    const text = card.innerText || '';
+                    if (text.includes('議論') && card.getAttribute('data-auto-selected') !== 'true') {
+                        card.setAttribute('data-auto-selected', 'true');
+                        card.click();
+                        console.log('CueCard: Auto-selected "Discussion" for Audio Commentary.');
+                    }
+                });
             }
+
+            // --- 2. お気に入りボタンの注入 ---
+
+            // A. 特定のラベル ID に基づく注入 (音声・動画)
+            const focusLabels = [
+                { id: 'episodeFocus-label', category: 'audio' },
+                { id: 'videoFocus-label', category: 'video' }
+            ];
+
+            focusLabels.forEach(config => {
+                const label = document.getElementById(config.id);
+                if (label && !label.querySelector('.cuecard-fav-container')) {
+                    const favButtons = createFavoriteButtons(config.category);
+                    if (favButtons) {
+                        label.style.display = 'inline-flex';
+                        label.style.alignItems = 'center';
+                        label.style.flexWrap = 'wrap';
+                        label.style.gap = '8px';
+                        label.appendChild(favButtons);
+                        console.log(`CueCard: Injected ${config.category} favorite buttons inside #${config.id}`);
+                    }
+                }
+            });
 
             // B. 汎用的なアクションメニュー (.actions-options)
             const targetParents = document.querySelectorAll('.actions-options');
