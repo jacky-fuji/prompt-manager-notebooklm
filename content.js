@@ -214,20 +214,6 @@
                 }
             }
 
-            // B. 音声解説のデフォルトを「議論 (Discussion)」に変更
-            const audioDialog = document.querySelector('configurable-form-dialog');
-            if (audioDialog && (audioDialog.innerText || '').includes('音声解説')) {
-                // 「議論」カードを探してクリック
-                const cards = audioDialog.querySelectorAll('.form-option-card');
-                cards.forEach(card => {
-                    const text = card.innerText || '';
-                    if (text.includes('議論') && card.getAttribute('data-auto-selected') !== 'true') {
-                        card.setAttribute('data-auto-selected', 'true');
-                        card.click();
-                        console.log('CueCard: Auto-selected "Discussion" for Audio Commentary.');
-                    }
-                });
-            }
 
             // --- 2. お気に入りボタンの注入 ---
 
