@@ -238,7 +238,25 @@
                 }
             });
 
-            // B. 汎用的なアクションメニュー (.actions-options)
+            // B. テキスト内容に基づく注入 (レポート等)
+            const matTitles = document.querySelectorAll('.mat-title-medium');
+            matTitles.forEach(title => {
+                const text = (title.innerText || '').trim();
+                // 「作成したいレポートの内容を記入してください」に合致する場合
+                if (text.includes('作成したいレポートの内容を記入してください') && !title.querySelector('.cuecard-fav-container')) {
+                    const favButtons = createFavoriteButtons('report');
+                    if (favButtons) {
+                        title.style.display = 'inline-flex';
+                        title.style.alignItems = 'center';
+                        title.style.flexWrap = 'wrap';
+                        title.style.gap = '8px';
+                        title.appendChild(favButtons);
+                        console.log('CueCard: Injected report favorite buttons based on text content.');
+                    }
+                }
+            });
+
+            // C. 汎用的なアクションメニュー (.actions-options)
             const targetParents = document.querySelectorAll('.actions-options');
             targetParents.forEach(parent => {
                 if (!parent.querySelector('.cuecard-fav-container')) {
