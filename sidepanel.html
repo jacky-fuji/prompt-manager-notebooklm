@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="sidepanel.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>CueCard for NotebookLM</h1>
+            <button id="admin-mode-btn" class="mode-toggle">管理モード</button>
+        </div>
+
+        <!-- フィルタリングセクション -->
+        <div id="filter-section" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 4px;">
+            <input type="text" id="search-input" placeholder="プロンプトを検索..." style="margin-bottom: 0;">
+            <div id="tag-cloud" class="tag-cloud">
+                <!-- 動的に生成 -->
+            </div>
+
+            <div class="settings-panel">
+                <label class="setting-item">
+                    <input type="checkbox" id="setting-auto-deep-research">
+                    <span>Deep Research をデフォルトに</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- 挿入モード -->
+        <div id="select-section">
+            <div id="cue-list" class="cue-list">
+                <!-- ここにプロンプトが動的に挿入されます -->
+            </div>
+        </div>
+
+        <!-- 管理モード -->
+        <div id="admin-section" class="admin-section">
+            <h2 id="admin-title" style="font-size: 14px; margin: 0;">プロンプトの追加</h2>
+            <input type="hidden" id="edit-index" value="-1">
+            <input type="text" id="prompt-title" placeholder="タイトル（例: 銘柄分析）">
+            <input type="text" id="prompt-tags" placeholder="タグ (カンマ区切り、例: 調査, 分析)">
+            <label
+                style="display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer; user-select: none;">
+                <input type="checkbox" id="prompt-favorite" style="width: auto; margin: 0;"> ⭐ お気に入りに登録（最上部に固定）
+            </label>
+            <div style="position: relative;">
+                <textarea id="prompt-text" rows="6" placeholder="プロンプト内容" maxlength="5000"></textarea>
+                <div id="char-count" style="font-size: 10px; color: #888; text-align: right; margin-top: -4px;">0 / 5000
+                </div>
+            </div>
+            <div class="btn-group">
+                <button id="save-btn" class="btn btn-primary">保存</button>
+                <button id="cancel-btn" class="btn btn-secondary">キャンセル</button>
+            </div>
+            <p style="font-size: 10px; color: #888; margin: 4px 0 0;">5000文字以内で入力してください。</p>
+        </div>
+    </div>
+    <script src="sidepanel.js"></script>
+</body>
+
+</html>
