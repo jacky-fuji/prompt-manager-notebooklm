@@ -217,65 +217,64 @@
 
             // --- 2. お気に入りボタンの注入 ---
 
-            // A. 特定のラベル ID に基づく注入 (音声・動画・インフォグラフィック)
-            const focusLabels = [
-                { id: 'episodeFocus-label', category: 'audio' },
-                { id: 'videoFocus-label', category: 'video' },
-                { id: 'userSteeringPrompt-label', category: 'infographic' }
+            // --- 2. お気に入りボタンの注入 ---
+
+            // A. コンテキストに応じた注入 (IDやクラスを横断的に監視)
+            const injectionTargets = [
+                // ID指定のもの
+                'episodeFocus-label',   // 音声
+                'videoFocus-label',     // 動画
+                'userSteeringPrompt-label', // スライド, インフォグラフィック, データテーブル
+                // クラス指定のもの
+                '.mat-title-medium'     // レポート, クイズ, フラッシュカード
             ];
 
-            focusLabels.forEach(config => {
-                const label = document.getElementById(config.id);
-                if (label && !label.querySelector('.cuecard-fav-container')) {
-                    const favButtons = createFavoriteButtons(config.category);
-                    if (favButtons) {
-                        label.style.display = 'inline-flex';
-                        label.style.alignItems = 'center';
-                        label.style.flexWrap = 'wrap';
-                        label.style.gap = '8px';
-                        label.appendChild(favButtons);
-                        console.log(`CueCard: Injected ${config.category} favorite buttons inside #${config.id}`);
-                    }
+            const targetElements = [];
+            injectionTargets.forEach(selector => {
+                if (selector.startsWith('.')) {
+                    document.querySelectorAll(selector).forEach(el => targetElements.push(el));
+                } else {
+                    const el = document.getElementById(selector);
+                    if (el) targetElements.push(el);
                 }
             });
 
-            // B. テキスト内容に基づく注入 (レポート等)
-            const matTitles = document.querySelectorAll('.mat-title-medium');
-            matTitles.forEach(title => {
-                const text = (title.innerText || '').trim();
-                // 「作成したいレポートの内容を記入してください」に合致する場合
-                if (text.includes('作成したいレポートの内容を記入してください') && !title.querySelector('.cuecard-fav-container')) {
-                    const favButtons = createFavoriteButtons('report');
-                    if (favButtons) {
-                        title.style.display = 'inline-flex';
-                        title.style.alignItems = 'center';
-                        title.style.flexWrap = 'wrap';
-                        title.style.gap = '8px';
-                        title.appendChild(favButtons);
-                        console.log('CueCard: Injected report favorite buttons based on text content.');
-                    }
+            targetElements.forEach(item => {
+                if (item.querySelector('.cuecard-fav-container')) return;
+
+                // ダイアログ全体のタイトル等からカテゴリを判別
+                const dialog = item.closest('mat-dialog-container') || item.closest('configurable-form-dialog') || document.body;
+                const dialogText = (dialog.innerText || '');
+                const itemText = (item.innerText || '');
+
+                let category = null;
+
+                // 1. タイトル文字列による判別 (優先)
+                if (dialogText.includes('音声解説')) category = 'audio';
+                else if (dialogText.includes('動画解説')) category = 'video';
+                else if (dialogText.includes('インフォグラフィック')) category = 'infographic';
+                else if (dialogText.includes('スライド資料')) category = 'slide';
+                else if (dialogText.includes('クイズをカスタマイズ')) category = 'quiz';
+                else if (dialogText.includes('フラッシュカードのカスタマイズ')) category = 'flashcard';
+                else if (dialogText.includes('レポート')) category = 'report';
+                else if (dialogText.includes('データテーブル')) category = 'datatable';
+
+                // 2. ラベルテキストによる補完 (ダイアログが見つからない場合など)
+                if (!category) {
+                    if (itemText.includes('レポート')) category = 'report';
+                    else if (itemText.includes('スライド')) category = 'slide';
+                    else if (itemText.includes('インフォグラフィック')) category = 'infographic';
                 }
-                // 「希望するトピック」に合致する場合 (フラッシュカード or クイズ)
-                if (text.includes('希望するトピック') && !title.querySelector('.cuecard-fav-container')) {
-                    // ダイアログ全体のタイトル等からカテゴリを判別
-                    const dialog = title.closest('mat-dialog-container') || document.body;
-                    const dialogText = dialog.innerText || '';
 
-                    let targetCategory = 'flashcard'; // デフォルト
-                    if (dialogText.includes('クイズをカスタマイズ')) {
-                        targetCategory = 'quiz';
-                    } else if (dialogText.includes('フラッシュカードのカスタマイズ')) {
-                        targetCategory = 'flashcard';
-                    }
-
-                    const favButtons = createFavoriteButtons(targetCategory);
+                if (category) {
+                    const favButtons = createFavoriteButtons(category);
                     if (favButtons) {
-                        title.style.display = 'inline-flex';
-                        title.style.alignItems = 'center';
-                        title.style.flexWrap = 'wrap';
-                        title.style.gap = '8px';
-                        title.appendChild(favButtons);
-                        console.log(`CueCard: Injected ${targetCategory} favorite buttons based on text content and dialog title.`);
+                        item.style.display = 'inline-flex';
+                        item.style.alignItems = 'center';
+                        item.style.flexWrap = 'wrap';
+                        item.style.gap = '8px';
+                        item.appendChild(favButtons);
+                        console.log(`CueCard: Injected ${category} buttons based on dialog/label context.`);
                     }
                 }
             });
