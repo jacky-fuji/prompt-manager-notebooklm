@@ -217,77 +217,49 @@
 
             // --- 2. お気に入りボタンの注入 ---
 
-            // --- 2. お気に入りボタンの注入 ---
+            // A. コンテキストに応じた注入 (IDやテキスト内容に基づく厳密な判定)
+            const injectionLabels = document.querySelectorAll('#episodeFocus-label, #videoFocus-label, #userSteeringPrompt-label, .mat-title-medium, .control-label');
 
-            // A. コンテキストに応じた注入 (IDやクラスを横断的に監視)
-            const injectionTargets = [
-                // ID指定のもの
-                'episodeFocus-label',   // 音声
-                'videoFocus-label',     // 動画
-                'userSteeringPrompt-label', // スライド, インフォグラフィック, データテーブル
-                // クラス指定のもの
-                '.mat-title-medium'     // レポート, クイズ, フラッシュカード
-            ];
+            injectionLabels.forEach(label => {
+                if (label.querySelector('.cuecard-fav-container')) return;
 
-            const targetElements = [];
-            injectionTargets.forEach(selector => {
-                if (selector.startsWith('.')) {
-                    document.querySelectorAll(selector).forEach(el => targetElements.push(el));
-                } else {
-                    const el = document.getElementById(selector);
-                    if (el) targetElements.push(el);
-                }
-            });
-
-            targetElements.forEach(item => {
-                if (item.querySelector('.cuecard-fav-container')) return;
-
-                // ダイアログ全体のタイトル等からカテゴリを判別
-                const dialog = item.closest('mat-dialog-container') || item.closest('configurable-form-dialog') || document.body;
-                const dialogText = (dialog.innerText || '');
-                const itemText = (item.innerText || '');
-
+                const text = (label.innerText || '').trim();
                 let category = null;
 
-                // 1. タイトル文字列による判別 (優先)
-                if (dialogText.includes('音声解説')) category = 'audio';
-                else if (dialogText.includes('動画解説')) category = 'video';
-                else if (dialogText.includes('インフォグラフィック')) category = 'infographic';
-                else if (dialogText.includes('スライド資料')) category = 'slide';
-                else if (dialogText.includes('クイズをカスタマイズ')) category = 'quiz';
-                else if (dialogText.includes('フラッシュカードのカスタマイズ')) category = 'flashcard';
-                else if (dialogText.includes('レポート')) category = 'report';
-                else if (dialogText.includes('データテーブル')) category = 'datatable';
-
-                // 2. ラベルテキストによる補完 (ダイアログが見つからない場合など)
-                if (!category) {
-                    if (itemText.includes('レポート')) category = 'report';
-                    else if (itemText.includes('スライド')) category = 'slide';
-                    else if (itemText.includes('インフォグラフィック')) category = 'infographic';
-                }
-
-                // 3. 特定のカテゴリにおけるバリデーション (誤爆防止)
-                if (category === 'report' && !itemText.includes('作成したいレポートの内容を記入してください')) {
-                    category = null;
-                }
-                if ((category === 'quiz' || category === 'flashcard') && !itemText.includes('希望するトピック')) {
-                    category = null;
+                // 各カテゴリのターゲットラベルを内容（テキスト）で厳密に照合
+                if (text.includes('作成したいレポートの内容を記入してください')) {
+                    category = 'report';
+                } else if (text.includes('希望するトピック')) {
+                    // ダイアログ全体のタイトル等から クイズ vs フラッシュカード を判別
+                    const dialog = label.closest('mat-dialog-container') || label.closest('configurable-form-dialog') || document.body;
+                    const dialogText = (dialog.innerText || '');
+                    category = dialogText.includes('クイズ') ? 'quiz' : 'flashcard';
+                } else if (text.includes('インフォグラフィックについて説明してください')) {
+                    category = 'infographic';
+                } else if (text.includes('スライドについて説明してください')) {
+                    category = 'slide';
+                } else if (text.includes('データテーブル') && (text.includes('説明') || label.id === 'userSteeringPrompt-label')) {
+                    category = 'datatable';
+                } else if (label.id === 'episodeFocus-label') {
+                    category = 'audio';
+                } else if (label.id === 'videoFocus-label') {
+                    category = 'video';
                 }
 
                 if (category) {
                     const favButtons = createFavoriteButtons(category);
                     if (favButtons) {
-                        item.style.display = 'inline-flex';
-                        item.style.alignItems = 'center';
-                        item.style.flexWrap = 'wrap';
-                        item.style.gap = '8px';
-                        item.appendChild(favButtons);
-                        console.log(`CueCard: Injected ${category} buttons based on dialog/label context.`);
+                        label.style.display = 'inline-flex';
+                        label.style.alignItems = 'center';
+                        label.style.flexWrap = 'wrap';
+                        label.style.gap = '8px';
+                        label.appendChild(favButtons);
+                        console.log(`CueCard: Injected ${category} buttons based on strict label match: "${text.substring(0, 15)}..."`);
                     }
                 }
             });
 
-            // C. 汎用的なアクションメニュー (.actions-options)
+            // B. 汎用的なアクションメニュー (.actions-options)
             const targetParents = document.querySelectorAll('.actions-options');
             targetParents.forEach(parent => {
                 if (!parent.querySelector('.cuecard-fav-container')) {
