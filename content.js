@@ -266,6 +266,14 @@
                     else if (itemText.includes('インフォグラフィック')) category = 'infographic';
                 }
 
+                // 3. 特定のカテゴリにおけるバリデーション (誤爆防止)
+                if (category === 'report' && !itemText.includes('作成したいレポートの内容を記入してください')) {
+                    category = null;
+                }
+                if ((category === 'quiz' || category === 'flashcard') && !itemText.includes('希望するトピック')) {
+                    category = null;
+                }
+
                 if (category) {
                     const favButtons = createFavoriteButtons(category);
                     if (favButtons) {
