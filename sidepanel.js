@@ -39,6 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 設定要素
     const autoDeepResearchInput = document.getElementById('setting-auto-deep-research');
+    const audioFormatInput = document.getElementById('setting-audio-format');
 
     // フィルタリング状態
     let currentTag = null;
@@ -74,6 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
      * 文字数カウントの更新
      */
     function updateCharCount() {
+        if (!textInput) return;
         const length = textInput.value.length;
         charCountDisplay.innerText = `${length} / 5000`;
         if (length >= 4500) {
@@ -83,21 +85,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    textInput.addEventListener('input', updateCharCount);
+    if (textInput) {
+        textInput.addEventListener('input', updateCharCount);
+    }
 
     /**
      * 検索入力イベント
      */
-    searchInput.addEventListener('input', (e) => {
-        searchQuery = e.target.value.toLowerCase();
-        loadAndRenderPrompts();
-    });
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            searchQuery = e.target.value.toLowerCase();
+            loadAndRenderPrompts();
+        });
+    }
 
     /**
      * プロンプトと設定をストレージから読み込み
      */
     function loadAndRenderPrompts() {
-        chrome.storage.local.get(['prompts', 'autoDeepResearch'], (result) => {
+        chrome.storage.local.get(['prompts', 'autoDeepResearch', 'audioFormat'], (result) => {
             let prompts = result.prompts;
             if (!prompts || prompts.length === 0) {
                 prompts = initialPrompts;
@@ -110,7 +116,12 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             // 設定の反映
-            autoDeepResearchInput.checked = !!result.autoDeepResearch;
+            if (autoDeepResearchInput) {
+                autoDeepResearchInput.checked = !!result.autoDeepResearch;
+            }
+            if (audioFormatInput && result.audioFormat) {
+                audioFormatInput.value = result.audioFormat;
+            }
 
             updateTagCloud(prompts);
             renderCategorizedList(prompts);
@@ -120,14 +131,23 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * 設定変更イベント
      */
-    autoDeepResearchInput.addEventListener('change', (e) => {
-        chrome.storage.local.set({ autoDeepResearch: e.target.checked });
-    });
+    if (autoDeepResearchInput) {
+        autoDeepResearchInput.addEventListener('change', (e) => {
+            chrome.storage.local.set({ autoDeepResearch: e.target.checked });
+        });
+    }
+
+    if (audioFormatInput) {
+        audioFormatInput.addEventListener('change', (e) => {
+            chrome.storage.local.set({ audioFormat: e.target.value });
+        });
+    }
 
     /**
      * タグクラウドの更新
      */
     function updateTagCloud(prompts) {
+        if (!tagCloud) return;
         const allTags = new Set();
         prompts.forEach(p => {
             if (p.tags) p.tags.forEach(t => allTags.add(t));
@@ -160,7 +180,9 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     function renderCategorizedList(prompts) {
         // 各コンテナをクリア
-        Object.values(listContainers).forEach(c => c.innerHTML = '');
+        Object.values(listContainers).forEach(c => {
+            if (c) c.innerHTML = '';
+        });
 
         // フィルタリング
         let filtered = prompts.filter(p => {
@@ -173,7 +195,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // カテゴリごとに描画
-        ['research', 'audio', 'video', 'report', 'flashcard', 'quiz', 'infographic', 'slide', 'datatable'].forEach(cat => {
+        const categories = ['research', 'audio', 'video', 'report', 'flashcard', 'quiz', 'infographic', 'slide', 'datatable'];
+        categories.forEach(cat => {
+            if (!listContainers[cat]) return;
+
             const catPrompts = filtered.filter(p => {
                 if (cat === 'research') {
                     return p.category === cat || !p.category;
@@ -303,40 +328,42 @@ document.addEventListener('DOMContentLoaded', () => {
     /**
      * 保存/更新
      */
-    saveBtn.onclick = () => {
-        const title = titleInput.value.trim();
-        const category = categoryInput.value;
-        const text = textInput.value.trim();
-        const tagsRaw = tagsInput.value.trim();
-        const isFavorite = favoriteInput.checked;
-        const editIndex = parseInt(editIndexInput.value);
+    if (saveBtn) {
+        saveBtn.onclick = () => {
+            const title = titleInput.value.trim();
+            const category = categoryInput.value;
+            const text = textInput.value.trim();
+            const tagsRaw = tagsInput.value.trim();
+            const isFavorite = favoriteInput.checked;
+            const editIndex = parseInt(editIndexInput.value);
 
-        if (!title || !text) {
-            alert('タイトルと内容を入力してください。');
-            return;
-        }
-
-        const tags = tagsRaw ? tagsRaw.split(/[,,、\s]+/).filter(t => t.length > 0) : [];
-
-        chrome.storage.local.get(['prompts'], (result) => {
-            const prompts = result.prompts || [];
-            const newPrompt = { title, category, tags, text, isFavorite };
-
-            if (editIndex >= 0) {
-                prompts[editIndex] = newPrompt;
-            } else {
-                prompts.push(newPrompt);
+            if (!title || !text) {
+                alert('タイトルと内容を入力してください。');
+                return;
             }
 
-            chrome.storage.local.set({ prompts: prompts }, () => {
-                resetForm();
-                adminSection.classList.remove('active');
-                adminModeBtn.innerText = '管理モード';
-                if (scrollToAdminBtn) scrollToAdminBtn.style.display = 'none';
-                loadAndRenderPrompts();
+            const tags = tagsRaw ? tagsRaw.split(/[,,、\s]+/).filter(t => t.length > 0) : [];
+
+            chrome.storage.local.get(['prompts'], (result) => {
+                const prompts = result.prompts || [];
+                const newPrompt = { title, category, tags, text, isFavorite };
+
+                if (editIndex >= 0) {
+                    prompts[editIndex] = newPrompt;
+                } else {
+                    prompts.push(newPrompt);
+                }
+
+                chrome.storage.local.set({ prompts: prompts }, () => {
+                    resetForm();
+                    adminSection.classList.remove('active');
+                    adminModeBtn.innerText = '管理モード';
+                    if (scrollToAdminBtn) scrollToAdminBtn.style.display = 'none';
+                    loadAndRenderPrompts();
+                });
             });
-        });
-    };
+        };
+    }
 
     function resetForm() {
         editIndexInput.value = -1;
@@ -379,22 +406,26 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    adminModeBtn.onclick = () => {
-        adminSection.classList.toggle('active');
-        const isActive = adminSection.classList.contains('active');
-        adminModeBtn.innerText = isActive ? '戻る' : '管理モード';
-        if (scrollToAdminBtn) scrollToAdminBtn.style.display = isActive ? 'block' : 'none';
-        if (!isActive) resetForm();
-        loadAndRenderPrompts();
-    };
+    if (adminModeBtn) {
+        adminModeBtn.onclick = () => {
+            adminSection.classList.toggle('active');
+            const isActive = adminSection.classList.contains('active');
+            adminModeBtn.innerText = isActive ? '戻る' : '管理モード';
+            if (scrollToAdminBtn) scrollToAdminBtn.style.display = isActive ? 'block' : 'none';
+            if (!isActive) resetForm();
+            loadAndRenderPrompts();
+        };
+    }
 
-    cancelBtn.onclick = () => {
-        adminSection.classList.remove('active');
-        adminModeBtn.innerText = '管理モード';
-        if (scrollToAdminBtn) scrollToAdminBtn.style.display = 'none';
-        resetForm();
-        loadAndRenderPrompts();
-    };
+    if (cancelBtn) {
+        cancelBtn.onclick = () => {
+            adminSection.classList.remove('active');
+            adminModeBtn.innerText = '管理モード';
+            if (scrollToAdminBtn) scrollToAdminBtn.style.display = 'none';
+            resetForm();
+            loadAndRenderPrompts();
+        };
+    }
 
     // 初期起動
     loadAndRenderPrompts();

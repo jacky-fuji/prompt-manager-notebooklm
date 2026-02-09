@@ -55,7 +55,21 @@
                         <span class="arrow">▼</span>
                         <span class="title">音声解説 (Audio Commentary)</span>
                     </div>
-                    <div class="category-content cue-list" id="list-audio"></div>
+                    <div class="category-content">
+                        <div class="settings-panel" style="margin-bottom: 8px;">
+                            <div class="setting-item">
+                                <span class="setting-label">デフォルト形式</span>
+                                <select id="setting-audio-format" class="setting-select">
+                                    <option value="">(自動選択なし)</option>
+                                    <option value="詳細">詳細</option>
+                                    <option value="概要">概要</option>
+                                    <option value="評論">評論</option>
+                                    <option value="議論">議論</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="cue-list" id="list-audio"></div>
+                    </div>
                 </section>
 
                 <section class="category-section" data-category="video">

@@ -10,6 +10,7 @@
 
     let lastFocusedElement = null;
     let autoDeepResearchEnabled = false;
+    let audioFormat = '';
     let favoritePrompts = [];
 
     // 基本スタイルの注入
@@ -68,9 +69,10 @@
     // 設定とお気に入りをロードしてキャッシュ
     function refreshSettings() {
         if (!isContextValid()) return;
-        chrome.storage.local.get(['autoDeepResearch', 'prompts'], (result) => {
+        chrome.storage.local.get(['autoDeepResearch', 'prompts', 'audioFormat'], (result) => {
             if (chrome.runtime.lastError) return;
             autoDeepResearchEnabled = !!result.autoDeepResearch;
+            audioFormat = result.audioFormat || '';
             if (result.prompts) {
                 favoritePrompts = result.prompts.filter(p => p.isFavorite);
             }
@@ -82,6 +84,9 @@
         if (area === 'local') {
             if (changes.autoDeepResearch) {
                 autoDeepResearchEnabled = !!changes.autoDeepResearch.newValue;
+            }
+            if (changes.audioFormat) {
+                audioFormat = changes.audioFormat.newValue || '';
             }
             if (changes.prompts) {
                 favoritePrompts = changes.prompts.newValue.filter(p => p.isFavorite);
@@ -214,6 +219,30 @@
                 }
             }
 
+            // B. 音声解説形式の自動選択
+            if (audioFormat) {
+                const dialogs = document.querySelectorAll('mat-dialog-container, configurable-form-dialog');
+                const audioDialog = Array.from(dialogs).find(d => (d.innerText || '').includes('音声解説をカスタマイズ'));
+
+                if (audioDialog && audioDialog.getAttribute('data-auto-formatted') !== 'true') {
+                    const labels = audioDialog.querySelectorAll('.tile-label');
+                    let selected = false;
+                    for (const label of labels) {
+                        if (label.innerText.trim() === audioFormat) {
+                            // 親の mat-radio-button またはカード全体をクリック
+                            const card = label.closest('.mat-radio-button') || label.closest('mat-radio-button') || label;
+                            card.click();
+                            selected = true;
+                            break;
+                        }
+                    }
+                    if (selected) {
+                        audioDialog.setAttribute('data-auto-formatted', 'true');
+                        console.log(`CueCard: Auto-selected audio format: ${audioFormat}`);
+                    }
+                }
+            }
+
 
             // --- 2. お気に入りボタンの注入 ---
 
@@ -316,10 +345,11 @@
             }
 
             // クリーンアップ
-            const clicked = document.querySelectorAll('[data-auto-clicked="true"]');
+            const clicked = document.querySelectorAll('[data-auto-clicked="true"], [data-auto-formatted="true"]');
             clicked.forEach(el => {
                 if (!document.body.contains(el) || el.offsetParent === null) {
                     el.removeAttribute('data-auto-clicked');
+                    el.removeAttribute('data-auto-formatted');
                 }
             });
         });
