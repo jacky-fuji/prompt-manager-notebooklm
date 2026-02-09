@@ -221,24 +221,31 @@
 
             // B. 音声解説形式の自動選択
             if (audioFormat) {
-                const dialogs = document.querySelectorAll('mat-dialog-container, configurable-form-dialog');
+                // 未処理のダイアログを探す
+                const dialogs = document.querySelectorAll('mat-dialog-container:not([data-auto-formatted="true"]), configurable-form-dialog:not([data-auto-formatted="true"])');
                 const audioDialog = Array.from(dialogs).find(d => (d.innerText || '').includes('音声解説をカスタマイズ'));
 
-                if (audioDialog && audioDialog.getAttribute('data-auto-formatted') !== 'true') {
+                if (audioDialog) {
                     const labels = audioDialog.querySelectorAll('.tile-label');
-                    let selected = false;
                     for (const label of labels) {
                         if (label.innerText.trim() === audioFormat) {
-                            // 親の mat-radio-button またはカード全体をクリック
-                            const card = label.closest('.mat-radio-button') || label.closest('mat-radio-button') || label;
-                            card.click();
-                            selected = true;
-                            break;
+                            const radioButton = label.closest('mat-radio-button') || label.closest('.mat-mdc-radio-button') || label.closest('.mat-radio-button');
+                            if (radioButton) {
+                                // 既に選択済みなら完了マークを付けて終了
+                                if (radioButton.classList.contains('mat-mdc-radio-checked') || radioButton.getAttribute('aria-checked') === 'true' || radioButton.classList.contains('mat-radio-checked')) {
+                                    audioDialog.setAttribute('data-auto-formatted', 'true');
+                                    break;
+                                }
+
+                                // クリック対象を特定（視覚的なカード部分 .tile-content または input を優先）
+                                const clickTarget = radioButton.querySelector('.tile-content') || radioButton.querySelector('input') || radioButton;
+                                clickTarget.click();
+
+                                audioDialog.setAttribute('data-auto-formatted', 'true');
+                                console.log(`CueCard: Auto-selected audio format: ${audioFormat}`);
+                                break;
+                            }
                         }
-                    }
-                    if (selected) {
-                        audioDialog.setAttribute('data-auto-formatted', 'true');
-                        console.log(`CueCard: Auto-selected audio format: ${audioFormat}`);
                     }
                 }
             }
