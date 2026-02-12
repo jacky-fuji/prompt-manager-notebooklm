@@ -134,7 +134,12 @@
         <div id="admin-section" class="admin-section">
             <h2 id="admin-title">プロンプトの追加</h2>
             <input type="hidden" id="edit-index" value="-1">
-            <input type="text" id="prompt-title" placeholder="タイトル（例: 銘柄分析）">
+
+            <div style="position: relative;">
+                <input type="text" id="prompt-title" placeholder="タイトル（例: 銘柄分析）" maxlength="10">
+                <div id="title-char-count" style="font-size: 10px; color: #888; text-align: right; margin-top: -4px;">0
+                    / 10</div>
+            </div>
 
             <div class="form-group" style="margin-bottom: 8px;">
                 <label style="font-size: 12px; color: #64748b; margin-bottom: 4px; display: block;">カテゴリ</label>
@@ -152,18 +157,22 @@
                 </select>
             </div>
 
-            <input type="text" id="prompt-tags" placeholder="タグ (カンマ区切り、例: 調査, 分析)">
-
-            <label
-                style="display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer; user-select: none; margin: 4px 0;">
-                <input type="checkbox" id="prompt-favorite" style="width: auto; margin: 0;"> ⭐ お気に入り登録
-            </label>
+            <div style="position: relative;">
+                <input type="text" id="prompt-tags" placeholder="タグ (カンマ区切り、例: 調査, 分析)">
+                <div id="tags-char-count" style="font-size: 10px; color: #888; text-align: right; margin-top: -4px;">0 /
+                    10個</div>
+            </div>
 
             <div style="position: relative;">
                 <textarea id="prompt-text" rows="6" placeholder="プロンプト内容" maxlength="5000"></textarea>
                 <div id="char-count" style="font-size: 10px; color: #888; text-align: right; margin-top: -4px;">0 / 5000
                 </div>
             </div>
+
+            <label
+                style="display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer; user-select: none; margin: 4px 0;">
+                <input type="checkbox" id="prompt-favorite" style="width: auto; margin: 0;"> ⭐ お気に入り登録
+            </label>
 
             <div class="btn-group">
                 <button id="save-btn" class="btn btn-primary">保存</button>

@@ -31,6 +31,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const textInput = document.getElementById('prompt-text');
     const editIndexInput = document.getElementById('edit-index');
     const charCountDisplay = document.getElementById('char-count');
+    const titleCharCountDisplay = document.getElementById('title-char-count');
+    const tagsCharCountDisplay = document.getElementById('tags-char-count');
     const adminTitle = document.getElementById('admin-title');
 
     // フィルター要素
@@ -85,16 +87,45 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateCharCount() {
         if (!textInput) return;
         const length = textInput.value.length;
-        charCountDisplay.innerText = `${length} / 5000`;
-        if (length >= 4500) {
+        charCountDisplay.innerText = `${length} / ${MAX_TEXT_LENGTH}`;
+        if (length >= MAX_TEXT_LENGTH - 500) {
             charCountDisplay.classList.add('warning');
         } else {
             charCountDisplay.classList.remove('warning');
         }
     }
 
+    function updateTitleCharCount() {
+        if (!titleInput) return;
+        const length = titleInput.value.length;
+        titleCharCountDisplay.innerText = `${length} / ${MAX_TITLE_LENGTH}`;
+        if (length >= MAX_TITLE_LENGTH) {
+            titleCharCountDisplay.classList.add('warning');
+        } else {
+            titleCharCountDisplay.classList.remove('warning');
+        }
+    }
+
+    function updateTagsCharCount() {
+        if (!tagsInput) return;
+        const raw = tagsInput.value.trim();
+        const tags = raw ? raw.split(/[,,、\s]+/).filter(t => t.length > 0) : [];
+        tagsCharCountDisplay.innerText = `${tags.length} / ${MAX_TAG_COUNT}個`;
+        if (tags.length >= MAX_TAG_COUNT) {
+            tagsCharCountDisplay.classList.add('warning');
+        } else {
+            tagsCharCountDisplay.classList.remove('warning');
+        }
+    }
+
     if (textInput) {
         textInput.addEventListener('input', updateCharCount);
+    }
+    if (titleInput) {
+        titleInput.addEventListener('input', updateTitleCharCount);
+    }
+    if (tagsInput) {
+        tagsInput.addEventListener('input', updateTagsCharCount);
     }
 
     /**
@@ -330,6 +361,8 @@ document.addEventListener('DOMContentLoaded', () => {
         saveBtn.innerText = '更新';
         adminSection.classList.add('active');
         updateCharCount();
+        updateTitleCharCount();
+        updateTagsCharCount();
         titleInput.focus();
     }
 
@@ -422,6 +455,8 @@ document.addEventListener('DOMContentLoaded', () => {
         adminTitle.innerText = 'プロンプトを追加';
         saveBtn.innerText = '保存';
         updateCharCount();
+        updateTitleCharCount();
+        updateTagsCharCount();
     }
 
     /**
