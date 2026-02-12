@@ -20,6 +20,9 @@
       ]
     }
   ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  },
   "side_panel": {
     "default_path": "sidepanel.html"
   },

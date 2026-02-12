@@ -6,7 +6,10 @@
 
     if (!isContextValid()) return;
 
-    console.log('CueCard for NotebookLM: Content script loaded');
+    const DEBUG = false;
+    const log = (...args) => { if (DEBUG) console.log('[CueCard]', ...args); };
+
+    log('Content script loaded');
 
     let lastFocusedElement = null;
     let autoDeepResearchEnabled = false;
@@ -89,7 +92,8 @@
                 audioFormat = changes.audioFormat.newValue || '';
             }
             if (changes.prompts) {
-                favoritePrompts = changes.prompts.newValue.filter(p => p.isFavorite);
+                const newPrompts = changes.prompts.newValue;
+                favoritePrompts = Array.isArray(newPrompts) ? newPrompts.filter(p => p.isFavorite) : [];
             }
         }
     });
@@ -110,6 +114,7 @@
      * テキスト挿入メッセージの受信
      */
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+        if (sender.id !== chrome.runtime.id) return;
         if (request.action === 'insertText') {
             insertText(request.text);
             sendResponse({ status: 'success' });
@@ -149,7 +154,7 @@
             // lastFocusedElement を更新しておく
             lastFocusedElement = target;
         } catch (err) {
-            console.error('CueCard: Insertion failed', err);
+            if (DEBUG) console.error('[CueCard] Insertion failed', err);
         }
     }
 
@@ -215,7 +220,7 @@
                 if (deepBtn && deepBtn.getAttribute('data-auto-clicked') !== 'true') {
                     deepBtn.setAttribute('data-auto-clicked', 'true');
                     deepBtn.click();
-                    console.log('CueCard: Auto-selected Deep Research (Fast).');
+                    log('Auto-selected Deep Research (Fast).');
                 }
             }
 
@@ -242,7 +247,7 @@
                                 clickTarget.click();
 
                                 audioDialog.setAttribute('data-auto-formatted', 'true');
-                                console.log(`CueCard: Auto-selected audio format: ${audioFormat}`);
+                                log(`Auto-selected audio format: ${audioFormat}`);
                                 break;
                             }
                         }
@@ -290,7 +295,7 @@
                         label.style.flexWrap = 'wrap';
                         label.style.gap = '8px';
                         label.appendChild(favButtons);
-                        console.log(`CueCard: Injected ${category} buttons based on strict label match: "${text.substring(0, 15)}..."`);
+                        log(`Injected ${category} buttons based on strict label match: "${text.substring(0, 15)}..."`);
                     }
                 }
             });
@@ -308,7 +313,7 @@
                         parent.style.alignItems = 'flex-start';
 
                         parent.appendChild(favButtons);
-                        console.log('CueCard: Injected research favorite buttons to an .actions-options container.');
+                        log('Injected research favorite buttons to an .actions-options container.');
                     }
                 }
             });
@@ -343,7 +348,7 @@
                             isProcessing = true;
                             btn.setAttribute('data-auto-opened', 'true');
                             btn.click();
-                            console.log('CueCard: Auto-opening web research menu...');
+                            log('Auto-opening web research menu...');
                             setTimeout(() => { isProcessing = false; }, 100);
                             break;
                         }
