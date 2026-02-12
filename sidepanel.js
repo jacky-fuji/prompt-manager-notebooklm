@@ -293,12 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
         title.innerText = prompt.title;
         titleContainer.appendChild(title);
 
-        const preview = document.createElement('span');
-        preview.className = 'cue-item-text';
-        preview.innerText = prompt.text;
-
         item.appendChild(titleContainer);
-        item.appendChild(preview);
 
         // タグ表示
         if (prompt.tags && prompt.tags.length > 0) {
