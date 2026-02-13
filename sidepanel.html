@@ -195,7 +195,10 @@
             </div>
 
             <div style="position: relative;">
-                <input type="text" id="prompt-tags" placeholder="タグ (カンマ区切り、例: 調査, 分析)">
+                <div id="tags-input-container" class="tags-input-container">
+                    <input type="text" id="prompt-tags-input" placeholder="タグ (Enterで追加)">
+                </div>
+                <input type="hidden" id="prompt-tags">
                 <div id="tags-char-count" class="char-counter">0 / 10個</div>
             </div>
 

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "CueCard for NotebookLM",
-  "version": "1.0",
+  "version": "1.0.0",
   "description": "NotebookLM専用のプロンプト入力支援ツール (サイドパネル版)",
   "permissions": [
     "storage",

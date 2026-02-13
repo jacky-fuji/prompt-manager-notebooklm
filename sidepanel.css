@@ -301,6 +301,60 @@ textarea {
     border-radius: 4px;
 }
 
+.tags-input-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    background-color: white;
+    cursor: text;
+    transition: border-color 0.2s;
+}
+
+.tags-input-container:focus-within {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.tags-input-container input {
+    border: none;
+    outline: none;
+    padding: 4px 0;
+    margin: 0;
+    flex: 1;
+    min-width: 60px;
+    background: transparent;
+    font-size: 13px;
+}
+
+.tag-chip-input {
+    background: #e2e8f0;
+    color: #475569;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.tag-chip-input .remove-btn {
+    cursor: pointer;
+    font-weight: bold;
+    color: #94a3b8;
+    font-size: 14px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+}
+
+.tag-chip-input .remove-btn:hover {
+    color: #ef4444;
+}
+
 /* スイッチ型トグル */
 .switch {
     position: relative;

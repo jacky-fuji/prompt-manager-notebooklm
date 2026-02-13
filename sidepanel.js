@@ -24,7 +24,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // フォーム入力
     const titleInput = document.getElementById('prompt-title');
     const categoryInput = document.getElementById('prompt-category');
-    const tagsInput = document.getElementById('prompt-tags');
+    const tagsInputContainer = document.getElementById('tags-input-container');
+    const tagsInputElement = document.getElementById('prompt-tags-input');
+    const tagsHiddenInput = document.getElementById('prompt-tags');
+    let currentInputTags = [];
     const favoriteInput = document.getElementById('prompt-favorite');
     const textInput = document.getElementById('prompt-text');
     const editIndexInput = document.getElementById('edit-index');
@@ -118,11 +121,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateTagsCharCount() {
-        if (!tagsInput) return;
-        const raw = tagsInput.value.trim();
-        const tags = raw ? raw.split(/[,,、\s]+/).filter(t => t.length > 0) : [];
-        tagsCharCountDisplay.innerText = `${tags.length} / ${MAX_TAG_COUNT}個`;
-        if (tags.length >= MAX_TAG_COUNT) {
+        const count = currentInputTags.length;
+        tagsCharCountDisplay.innerText = `${count} / ${MAX_TAG_COUNT}個`;
+        if (count >= MAX_TAG_COUNT) {
             tagsCharCountDisplay.classList.add('warning');
         } else {
             tagsCharCountDisplay.classList.remove('warning');
@@ -135,8 +136,86 @@ document.addEventListener('DOMContentLoaded', () => {
     if (titleInput) {
         titleInput.addEventListener('input', updateTitleCharCount);
     }
-    if (tagsInput) {
-        tagsInput.addEventListener('input', updateTagsCharCount);
+
+    // タグ入力ロジック
+    if (tagsInputElement) {
+        // コンテナクリックで入力にフォーカス
+        tagsInputContainer.addEventListener('click', () => {
+            tagsInputElement.focus();
+        });
+
+        tagsInputElement.addEventListener('keydown', (e) => {
+            if (e.isComposing) return; // IME変換中は無視
+
+            if (e.key === 'Enter' || e.key === ',') {
+                e.preventDefault();
+                addTagFromInput();
+            } else if (e.key === 'Backspace' && tagsInputElement.value === '' && currentInputTags.length > 0) {
+                currentInputTags.pop();
+                renderInputTags();
+                updateTagsCharCount();
+            }
+        });
+
+        tagsInputElement.addEventListener('blur', () => {
+            addTagFromInput();
+        });
+    }
+
+    function addTagFromInput() {
+        const val = tagsInputElement.value.trim().replace(/,/g, '');
+        if (val) {
+            if (currentInputTags.length >= MAX_TAG_COUNT) {
+                // 最大個数制限
+                showValidationError(tagsInputContainer, `タグは${MAX_TAG_COUNT}個までです。`);
+                tagsInputElement.value = '';
+                return;
+            }
+            if (val.length > MAX_TAG_LENGTH) {
+                showValidationError(tagsInputContainer, `タグは${MAX_TAG_LENGTH}文字以内で入力してください。`);
+                return;
+            }
+            // 重複チェック（オプション）
+            if (!currentInputTags.includes(val)) {
+                currentInputTags.push(val);
+                renderInputTags();
+                updateTagsCharCount();
+            }
+            tagsInputElement.value = '';
+            clearValidationErrors(); // エラーがあれば消す
+        }
+    }
+
+    function renderInputTags() {
+        // 既存のチップを削除（input以外）
+        const chips = tagsInputContainer.querySelectorAll('.tag-chip-input');
+        chips.forEach(c => c.remove());
+
+        // チップを再生成してinputの前に挿入
+        currentInputTags.forEach((tag, index) => {
+            const chip = document.createElement('div');
+            chip.className = 'tag-chip-input';
+
+            const span = document.createElement('span');
+            span.innerText = tag;
+            chip.appendChild(span);
+
+            const removeBtn = document.createElement('span');
+            removeBtn.className = 'remove-btn';
+            removeBtn.innerHTML = '&times;';
+            removeBtn.onclick = (e) => {
+                e.stopPropagation();
+                currentInputTags.splice(index, 1);
+                renderInputTags();
+                updateTagsCharCount();
+            };
+            chip.appendChild(removeBtn);
+
+            tagsInputContainer.insertBefore(chip, tagsInputElement);
+        });
+
+        // 隠しフィールド更新
+        tagsHiddenInput.value = currentInputTags.join(',');
     }
 
     /**
@@ -357,7 +436,9 @@ document.addEventListener('DOMContentLoaded', () => {
         editIndexInput.value = index;
         titleInput.value = prompt.title;
         categoryInput.value = prompt.category || 'research';
-        tagsInput.value = prompt.tags ? prompt.tags.join(', ') : '';
+        tagsHiddenInput.value = prompt.tags ? prompt.tags.join(',') : '';
+        currentInputTags = prompt.tags ? [...prompt.tags] : [];
+        renderInputTags();
         favoriteInput.checked = !!prompt.isFavorite;
         textInput.value = prompt.text;
         adminTitle.innerText = 'プロンプトを編集';
@@ -396,7 +477,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const title = titleInput.value.trim();
         const category = categoryInput.value;
         const text = textInput.value.trim();
-        const tagsRaw = tagsInput.value.trim();
+        const tags = currentInputTags;
         const isFavorite = favoriteInput.checked;
         const editIndex = parseInt(editIndexInput.value);
 
@@ -423,12 +504,12 @@ document.addEventListener('DOMContentLoaded', () => {
             hasError = true;
         }
 
-        const tags = tagsRaw ? tagsRaw.split(/[,,、\s]+/).filter(t => t.length > 0) : [];
+        // const tags = tagsRaw ? tagsRaw.split(/[,,、\s]+/).filter(t => t.length > 0) : [];
         if (tags.length > MAX_TAG_COUNT) {
-            showValidationError(tagsInput, `タグは${MAX_TAG_COUNT}個以内で設定してください。`);
+            showValidationError(tagsInputContainer, `タグは${MAX_TAG_COUNT}個以内で設定してください。`);
             hasError = true;
         } else if (tags.some(t => t.length > MAX_TAG_LENGTH)) {
-            showValidationError(tagsInput, `各タグは${MAX_TAG_LENGTH}文字以内で入力してください。`);
+            showValidationError(tagsInputContainer, `各タグは${MAX_TAG_LENGTH}文字以内で入力してください。`);
             hasError = true;
         }
 
@@ -465,7 +546,12 @@ document.addEventListener('DOMContentLoaded', () => {
         editIndexInput.value = -1;
         titleInput.value = '';
         categoryInput.value = 'research';
-        tagsInput.value = '';
+
+        tagsInputElement.value = '';
+        tagsHiddenInput.value = '';
+        currentInputTags = [];
+        renderInputTags();
+
         favoriteInput.checked = false;
         textInput.value = '';
         adminTitle.innerText = 'プロンプトの追加';
