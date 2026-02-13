@@ -41,6 +41,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const autoDeepResearchInput = document.getElementById('setting-auto-deep-research');
     const audioFormatInput = document.getElementById('setting-audio-format');
 
+    // カスタムモーダル要素
+    const confirmModal = document.getElementById('custom-confirm-modal');
+    const confirmMessage = document.getElementById('confirm-message');
+    const confirmYesBtn = document.getElementById('confirm-yes-btn');
+    const confirmNoBtn = document.getElementById('confirm-no-btn');
+    let pendingDeleteIndex = -1;
+
     // バリデーション定数
     const VALID_CATEGORIES = ['research', 'audio', 'video', 'report', 'flashcard', 'quiz', 'infographic', 'slide', 'datatable'];
     const MAX_TITLE_LENGTH = 10;
@@ -322,7 +329,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const deleteBtn = document.createElement('button');
         deleteBtn.className = 'btn-delete';
         deleteBtn.innerText = '🗑️';
-        deleteBtn.onclick = (e) => { e.stopPropagation(); deletePrompt(index); };
+        deleteBtn.onclick = (e) => { e.stopPropagation(); deletePrompt(index, prompt.title); };
 
         actions.appendChild(starToggleBtn);
         actions.appendChild(editBtn);
@@ -471,14 +478,42 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function deletePrompt(index) {
-        if (!confirm('削除しますか？')) return;
-        chrome.storage.local.get(['prompts'], (result) => {
-            const prompts = result.prompts || [];
-            prompts.splice(index, 1);
-            chrome.storage.local.set({ prompts: prompts }, loadAndRenderPrompts);
-        });
+    function deletePrompt(index, title) {
+        pendingDeleteIndex = index;
+        confirmMessage.innerText = `${title}のプロンプトを削除しますか？`;
+        confirmModal.classList.add('active');
     }
+
+    if (confirmYesBtn) {
+        confirmYesBtn.onclick = () => {
+            if (pendingDeleteIndex >= 0) {
+                chrome.storage.local.get(['prompts'], (result) => {
+                    const prompts = result.prompts || [];
+                    prompts.splice(pendingDeleteIndex, 1);
+                    chrome.storage.local.set({ prompts: prompts }, () => {
+                        confirmModal.classList.remove('active');
+                        pendingDeleteIndex = -1;
+                        loadAndRenderPrompts();
+                    });
+                });
+            }
+        };
+    }
+
+    if (confirmNoBtn) {
+        confirmNoBtn.onclick = () => {
+            confirmModal.classList.remove('active');
+            pendingDeleteIndex = -1;
+        };
+    }
+
+    // モーダルの外側をクリックして閉じる
+    window.onclick = (event) => {
+        if (event.target === confirmModal) {
+            confirmModal.classList.remove('active');
+            pendingDeleteIndex = -1;
+        }
+    };
 
     function sendToContentScript(text) {
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
