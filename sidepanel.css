@@ -154,46 +154,46 @@ textarea {
 
 .btn-favorite-toggle {
     background: transparent;
-    border: 1px solid #e2e8f0;
-    font-size: 14px;
-    padding: 2px 6px;
+    border: none;
+    font-size: 15px;
+    padding: 4px;
     border-radius: 4px;
     cursor: pointer;
+    transition: background 0.2s;
 }
 
 .btn-favorite-toggle:hover {
-    background: #f8fafc;
-    border-color: #cbd5e1;
+    background: #f1f5f9;
 }
 
 .btn-edit {
-    background: white;
-    border: 1px solid #10b981;
-    color: #10b981;
-    padding: 2px 6px;
+    background: transparent;
+    border: none;
+    padding: 4px;
     border-radius: 4px;
-    font-size: 11px;
+    font-size: 13px;
     cursor: pointer;
+    transition: background 0.2s;
 }
 
 .btn-delete {
-    background: white;
-    border: 1px solid #ef4444;
-    color: #ef4444;
-    padding: 2px 6px;
+    background: transparent;
+    border: none;
+    padding: 4px;
     border-radius: 4px;
-    font-size: 11px;
+    font-size: 13px;
     cursor: pointer;
+    transition: background 0.2s;
 }
 
 .btn-edit:hover {
-    background: #10b981;
-    color: white;
+    background: #dcfce7;
+    /* Light green */
 }
 
 .btn-delete:hover {
-    background: #ef4444;
-    color: white;
+    background: #fee2e2;
+    /* Light red */
 }
 
 /* 検索・タグ */
