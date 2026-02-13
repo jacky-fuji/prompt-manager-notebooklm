@@ -72,6 +72,7 @@ body {
 .cue-item-title {
     font-weight: 600;
     font-size: 13px;
+    line-height: 1.2;
     display: -webkit-box;
     -webkit-line-clamp: 1;
     line-clamp: 1;
@@ -152,10 +153,11 @@ textarea {
 /* 操作ボタン */
 .item-actions {
     display: flex;
-    gap: 4px;
+    gap: 2px;
     align-items: center;
     flex-shrink: 0;
-    /* ボタンが潰れないように */
+    transform: translateY(-3px);
+    /* 3px上に調整 */
 }
 
 .btn-favorite-toggle {
