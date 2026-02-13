@@ -316,12 +316,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const editBtn = document.createElement('button');
         editBtn.className = 'btn-edit';
-        editBtn.innerText = '編集';
+        editBtn.innerText = '✏️';
         editBtn.onclick = (e) => { e.stopPropagation(); enterEditMode(index, prompt); };
 
         const deleteBtn = document.createElement('button');
         deleteBtn.className = 'btn-delete';
-        deleteBtn.innerText = '削除';
+        deleteBtn.innerText = '🗑️';
         deleteBtn.onclick = (e) => { e.stopPropagation(); deletePrompt(index); };
 
         actions.appendChild(starToggleBtn);
