@@ -46,14 +46,13 @@ body {
     background: white;
     border: 1px solid #e2e8f0;
     border-radius: 10px;
-    padding: 8px 12px;
+    padding: 10px 12px;
     cursor: pointer;
     transition: all 0.2s;
-    position: relative;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    gap: 4px;
 }
 
 .cue-item:hover {
@@ -62,18 +61,25 @@ body {
     transform: translateY(-1px);
 }
 
+.cue-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* 垂直方向の中央揃え */
+    gap: 8px;
+}
+
 .cue-item-title {
     font-weight: 600;
     font-size: 13px;
-    margin-bottom: 4px;
     display: -webkit-box;
     -webkit-line-clamp: 1;
     line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
     color: #334155;
-    padding-right: 65px;
-    /* 操作ボタンとの重なり防止 */
+    flex: 1;
+    /* タイトルを可能な限り広げる */
 }
 
 /* フォームセクション */
@@ -147,9 +153,9 @@ textarea {
 .item-actions {
     display: flex;
     gap: 4px;
-    position: absolute;
-    top: 8px;
-    right: 8px;
+    align-items: center;
+    flex-shrink: 0;
+    /* ボタンが潰れないように */
 }
 
 .btn-favorite-toggle {

@@ -288,29 +288,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const item = document.createElement('div');
         item.className = `cue-item ${prompt.isFavorite ? 'is-favorite' : ''}`;
 
-        const titleContainer = document.createElement('div');
-        titleContainer.style.display = 'flex';
-        titleContainer.style.alignItems = 'center';
+        const header = document.createElement('div');
+        header.className = 'cue-item-header';
 
         const title = document.createElement('span');
         title.className = 'cue-item-title';
         title.innerText = prompt.title;
-        titleContainer.appendChild(title);
-
-        item.appendChild(titleContainer);
-
-        // タグ表示
-        if (prompt.tags && prompt.tags.length > 0) {
-            const tagList = document.createElement('div');
-            tagList.className = 'cue-tags';
-            prompt.tags.forEach(t => {
-                const tagLabel = document.createElement('span');
-                tagLabel.className = 'tag-label';
-                tagLabel.innerText = t;
-                tagList.appendChild(tagLabel);
-            });
-            item.appendChild(tagList);
-        }
+        header.appendChild(title);
 
         // 操作ボタン（常時表示）
         const actions = document.createElement('div');
@@ -334,7 +318,24 @@ document.addEventListener('DOMContentLoaded', () => {
         actions.appendChild(starToggleBtn);
         actions.appendChild(editBtn);
         actions.appendChild(deleteBtn);
-        item.appendChild(actions);
+        header.appendChild(actions);
+
+        item.appendChild(header);
+
+        // タグ表示
+        if (prompt.tags && prompt.tags.length > 0) {
+            const tagList = document.createElement('div');
+            tagList.className = 'cue-tags';
+            prompt.tags.forEach(t => {
+                const tagLabel = document.createElement('span');
+                tagLabel.className = 'tag-label';
+                tagLabel.innerText = t;
+                tagList.appendChild(tagLabel);
+            });
+            item.appendChild(tagList);
+        }
+
+
 
         item.onclick = () => {
             sendToContentScript(prompt.text);
