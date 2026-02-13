@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const confirmMessage = document.getElementById('confirm-message');
     const confirmYesBtn = document.getElementById('confirm-yes-btn');
     const confirmNoBtn = document.getElementById('confirm-no-btn');
-    let pendingDeleteIndex = -1;
+    let onConfirmAction = null;
 
     // バリデーション定数
     const VALID_CATEGORIES = ['research', 'audio', 'video', 'report', 'flashcard', 'quiz', 'infographic', 'slide', 'datatable'];
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const MAX_PROMPTS_PER_CATEGORY = 20;
 
     // フィルタリング状態
-    let currentTag = null;
+    const selectedTags = new Set();
     let searchQuery = '';
 
     // 初期プロンプトデータ
@@ -205,20 +205,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
         while (tagCloud.firstChild) tagCloud.removeChild(tagCloud.firstChild);
         const allBtn = document.createElement('button');
-        allBtn.className = `tag-chip ${currentTag === null ? 'active' : ''}`;
+        allBtn.className = `tag-chip ${selectedTags.size === 0 ? 'active' : ''}`;
         allBtn.innerText = 'すべて';
         allBtn.onclick = () => {
-            currentTag = null;
+            selectedTags.clear();
             loadAndRenderPrompts();
         };
         tagCloud.appendChild(allBtn);
 
         [...allTags].sort().forEach(tag => {
             const btn = document.createElement('button');
-            btn.className = `tag-chip ${currentTag === tag ? 'active' : ''}`;
+            btn.className = `tag-chip ${selectedTags.has(tag) ? 'active' : ''}`;
             btn.innerText = tag;
             btn.onclick = () => {
-                currentTag = (currentTag === tag) ? null : tag;
+                if (selectedTags.has(tag)) {
+                    selectedTags.delete(tag);
+                } else {
+                    selectedTags.add(tag);
+                }
                 loadAndRenderPrompts();
             };
             tagCloud.appendChild(btn);
@@ -236,7 +240,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // フィルタリング
         let filtered = prompts.filter(p => {
-            const matchesTag = !currentTag || (p.tags && p.tags.includes(currentTag));
+            // AND検索: 選択されたすべてのタグを持っているか
+            const matchesTag = selectedTags.size === 0 ||
+                (p.tags && Array.from(selectedTags).every(t => p.tags.includes(t)));
             const matchesSearch = !searchQuery ||
                 p.title.toLowerCase().includes(searchQuery) ||
                 p.text.toLowerCase().includes(searchQuery) ||
@@ -269,7 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             // プロンプトがない場合は「なし」を表示
-            if (catPrompts.length === 0 && !searchQuery && !currentTag) {
+            if (catPrompts.length === 0 && !searchQuery && selectedTags.size === 0) {
                 const empty = document.createElement('div');
                 empty.style.padding = '8px';
                 empty.style.fontSize = '12px';
@@ -368,74 +374,90 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     if (saveBtn) {
         saveBtn.onclick = () => {
-            clearValidationErrors();
+            const isUpdate = parseInt(editIndexInput.value) >= 0;
+            const message = isUpdate ? '変更を保存しますか？' : 'プロンプトを保存しますか？';
 
-            const title = titleInput.value.trim();
-            const category = categoryInput.value;
-            const text = textInput.value.trim();
-            const tagsRaw = tagsInput.value.trim();
-            const isFavorite = favoriteInput.checked;
-            const editIndex = parseInt(editIndexInput.value);
-
-            let hasError = false;
-
-            if (!title) {
-                showValidationError(titleInput, 'タイトルを入力してください。');
-                hasError = true;
-            } else if (title.length > MAX_TITLE_LENGTH) {
-                showValidationError(titleInput, `タイトルは${MAX_TITLE_LENGTH}文字以内で入力してください。`);
-                hasError = true;
+            // バリデーションチェック（簡易）
+            if (!titleInput.value.trim() || !textInput.value.trim()) {
+                // エラー表示のため、バリデーションロジックだけ実行させる
+                executeSave();
+                return;
             }
 
-            if (!text) {
-                showValidationError(textInput, 'プロンプト内容を入力してください。');
-                hasError = true;
-            } else if (text.length > MAX_TEXT_LENGTH) {
-                showValidationError(textInput, `プロンプト内容は${MAX_TEXT_LENGTH}文字以内で入力してください。`);
-                hasError = true;
-            }
-
-            if (!VALID_CATEGORIES.includes(category)) {
-                showValidationError(categoryInput, '無効なカテゴリです。');
-                hasError = true;
-            }
-
-            const tags = tagsRaw ? tagsRaw.split(/[,,、\s]+/).filter(t => t.length > 0) : [];
-            if (tags.length > MAX_TAG_COUNT) {
-                showValidationError(tagsInput, `タグは${MAX_TAG_COUNT}個以内で設定してください。`);
-                hasError = true;
-            } else if (tags.some(t => t.length > MAX_TAG_LENGTH)) {
-                showValidationError(tagsInput, `各タグは${MAX_TAG_LENGTH}文字以内で入力してください。`);
-                hasError = true;
-            }
-
-            if (hasError) return;
-
-            chrome.storage.local.get(['prompts'], (result) => {
-                const prompts = Array.isArray(result.prompts) ? result.prompts : [];
-                const newPrompt = { title, category, tags, text, isFavorite };
-
-                // カテゴリ別の件数上限チェック（新規追加時のみ）
-                if (editIndex < 0) {
-                    const catCount = prompts.filter(p => (p.category || 'research') === category).length;
-                    if (catCount >= MAX_PROMPTS_PER_CATEGORY) {
-                        showValidationError(categoryInput, `このカテゴリには最大${MAX_PROMPTS_PER_CATEGORY}件まで登録できます。`);
-                        return;
-                    }
-                }
-
-                if (editIndex >= 0) {
-                    prompts[editIndex] = newPrompt;
-                } else {
-                    prompts.push(newPrompt);
-                }
-
-                chrome.storage.local.set({ prompts: prompts }, () => {
-                    resetForm();
-                    loadAndRenderPrompts();
-                });
+            showConfirmModal(message, 'はい', 'キャンセル', () => {
+                executeSave();
             });
         };
+    }
+
+    function executeSave() {
+        clearValidationErrors();
+
+        const title = titleInput.value.trim();
+        const category = categoryInput.value;
+        const text = textInput.value.trim();
+        const tagsRaw = tagsInput.value.trim();
+        const isFavorite = favoriteInput.checked;
+        const editIndex = parseInt(editIndexInput.value);
+
+        let hasError = false;
+
+        if (!title) {
+            showValidationError(titleInput, 'タイトルを入力してください。');
+            hasError = true;
+        } else if (title.length > MAX_TITLE_LENGTH) {
+            showValidationError(titleInput, `タイトルは${MAX_TITLE_LENGTH}文字以内で入力してください。`);
+            hasError = true;
+        }
+
+        if (!text) {
+            showValidationError(textInput, 'プロンプト内容を入力してください。');
+            hasError = true;
+        } else if (text.length > MAX_TEXT_LENGTH) {
+            showValidationError(textInput, `プロンプト内容は${MAX_TEXT_LENGTH}文字以内で入力してください。`);
+            hasError = true;
+        }
+
+        if (!VALID_CATEGORIES.includes(category)) {
+            showValidationError(categoryInput, '無効なカテゴリです。');
+            hasError = true;
+        }
+
+        const tags = tagsRaw ? tagsRaw.split(/[,,、\s]+/).filter(t => t.length > 0) : [];
+        if (tags.length > MAX_TAG_COUNT) {
+            showValidationError(tagsInput, `タグは${MAX_TAG_COUNT}個以内で設定してください。`);
+            hasError = true;
+        } else if (tags.some(t => t.length > MAX_TAG_LENGTH)) {
+            showValidationError(tagsInput, `各タグは${MAX_TAG_LENGTH}文字以内で入力してください。`);
+            hasError = true;
+        }
+
+        if (hasError) return;
+
+        chrome.storage.local.get(['prompts'], (result) => {
+            const prompts = Array.isArray(result.prompts) ? result.prompts : [];
+            const newPrompt = { title, category, tags, text, isFavorite };
+
+            // カテゴリ別の件数上限チェック（新規追加時のみ）
+            if (editIndex < 0) {
+                const catCount = prompts.filter(p => (p.category || 'research') === category).length;
+                if (catCount >= MAX_PROMPTS_PER_CATEGORY) {
+                    showValidationError(categoryInput, `このカテゴリには最大${MAX_PROMPTS_PER_CATEGORY}件まで登録できます。`);
+                    return;
+                }
+            }
+
+            if (editIndex >= 0) {
+                prompts[editIndex] = newPrompt;
+            } else {
+                prompts.push(newPrompt);
+            }
+
+            chrome.storage.local.set({ prompts: prompts }, () => {
+                resetForm();
+                loadAndRenderPrompts();
+            });
+        });
     }
 
     function resetForm() {
@@ -480,39 +502,47 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function deletePrompt(index, title) {
-        pendingDeleteIndex = index;
-        confirmMessage.innerText = `${title}のプロンプトを削除しますか？`;
+        showConfirmModal(`${title}のプロンプトを削除しますか？`, '削除', 'キャンセル', () => {
+            chrome.storage.local.get(['prompts'], (result) => {
+                const prompts = result.prompts || [];
+                prompts.splice(index, 1);
+                chrome.storage.local.set({ prompts: prompts }, () => {
+                    loadAndRenderPrompts();
+                });
+            });
+        });
+    }
+
+    function showConfirmModal(message, yesLabel, noLabel, onConfirm) {
+        confirmMessage.innerText = message;
+        confirmYesBtn.innerText = yesLabel;
+        confirmNoBtn.innerText = noLabel;
+        onConfirmAction = onConfirm;
         confirmModal.classList.add('active');
     }
 
     if (confirmYesBtn) {
         confirmYesBtn.onclick = () => {
-            if (pendingDeleteIndex >= 0) {
-                chrome.storage.local.get(['prompts'], (result) => {
-                    const prompts = result.prompts || [];
-                    prompts.splice(pendingDeleteIndex, 1);
-                    chrome.storage.local.set({ prompts: prompts }, () => {
-                        confirmModal.classList.remove('active');
-                        pendingDeleteIndex = -1;
-                        loadAndRenderPrompts();
-                    });
-                });
+            if (onConfirmAction) {
+                onConfirmAction();
             }
+            closeModal();
         };
     }
 
     if (confirmNoBtn) {
-        confirmNoBtn.onclick = () => {
-            confirmModal.classList.remove('active');
-            pendingDeleteIndex = -1;
-        };
+        confirmNoBtn.onclick = closeModal;
+    }
+
+    function closeModal() {
+        confirmModal.classList.remove('active');
+        onConfirmAction = null;
     }
 
     // モーダルの外側をクリックして閉じる
     window.onclick = (event) => {
         if (event.target === confirmModal) {
-            confirmModal.classList.remove('active');
-            pendingDeleteIndex = -1;
+            closeModal();
         }
     };
 
@@ -528,7 +558,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (cancelBtn) {
         cancelBtn.onclick = () => {
-            resetForm();
+            // 入力が空なら確認せずにリセット
+            if (!titleInput.value.trim() && !textInput.value.trim() && parseInt(editIndexInput.value) === -1) {
+                resetForm();
+                return;
+            }
+            showConfirmModal('編集を取り消しますか？', 'はい', 'いいえ', () => {
+                resetForm();
+            });
         };
     }
 
