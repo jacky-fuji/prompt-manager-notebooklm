@@ -10,12 +10,6 @@
     <div class="container">
         <header class="header">
             <h1>CueCard for NotebookLM</h1>
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <a href="#" id="scroll-to-admin-btn"
-                    style="display: none; font-size: 11px; color: #6366f1; text-decoration: none; font-weight: 600; white-space: nowrap;">＋
-                    プロンプトを追加</a>
-                <button id="admin-mode-btn" class="mode-toggle">管理モード</button>
-            </div>
         </header>
 
         <!-- 共通コントロールエリア -->
@@ -28,13 +22,16 @@
             </div>
         </div>
 
-        <!-- 挿入モード (カテゴリ別アコーディオン) -->
+        <!-- カテゴリ別アコーディオン -->
         <div id="select-section">
             <div id="prompt-list-container">
                 <section class="category-section" data-category="research">
                     <div class="category-header" id="header-research">
-                        <span class="arrow">▼</span>
-                        <span class="title">リサーチ (Research)</span>
+                        <div class="category-header-left">
+                            <span class="arrow">▼</span>
+                            <span class="title">リサーチ (Research)</span>
+                        </div>
+                        <button class="btn-add-category" data-category="research" title="リサーチにプロンプトを追加">＋</button>
                     </div>
                     <div class="category-content">
                         <div class="settings-panel" style="margin-bottom: 8px;">
@@ -52,8 +49,11 @@
 
                 <section class="category-section" data-category="audio">
                     <div class="category-header" id="header-audio">
-                        <span class="arrow">▼</span>
-                        <span class="title">音声解説 (Audio Commentary)</span>
+                        <div class="category-header-left">
+                            <span class="arrow">▼</span>
+                            <span class="title">音声解説 (Audio Commentary)</span>
+                        </div>
+                        <button class="btn-add-category" data-category="audio" title="音声解説にプロンプトを追加">＋</button>
                     </div>
                     <div class="category-content">
                         <div class="settings-panel" style="margin-bottom: 8px;">
@@ -74,8 +74,11 @@
 
                 <section class="category-section" data-category="video">
                     <div class="category-header" id="header-video">
-                        <span class="arrow">▼</span>
-                        <span class="title">動画解説 (Video Commentary)</span>
+                        <div class="category-header-left">
+                            <span class="arrow">▼</span>
+                            <span class="title">動画解説 (Video Commentary)</span>
+                        </div>
+                        <button class="btn-add-category" data-category="video" title="動画解説にプロンプトを追加">＋</button>
                     </div>
                     <div class="category-content">
                         <div class="cue-list" id="list-video"></div>
@@ -84,8 +87,11 @@
 
                 <section class="category-section" data-category="report">
                     <div class="category-header" id="header-report">
-                        <span class="arrow">▼</span>
-                        <span class="title">レポート</span>
+                        <div class="category-header-left">
+                            <span class="arrow">▼</span>
+                            <span class="title">レポート</span>
+                        </div>
+                        <button class="btn-add-category" data-category="report" title="レポートにプロンプトを追加">＋</button>
                     </div>
                     <div class="category-content">
                         <div class="cue-list" id="list-report"></div>
@@ -94,8 +100,11 @@
 
                 <section class="category-section" data-category="flashcard">
                     <div class="category-header" id="header-flashcard">
-                        <span class="arrow">▼</span>
-                        <span class="title">フラッシュカード</span>
+                        <div class="category-header-left">
+                            <span class="arrow">▼</span>
+                            <span class="title">フラッシュカード</span>
+                        </div>
+                        <button class="btn-add-category" data-category="flashcard" title="フラッシュカードにプロンプトを追加">＋</button>
                     </div>
                     <div class="category-content">
                         <div class="cue-list" id="list-flashcard"></div>
@@ -104,8 +113,11 @@
 
                 <section class="category-section" data-category="quiz">
                     <div class="category-header" id="header-quiz">
-                        <span class="arrow">▼</span>
-                        <span class="title">クイズ</span>
+                        <div class="category-header-left">
+                            <span class="arrow">▼</span>
+                            <span class="title">クイズ</span>
+                        </div>
+                        <button class="btn-add-category" data-category="quiz" title="クイズにプロンプトを追加">＋</button>
                     </div>
                     <div class="category-content">
                         <div class="cue-list" id="list-quiz"></div>
@@ -114,8 +126,12 @@
 
                 <section class="category-section" data-category="infographic">
                     <div class="category-header" id="header-infographic">
-                        <span class="arrow">▼</span>
-                        <span class="title">インフォグラフィック</span>
+                        <div class="category-header-left">
+                            <span class="arrow">▼</span>
+                            <span class="title">インフォグラフィック</span>
+                        </div>
+                        <button class="btn-add-category" data-category="infographic"
+                            title="インフォグラフィックにプロンプトを追加">＋</button>
                     </div>
                     <div class="category-content">
                         <div class="cue-list" id="list-infographic"></div>
@@ -124,8 +140,11 @@
 
                 <section class="category-section" data-category="slide">
                     <div class="category-header" id="header-slide">
-                        <span class="arrow">▼</span>
-                        <span class="title">スライド資料</span>
+                        <div class="category-header-left">
+                            <span class="arrow">▼</span>
+                            <span class="title">スライド資料</span>
+                        </div>
+                        <button class="btn-add-category" data-category="slide" title="スライド資料にプロンプトを追加">＋</button>
                     </div>
                     <div class="category-content">
                         <div class="cue-list" id="list-slide"></div>
@@ -134,8 +153,12 @@
 
                 <section class="category-section" data-category="datatable">
                     <div class="category-header" id="header-datatable">
-                        <span class="arrow">▼</span>
-                        <span class="title">Data Table</span>
+                        <div class="category-header-left">
+                            <span class="arrow">▼</span>
+                            <span class="title">Data Table</span>
+                        </div>
+                        <button class="btn-add-category" data-category="datatable"
+                            title="Data Tableにプロンプトを追加">＋</button>
                     </div>
                     <div class="category-content">
                         <div class="cue-list" id="list-datatable"></div>
@@ -144,7 +167,7 @@
             </div>
         </div>
 
-        <!-- 管理モード (モーダル風) -->
+        <!-- プロンプトの追加・編集フォーム（常時表示） -->
         <div id="admin-section" class="admin-section">
             <h2 id="admin-title">プロンプトの追加</h2>
             <input type="hidden" id="edit-index" value="-1">
@@ -190,7 +213,7 @@
 
             <div class="btn-group">
                 <button id="save-btn" class="btn btn-primary">保存</button>
-                <button id="cancel-btn" class="btn btn-secondary">キャンセル</button>
+                <button id="cancel-btn" class="btn btn-secondary">クリア</button>
             </div>
         </div>
     </div>

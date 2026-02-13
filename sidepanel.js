@@ -1,5 +1,5 @@
 /**
- * CueCard for NotebookLM: ポップアップ管理ロジック
+ * CueCard for NotebookLM: サイドパネル管理ロジック
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -18,10 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // ボタン
-    const adminModeBtn = document.getElementById('admin-mode-btn');
     const saveBtn = document.getElementById('save-btn');
     const cancelBtn = document.getElementById('cancel-btn');
-    const scrollToAdminBtn = document.getElementById('scroll-to-admin-btn');
 
     // フォーム入力
     const titleInput = document.getElementById('prompt-title');
@@ -66,20 +64,26 @@ document.addEventListener('DOMContentLoaded', () => {
      * アコーディオンの開閉制御
      */
     document.querySelectorAll('.category-header').forEach(header => {
-        header.addEventListener('click', () => {
+        header.addEventListener('click', (e) => {
+            // ＋ボタンのクリックはアコーディオン開閉しない
+            if (e.target.closest('.btn-add-category')) return;
             header.classList.toggle('collapsed');
         });
     });
 
     /**
-     * クイックナビゲーション（プロンプト追加フォームへスクロール）
+     * カテゴリ別「＋」ボタン：フォームのカテゴリを設定してスクロール
      */
-    if (scrollToAdminBtn) {
-        scrollToAdminBtn.addEventListener('click', (e) => {
-            e.preventDefault();
+    document.querySelectorAll('.btn-add-category').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const category = btn.dataset.category;
+            resetForm();
+            categoryInput.value = category;
             adminSection.scrollIntoView({ behavior: 'smooth' });
+            titleInput.focus();
         });
-    }
+    });
 
     /**
      * 文字数カウントの更新
@@ -257,7 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 listContainers[cat].appendChild(item);
             });
 
-            // プロンプトがない場合は「なし」を表示（任意）
+            // プロンプトがない場合は「なし」を表示
             if (catPrompts.length === 0 && !searchQuery && !currentTag) {
                 const empty = document.createElement('div');
                 empty.style.padding = '8px';
@@ -281,13 +285,6 @@ document.addEventListener('DOMContentLoaded', () => {
         titleContainer.style.display = 'flex';
         titleContainer.style.alignItems = 'center';
 
-        if (prompt.isFavorite) {
-            const star = document.createElement('span');
-            star.className = 'cue-favorite-star';
-            star.innerText = '★';
-            titleContainer.appendChild(star);
-        }
-
         const title = document.createElement('span');
         title.className = 'cue-item-title';
         title.innerText = prompt.title;
@@ -308,10 +305,9 @@ document.addEventListener('DOMContentLoaded', () => {
             item.appendChild(tagList);
         }
 
-        // 操作ボタン（管理モード時）
+        // 操作ボタン（常時表示）
         const actions = document.createElement('div');
         actions.className = 'item-actions';
-        actions.style.display = adminSection.classList.contains('active') ? 'flex' : 'none';
 
         const starToggleBtn = document.createElement('button');
         starToggleBtn.className = 'btn-favorite-toggle';
@@ -334,9 +330,7 @@ document.addEventListener('DOMContentLoaded', () => {
         item.appendChild(actions);
 
         item.onclick = () => {
-            if (!adminSection.classList.contains('active')) {
-                sendToContentScript(prompt.text);
-            }
+            sendToContentScript(prompt.text);
         };
 
         return item;
@@ -354,10 +348,10 @@ document.addEventListener('DOMContentLoaded', () => {
         textInput.value = prompt.text;
         adminTitle.innerText = 'プロンプトを編集';
         saveBtn.innerText = '更新';
-        adminSection.classList.add('active');
         updateCharCount();
         updateTitleCharCount();
         updateTagsCharCount();
+        adminSection.scrollIntoView({ behavior: 'smooth' });
         titleInput.focus();
     }
 
@@ -430,9 +424,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 chrome.storage.local.set({ prompts: prompts }, () => {
                     resetForm();
-                    adminSection.classList.remove('active');
-                    adminModeBtn.innerText = '管理モード';
-                    if (scrollToAdminBtn) scrollToAdminBtn.style.display = 'none';
                     loadAndRenderPrompts();
                 });
             });
@@ -447,7 +438,7 @@ document.addEventListener('DOMContentLoaded', () => {
         tagsInput.value = '';
         favoriteInput.checked = false;
         textInput.value = '';
-        adminTitle.innerText = 'プロンプトを追加';
+        adminTitle.innerText = 'プロンプトの追加';
         saveBtn.innerText = '保存';
         updateCharCount();
         updateTitleCharCount();
@@ -499,24 +490,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    if (adminModeBtn) {
-        adminModeBtn.onclick = () => {
-            adminSection.classList.toggle('active');
-            const isActive = adminSection.classList.contains('active');
-            adminModeBtn.innerText = isActive ? '戻る' : '管理モード';
-            if (scrollToAdminBtn) scrollToAdminBtn.style.display = isActive ? 'block' : 'none';
-            if (!isActive) resetForm();
-            loadAndRenderPrompts();
-        };
-    }
-
     if (cancelBtn) {
         cancelBtn.onclick = () => {
-            adminSection.classList.remove('active');
-            adminModeBtn.innerText = '管理モード';
-            if (scrollToAdminBtn) scrollToAdminBtn.style.display = 'none';
             resetForm();
-            loadAndRenderPrompts();
         };
     }
 
