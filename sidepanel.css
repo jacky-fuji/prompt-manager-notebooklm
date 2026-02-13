@@ -116,6 +116,15 @@ textarea {
     resize: vertical;
 }
 
+.char-counter {
+    font-size: 10px;
+    color: #94a3b8;
+    text-align: right;
+    margin-top: 2px;
+    /* 入力エリアとの間に適度な隙間を空ける */
+    margin-bottom: 4px;
+}
+
 .btn-group {
     display: flex;
     gap: 8px;

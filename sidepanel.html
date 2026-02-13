@@ -174,8 +174,7 @@
 
             <div style="position: relative;">
                 <input type="text" id="prompt-title" placeholder="タイトル（例: 銘柄分析）" maxlength="10">
-                <div id="title-char-count" style="font-size: 10px; color: #888; text-align: right; margin-top: -4px;">0
-                    / 10</div>
+                <div id="title-char-count" class="char-counter">0 / 10</div>
             </div>
 
             <div class="form-group" style="margin-bottom: 8px;">
@@ -196,14 +195,12 @@
 
             <div style="position: relative;">
                 <input type="text" id="prompt-tags" placeholder="タグ (カンマ区切り、例: 調査, 分析)">
-                <div id="tags-char-count" style="font-size: 10px; color: #888; text-align: right; margin-top: -4px;">0 /
-                    10個</div>
+                <div id="tags-char-count" class="char-counter">0 / 10個</div>
             </div>
 
             <div style="position: relative;">
                 <textarea id="prompt-text" rows="6" placeholder="プロンプト内容" maxlength="5000"></textarea>
-                <div id="char-count" style="font-size: 10px; color: #888; text-align: right; margin-top: -4px;">0 / 5000
-                </div>
+                <div id="char-count" class="char-counter">0 / 5000</div>
             </div>
 
             <label
