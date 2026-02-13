@@ -161,11 +161,15 @@ textarea {
 .btn-favorite-toggle {
     background: transparent;
     border: none;
-    font-size: 15px;
-    padding: 4px;
+    font-size: 13px;
+    /* 少し小さめに */
+    padding: 2px 4px;
     border-radius: 4px;
     cursor: pointer;
     transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .btn-favorite-toggle:hover {
@@ -177,9 +181,13 @@ textarea {
     border: none;
     padding: 4px;
     border-radius: 4px;
-    font-size: 13px;
+    font-size: 11px;
+    /* 少し小さめに */
     cursor: pointer;
     transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .btn-delete {
@@ -187,9 +195,13 @@ textarea {
     border: none;
     padding: 4px;
     border-radius: 4px;
-    font-size: 13px;
+    font-size: 11px;
+    /* 少し小さめに */
     cursor: pointer;
     transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .btn-edit:hover {
