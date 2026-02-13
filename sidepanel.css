@@ -156,15 +156,15 @@ textarea {
     gap: 2px;
     align-items: center;
     flex-shrink: 0;
-    transform: translateY(-3px);
-    /* 3px上に調整 */
+    transform: translateY(-6px);
+    /* 累計6px上に調整 */
 }
 
 .btn-favorite-toggle {
     background: transparent;
     border: none;
-    font-size: 13px;
-    /* 少し小さめに */
+    font-size: 12px;
+    /* さらに小さめに */
     padding: 2px 4px;
     border-radius: 4px;
     cursor: pointer;
@@ -183,8 +183,8 @@ textarea {
     border: none;
     padding: 4px;
     border-radius: 4px;
-    font-size: 11px;
-    /* 少し小さめに */
+    font-size: 10px;
+    /* さらに小さめに */
     cursor: pointer;
     transition: background 0.2s;
     display: flex;
@@ -197,8 +197,8 @@ textarea {
     border: none;
     padding: 4px;
     border-radius: 4px;
-    font-size: 11px;
-    /* 少し小さめに */
+    font-size: 10px;
+    /* さらに小さめに */
     cursor: pointer;
     transition: background 0.2s;
     display: flex;
