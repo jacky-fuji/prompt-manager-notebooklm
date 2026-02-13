@@ -156,8 +156,8 @@ textarea {
     gap: 2px;
     align-items: center;
     flex-shrink: 0;
-    transform: translateY(-6px);
-    /* 累計6px上に調整 */
+    transform: translateY(-2px);
+    /* 合計 2px 上方に調整 */
 }
 
 .btn-favorite-toggle {
