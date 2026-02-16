@@ -16,6 +16,14 @@
     let audioFormat = '';
     let favoritePrompts = [];
 
+    // 音声解説形式のマッピング（内部値 -> 表示ラベル）
+    const AUDIO_FORMAT_MAP = {
+        '詳細': ['詳細', 'Deep Dive'],
+        '概要': ['概要', 'Brief'],
+        '評論': ['評論', 'Critique'],
+        '議論': ['議論', 'Debate']
+    };
+
     // 基本スタイルの注入
     const style = document.createElement('style');
     style.textContent = `
@@ -235,8 +243,11 @@
 
                 if (audioDialog) {
                     const labels = audioDialog.querySelectorAll('.tile-label');
+                    const targetLabels = AUDIO_FORMAT_MAP[audioFormat] || [audioFormat];
+
                     for (const label of labels) {
-                        if (label.innerText.trim() === audioFormat) {
+                        const labelText = label.innerText.trim();
+                        if (targetLabels.includes(labelText)) {
                             const radioButton = label.closest('mat-radio-button') || label.closest('.mat-mdc-radio-button') || label.closest('.mat-radio-button');
                             if (radioButton) {
                                 // 既に選択済みなら完了マークを付けて終了

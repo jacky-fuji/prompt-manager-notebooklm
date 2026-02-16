@@ -81,7 +81,9 @@ body {
     background: white;
     border: 1px solid #e2e8f0;
     border-radius: 10px;
-    padding: 10px 12px;
+    padding: 10px 12px 10px 12px;
+    /* 右側のパディングをさらに狭める場合 */
+    padding-right: 4px;
     cursor: pointer;
     transition: all 0.2s;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
@@ -101,7 +103,7 @@ body {
     justify-content: space-between;
     align-items: center;
     /* 垂直方向の中央揃え */
-    gap: 8px;
+    gap: 4px;
 }
 
 .cue-item-title {
@@ -202,11 +204,10 @@ textarea {
 /* 操作ボタン */
 .item-actions {
     display: flex;
-    gap: 2px;
+    gap: 0px;
     align-items: center;
     flex-shrink: 0;
     transform: translateY(-2px);
-    /* 合計 2px 上方に調整 */
 }
 
 .btn-favorite-toggle {
@@ -214,7 +215,7 @@ textarea {
     border: none;
     font-size: 12px;
     /* さらに小さめに */
-    padding: 2px 4px;
+    padding: 2px 2px;
     border-radius: 4px;
     cursor: pointer;
     transition: background 0.2s;
@@ -494,7 +495,7 @@ input:checked+.slider:before {
 }
 
 .category-header .arrow {
-    font-size: 8px;
+    font-size: 10px;
     transition: transform 0.2s;
     color: #64748b;
 }

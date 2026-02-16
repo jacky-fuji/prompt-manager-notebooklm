@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'err-text-empty': 'プロンプト内容を入力してください。',
             'err-text-long': 'プロンプト内容は5000文字以内で入力してください。',
             'err-tag-count': 'タグは10個までです。',
-            'err-tag-length': 'タグは10文字以内で入力してください。',
+            'err-tag-length': 'タグは20文字以内で入力してください。',
             'err-cat-invalid': '無効なカテゴリです。',
             'err-cat-limit': 'このカテゴリには最大20件まで登録できます。',
             'confirm-save': 'プロンプトを保存しますか？',
@@ -82,17 +82,17 @@ document.addEventListener('DOMContentLoaded', () => {
             'label-category': 'Category',
             'placeholder-title': 'Title (e.g., Stock Analysis)',
             'placeholder-tags': 'Tags (Enter to add)',
-            'placeholder-text': 'Prompt content',
-            'label-favorite': '⭐ Add to Favorites',
+            'placeholder-text': 'Enter prompt...',
+            'label-favorite': '⭐ Add to favorite',
             'btn-save': 'Save',
             'btn-update': 'Update',
             'btn-cancel': 'Cancel',
             'err-title-empty': 'Please enter a title.',
             'err-title-long': 'Title must be 20 characters or less.',
-            'err-text-empty': 'Please enter prompt content.',
+            'err-text-empty': 'Please enter the prompt.',
             'err-text-long': 'Prompt content must be 5000 characters or less.',
             'err-tag-count': 'Maximum 10 tags allowed.',
-            'err-tag-length': 'Each tag must be 10 characters or less.',
+            'err-tag-length': 'Each tag must be 20 characters or less.',
             'err-cat-invalid': 'Invalid category.',
             'err-cat-limit': 'Maximum 20 prompts allowed per category.',
             'confirm-save': 'Do you want to save this prompt?',
@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // バリデーション定数
     const VALID_CATEGORIES = ['research', 'audio', 'video', 'report', 'flashcard', 'quiz', 'infographic', 'slide', 'datatable'];
     const MAX_TITLE_LENGTH = 20;
-    const MAX_TAG_LENGTH = 10;
+    const MAX_TAG_LENGTH = 20;
     const MAX_TAG_COUNT = 10;
     const MAX_TEXT_LENGTH = 5000;
     const MAX_PROMPTS_PER_CATEGORY = 20;
@@ -516,10 +516,10 @@ document.addEventListener('DOMContentLoaded', () => {
             // プロンプトがない場合は「なし」を表示
             if (catPrompts.length === 0 && !searchQuery && selectedTags.size === 0) {
                 const empty = document.createElement('div');
-                empty.style.padding = '8px';
+                empty.style.padding = '8px 12px';
                 empty.style.fontSize = '12px';
                 empty.style.color = '#94a3b8';
-                empty.style.textAlign = 'center';
+                empty.style.textAlign = 'left';
                 empty.innerText = TRANSLATIONS[currentLang]['no-prompts'];
                 listContainers[cat].appendChild(empty);
             }
