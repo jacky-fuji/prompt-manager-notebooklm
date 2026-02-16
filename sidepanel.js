@@ -214,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 初期プロンプトデータ
     const initialPrompts = [
-        { title: '銘柄分析用', category: 'research', tags: ['調査', '分析'], text: '以下の銘柄について、直近の決算短信と中期経営計画から、今後の成長性とリスク要因を箇取りで分析してください。', isFavorite: true },
+        { title: '銘柄分析用', category: 'research', tags: ['調査', '分析'], text: '以下の銘柄について、直近の決算短信と中期経営計画から、今後の成長性とリスク要因を箇条書きで分析してください。', isFavorite: true },
         { title: 'Stock Analysis', category: 'research', tags: ['Research', 'Analysis'], text: 'Analyze the growth potential and risk factors of the following stock based on its latest financial results and medium-term business plan in bullet points.', isFavorite: true },
         { title: '音声解説サンプル', category: 'audio', tags: ['解説', '入門'], text: 'このソースの内容を、ラジオ番組の構成案として整理してください。主な聴取層はビジネスパーソンで、最新トレンドの紹介というトーンでお願いします。', isFavorite: true },
         { title: 'Audio Summary Sample', category: 'audio', tags: ['Summary', 'Learning'], text: 'Please organize the content of this source as a radio program script. The main audience is business professionals, and the tone should be like an introduction to latest trends.', isFavorite: true },
