@@ -228,7 +228,10 @@
             if (audioFormat) {
                 // 未処理のダイアログを探す
                 const dialogs = document.querySelectorAll('mat-dialog-container:not([data-auto-formatted="true"]), configurable-form-dialog:not([data-auto-formatted="true"])');
-                const audioDialog = Array.from(dialogs).find(d => (d.innerText || '').includes('音声解説をカスタマイズ'));
+                const audioDialog = Array.from(dialogs).find(d => {
+                    const text = d.innerText || '';
+                    return text.includes('音声解説をカスタマイズ') || text.includes('Customize Audio Overview');
+                });
 
                 if (audioDialog) {
                     const labels = audioDialog.querySelectorAll('.tile-label');
@@ -268,18 +271,25 @@
                 let category = null;
 
                 // 各カテゴリのターゲットラベルを内容（テキスト）で厳密に照合
-                if (text.includes('作成したいレポートの内容を記入してください')) {
+                if (text.includes('作成したいレポートの内容を記入してください') || text.includes('Describe the report you want to create')) {
                     category = 'report';
-                } else if (text.includes('希望するトピック')) {
+                } else if (text.includes('希望するトピック') || text.includes('What should the topic be?')) {
                     // ダイアログ全体のタイトル等から クイズ vs フラッシュカード を判別
                     const dialog = label.closest('mat-dialog-container') || label.closest('configurable-form-dialog') || document.body;
-                    const dialogText = (dialog.innerText || '');
-                    category = dialogText.includes('クイズ') ? 'quiz' : 'flashcard';
-                } else if (text.includes('インフォグラフィックについて説明してください')) {
+                    const dialogText = (dialog.innerText || '').toLowerCase();
+                    if (dialogText.includes('クイズ') || dialogText.includes('quiz')) {
+                        category = 'quiz';
+                    } else if (dialogText.includes('フラッシュカード') || dialogText.includes('flashcards')) {
+                        category = 'flashcard';
+                    }
+                } else if (text.includes('インフォグラフィックについて説明してください') || text.includes('Describe the infographic you want to create')) {
+                    // 日本語版は「説明してください」、英語版は「Describe ...」などの差異を考慮
                     category = 'infographic';
-                } else if (text.includes('スライドについて説明してください')) {
+                } else if (text.includes('スライドについて説明してください') || text.includes('Describe the slide deck you want to create')) {
                     category = 'slide';
-                } else if (text.includes('データテーブル') && (text.includes('説明') || label.id === 'userSteeringPrompt-label')) {
+                } else if ((text.includes('データテーブル') && text.includes('説明')) ||
+                    text.includes('Describe the data table you want to create') ||
+                    label.id === 'userSteeringPrompt-label') {
                     category = 'datatable';
                 } else if (label.id === 'episodeFocus-label') {
                     category = 'audio';

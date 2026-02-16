@@ -18,12 +18,17 @@ body {
 
 .header {
     display: flex;
-    justify-content: flex-start;
-    gap: 10px;
+    justify-content: space-between;
     align-items: center;
     border-bottom: 2px solid #e2e8f0;
     padding-bottom: 8px;
     margin-bottom: 8px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .header-icon {
@@ -39,6 +44,29 @@ body {
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.language-label {
+    font-size: 11px;
+    color: #475569;
+    font-weight: bold;
+}
+
+.language-select {
+    width: auto;
+    padding: 2px 6px;
+    font-size: 11px;
+    border-radius: 4px;
+    border: 1px solid #cbd5e1;
+    background-color: white;
+    color: #475569;
+    cursor: pointer;
 }
 
 /* プロンプトリスト */

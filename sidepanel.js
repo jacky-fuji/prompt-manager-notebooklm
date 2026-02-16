@@ -3,6 +3,144 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+    // 多言語対応データ
+    const TRANSLATIONS = {
+        ja: {
+            'app-title': 'CueCard for NotebookLM',
+            'label-language': '言語切替',
+            'search-placeholder': '保存済みのプロンプトを検索...',
+            'tag-all': 'すべて',
+            'cat-research': 'ソース検索',
+            'cat-audio': '音声解説',
+            'cat-video': '動画解説',
+            'cat-report': 'レポート',
+            'cat-flashcard': 'フラッシュカード',
+            'cat-quiz': 'クイズ',
+            'cat-infographic': 'インフォグラフィック',
+            'cat-slide': 'スライド資料',
+            'cat-datatable': 'Data Table',
+            'setting-deep-research': 'Deep Research をデフォルトにする',
+            'setting-audio-format': 'デフォルト形式',
+            'opt-detail': '詳細',
+            'opt-summary': '概要',
+            'opt-critique': '評論',
+            'opt-debate': '議論',
+            'no-prompts': 'プロンプトがありません',
+            'admin-add-title': 'プロンプトの追加',
+            'admin-edit-title': 'プロンプトを編集',
+            'label-category': 'カテゴリ',
+            'placeholder-title': 'タイトル（例: 銘柄分析）',
+            'placeholder-tags': 'タグ (Enterで追加)',
+            'placeholder-text': 'プロンプト内容',
+            'label-favorite': '⭐ お気に入り登録',
+            'btn-save': '保存',
+            'btn-update': '更新',
+            'btn-cancel': 'キャンセル',
+            'err-title-empty': 'タイトルを入力してください。',
+            'err-title-long': 'タイトルは20文字以内で入力してください。',
+            'err-text-empty': 'プロンプト内容を入力してください。',
+            'err-text-long': 'プロンプト内容は5000文字以内で入力してください。',
+            'err-tag-count': 'タグは10個までです。',
+            'err-tag-length': 'タグは10文字以内で入力してください。',
+            'err-cat-invalid': '無効なカテゴリです。',
+            'err-cat-limit': 'このカテゴリには最大20件まで登録できます。',
+            'confirm-save': 'プロンプトを保存しますか？',
+            'confirm-update': '変更を保存しますか？',
+            'confirm-cancel': '編集を取り消しますか？',
+            'confirm-delete-prefix': '',
+            'confirm-delete-suffix': 'のプロンプトを削除しますか？',
+            'btn-confirm-yes': 'はい',
+            'btn-confirm-no': 'キャンセル',
+            'btn-confirm-delete': '削除',
+            'btn-confirm-back': 'いいえ',
+            'tag-suffix': '個',
+            'reload-page': 'ページを再読み込みしてください。'
+        },
+        en: {
+            'app-title': 'CueCard for NotebookLM',
+            'label-language': 'Language',
+            'search-placeholder': 'Search saved prompts...',
+            'tag-all': 'All',
+            'cat-research': 'Research sources',
+            'cat-audio': 'Audio Overview',
+            'cat-video': 'Video Overview',
+            'cat-report': 'Reports',
+            'cat-flashcard': 'Flashcards',
+            'cat-quiz': 'Quiz',
+            'cat-infographic': 'Infographic',
+            'cat-slide': 'Slide Deck',
+            'cat-datatable': 'Data Table',
+            'setting-deep-research': 'Use Deep Research as default',
+            'setting-audio-format': 'Default format',
+            'opt-detail': 'Deep Dive',
+            'opt-summary': 'Brief',
+            'opt-critique': 'Critique',
+            'opt-debate': 'Debate',
+            'no-prompts': 'No prompts available',
+            'admin-add-title': 'Add Prompt',
+            'admin-edit-title': 'Edit Prompt',
+            'label-category': 'Category',
+            'placeholder-title': 'Title (e.g., Stock Analysis)',
+            'placeholder-tags': 'Tags (Enter to add)',
+            'placeholder-text': 'Prompt content',
+            'label-favorite': '⭐ Add to Favorites',
+            'btn-save': 'Save',
+            'btn-update': 'Update',
+            'btn-cancel': 'Cancel',
+            'err-title-empty': 'Please enter a title.',
+            'err-title-long': 'Title must be 20 characters or less.',
+            'err-text-empty': 'Please enter prompt content.',
+            'err-text-long': 'Prompt content must be 5000 characters or less.',
+            'err-tag-count': 'Maximum 10 tags allowed.',
+            'err-tag-length': 'Each tag must be 10 characters or less.',
+            'err-cat-invalid': 'Invalid category.',
+            'err-cat-limit': 'Maximum 20 prompts allowed per category.',
+            'confirm-save': 'Do you want to save this prompt?',
+            'confirm-update': 'Do you want to save changes?',
+            'confirm-cancel': 'Discard changes?',
+            'confirm-delete-prefix': 'Delete "',
+            'confirm-delete-suffix': '"?',
+            'btn-confirm-yes': 'Yes',
+            'btn-confirm-no': 'Cancel',
+            'btn-confirm-delete': 'Delete',
+            'btn-confirm-back': 'No',
+            'tag-suffix': ' tags',
+            'reload-page': 'Please reload the page.'
+        }
+    };
+
+    let currentLang = 'ja';
+
+    /**
+     * 静的要素の翻訳適用
+     */
+    function updateStaticTranslations() {
+        const langData = TRANSLATIONS[currentLang];
+
+        // テキストの置換
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (langData[key]) {
+                el.innerText = langData[key];
+            }
+        });
+
+        // プレースホルダーの置換
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+            const key = el.getAttribute('data-i18n-placeholder');
+            if (langData[key]) {
+                el.placeholder = langData[key];
+            }
+        });
+    }
+
+    /**
+     * 言語切替時の全適用
+     */
+    function applyLanguageChange() {
+        loadAndRenderPrompts();
+    }
+
     // コンテナ
     const adminSection = document.getElementById('admin-section');
     const listContainers = {
@@ -22,6 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const cancelBtn = document.getElementById('cancel-btn');
 
     // フォーム入力
+    const languageSelect = document.getElementById('language-select');
     const titleInput = document.getElementById('prompt-title');
     const categoryInput = document.getElementById('prompt-category');
     const tagsInputContainer = document.getElementById('tags-input-container');
@@ -51,9 +190,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const confirmNoBtn = document.getElementById('confirm-no-btn');
     let onConfirmAction = null;
 
+    // 言語切替イベント
+    if (languageSelect) {
+        languageSelect.addEventListener('change', (e) => {
+            currentLang = e.target.value;
+            chrome.storage.local.set({ language: currentLang }, () => {
+                applyLanguageChange();
+            });
+        });
+    }
+
     // バリデーション定数
     const VALID_CATEGORIES = ['research', 'audio', 'video', 'report', 'flashcard', 'quiz', 'infographic', 'slide', 'datatable'];
-    const MAX_TITLE_LENGTH = 10;
+    const MAX_TITLE_LENGTH = 20;
     const MAX_TAG_LENGTH = 10;
     const MAX_TAG_COUNT = 10;
     const MAX_TEXT_LENGTH = 5000;
@@ -122,7 +271,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateTagsCharCount() {
         const count = currentInputTags.length;
-        tagsCharCountDisplay.innerText = `${count} / ${MAX_TAG_COUNT}個`;
+        const suffix = TRANSLATIONS[currentLang]['tag-suffix'];
+        tagsCharCountDisplay.innerText = `${count} / ${MAX_TAG_COUNT}${suffix}`;
         if (count >= MAX_TAG_COUNT) {
             tagsCharCountDisplay.classList.add('warning');
         } else {
@@ -232,7 +382,17 @@ document.addEventListener('DOMContentLoaded', () => {
      * プロンプトと設定をストレージから読み込み
      */
     function loadAndRenderPrompts() {
-        chrome.storage.local.get(['prompts', 'autoDeepResearch', 'audioFormat'], (result) => {
+        chrome.storage.local.get(['prompts', 'autoDeepResearch', 'audioFormat', 'language'], (result) => {
+            // 言語設定の反映
+            if (result.language) {
+                currentLang = result.language;
+                if (languageSelect) languageSelect.value = currentLang;
+            }
+            updateStaticTranslations();
+            updateTagsCharCount();
+            updateCharCount();
+            updateTitleCharCount();
+
             let prompts = Array.isArray(result.prompts) ? result.prompts : null;
             if (!prompts || prompts.length === 0) {
                 prompts = initialPrompts;
@@ -285,7 +445,7 @@ document.addEventListener('DOMContentLoaded', () => {
         while (tagCloud.firstChild) tagCloud.removeChild(tagCloud.firstChild);
         const allBtn = document.createElement('button');
         allBtn.className = `tag-chip ${selectedTags.size === 0 ? 'active' : ''}`;
-        allBtn.innerText = 'すべて';
+        allBtn.innerText = TRANSLATIONS[currentLang]['tag-all'];
         allBtn.onclick = () => {
             selectedTags.clear();
             loadAndRenderPrompts();
@@ -360,7 +520,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 empty.style.fontSize = '12px';
                 empty.style.color = '#94a3b8';
                 empty.style.textAlign = 'center';
-                empty.innerText = 'プロンプトがありません';
+                empty.innerText = TRANSLATIONS[currentLang]['no-prompts'];
                 listContainers[cat].appendChild(empty);
             }
         });
@@ -441,8 +601,8 @@ document.addEventListener('DOMContentLoaded', () => {
         renderInputTags();
         favoriteInput.checked = !!prompt.isFavorite;
         textInput.value = prompt.text;
-        adminTitle.innerText = 'プロンプトを編集';
-        saveBtn.innerText = '更新';
+        adminTitle.innerText = TRANSLATIONS[currentLang]['admin-edit-title'];
+        saveBtn.innerText = TRANSLATIONS[currentLang]['btn-update'];
         updateCharCount();
         updateTitleCharCount();
         updateTagsCharCount();
@@ -456,7 +616,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (saveBtn) {
         saveBtn.onclick = () => {
             const isUpdate = parseInt(editIndexInput.value) >= 0;
-            const message = isUpdate ? '変更を保存しますか？' : 'プロンプトを保存しますか？';
+            const message = TRANSLATIONS[currentLang][isUpdate ? 'confirm-update' : 'confirm-save'];
 
             // バリデーションチェック（簡易）
             if (!titleInput.value.trim() || !textInput.value.trim()) {
@@ -465,7 +625,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            showConfirmModal(message, 'はい', 'キャンセル', () => {
+            showConfirmModal(message, TRANSLATIONS[currentLang]['btn-confirm-yes'], TRANSLATIONS[currentLang]['btn-confirm-no'], () => {
                 executeSave();
             });
         };
@@ -484,32 +644,32 @@ document.addEventListener('DOMContentLoaded', () => {
         let hasError = false;
 
         if (!title) {
-            showValidationError(titleInput, 'タイトルを入力してください。');
+            showValidationError(titleInput, TRANSLATIONS[currentLang]['err-title-empty']);
             hasError = true;
         } else if (title.length > MAX_TITLE_LENGTH) {
-            showValidationError(titleInput, `タイトルは${MAX_TITLE_LENGTH}文字以内で入力してください。`);
+            showValidationError(titleInput, TRANSLATIONS[currentLang]['err-title-long']);
             hasError = true;
         }
 
         if (!text) {
-            showValidationError(textInput, 'プロンプト内容を入力してください。');
+            showValidationError(textInput, TRANSLATIONS[currentLang]['err-text-empty']);
             hasError = true;
         } else if (text.length > MAX_TEXT_LENGTH) {
-            showValidationError(textInput, `プロンプト内容は${MAX_TEXT_LENGTH}文字以内で入力してください。`);
+            showValidationError(textInput, TRANSLATIONS[currentLang]['err-text-long']);
             hasError = true;
         }
 
         if (!VALID_CATEGORIES.includes(category)) {
-            showValidationError(categoryInput, '無効なカテゴリです。');
+            showValidationError(categoryInput, TRANSLATIONS[currentLang]['err-cat-invalid']);
             hasError = true;
         }
 
         // const tags = tagsRaw ? tagsRaw.split(/[,,、\s]+/).filter(t => t.length > 0) : [];
         if (tags.length > MAX_TAG_COUNT) {
-            showValidationError(tagsInputContainer, `タグは${MAX_TAG_COUNT}個以内で設定してください。`);
+            showValidationError(tagsInputContainer, TRANSLATIONS[currentLang]['err-tag-count']);
             hasError = true;
         } else if (tags.some(t => t.length > MAX_TAG_LENGTH)) {
-            showValidationError(tagsInputContainer, `各タグは${MAX_TAG_LENGTH}文字以内で入力してください。`);
+            showValidationError(tagsInputContainer, TRANSLATIONS[currentLang]['err-tag-length']);
             hasError = true;
         }
 
@@ -523,7 +683,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (editIndex < 0) {
                 const catCount = prompts.filter(p => (p.category || 'research') === category).length;
                 if (catCount >= MAX_PROMPTS_PER_CATEGORY) {
-                    showValidationError(categoryInput, `このカテゴリには最大${MAX_PROMPTS_PER_CATEGORY}件まで登録できます。`);
+                    showValidationError(categoryInput, TRANSLATIONS[currentLang]['err-cat-limit']);
                     return;
                 }
             }
@@ -554,8 +714,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         favoriteInput.checked = false;
         textInput.value = '';
-        adminTitle.innerText = 'プロンプトの追加';
-        saveBtn.innerText = '保存';
+        adminTitle.innerText = TRANSLATIONS[currentLang]['admin-add-title'];
+        saveBtn.innerText = TRANSLATIONS[currentLang]['btn-save'];
         updateCharCount();
         updateTitleCharCount();
         updateTagsCharCount();
@@ -588,7 +748,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function deletePrompt(index, title) {
-        showConfirmModal(`${title}のプロンプトを削除しますか？`, '削除', 'キャンセル', () => {
+        const message = `${TRANSLATIONS[currentLang]['confirm-delete-prefix']}${title}${TRANSLATIONS[currentLang]['confirm-delete-suffix']}`;
+        showConfirmModal(message, TRANSLATIONS[currentLang]['btn-confirm-delete'], TRANSLATIONS[currentLang]['btn-confirm-no'], () => {
             chrome.storage.local.get(['prompts'], (result) => {
                 const prompts = result.prompts || [];
                 prompts.splice(index, 1);
@@ -636,7 +797,7 @@ document.addEventListener('DOMContentLoaded', () => {
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             if (tabs[0]) {
                 chrome.tabs.sendMessage(tabs[0].id, { action: 'insertText', text: text }, (res) => {
-                    if (chrome.runtime.lastError) alert('ページを再読み込みしてください。');
+                    if (chrome.runtime.lastError) alert(TRANSLATIONS[currentLang]['reload-page']);
                 });
             }
         });
@@ -649,7 +810,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 resetForm();
                 return;
             }
-            showConfirmModal('編集を取り消しますか？', 'はい', 'いいえ', () => {
+            showConfirmModal(TRANSLATIONS[currentLang]['confirm-cancel'], TRANSLATIONS[currentLang]['btn-confirm-yes'], TRANSLATIONS[currentLang]['btn-confirm-no'], () => {
                 resetForm();
             });
         };
