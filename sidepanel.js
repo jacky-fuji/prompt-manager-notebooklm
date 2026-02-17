@@ -1,12 +1,12 @@
 /**
- * CueCard for NotebookLM: サイドパネル管理ロジック
+ * Prompt Manager for NotebookLM: サイドパネル管理ロジック
  */
 
 document.addEventListener('DOMContentLoaded', () => {
     // 多言語対応データ
     const TRANSLATIONS = {
         ja: {
-            'app-title': 'CueCard for NotebookLM',
+            'app-title': 'Prompt Manager for NotebookLM',
             'label-language': '言語切替',
             'search-placeholder': '保存済みのプロンプトを検索...',
             'tag-all': 'すべて',
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'reload-page': 'ページを再読み込みしてください。'
         },
         en: {
-            'app-title': 'CueCard for NotebookLM',
+            'app-title': 'Prompt Manager for NotebookLM',
             'label-language': 'Language',
             'search-placeholder': 'Search saved prompts...',
             'tag-all': 'All',

@@ -1,5 +1,5 @@
 /**
- * CueCard for NotebookLM: バックグラウンドスクリプト
+ * Prompt Manager for NotebookLM: バックグラウンドスクリプト
  * 拡張機能アイコンをクリックした際にサイドパネルを開くように設定します。
  */
 
