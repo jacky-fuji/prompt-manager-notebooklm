@@ -1,5 +1,5 @@
 (function () {
-    // 拡張機能のコンテキストチェック
+    // 拡張機能のコンテキストチェック / Extension context check
     function isContextValid() {
         return typeof chrome !== 'undefined' && !!chrome.runtime && !!chrome.runtime.id;
     }
@@ -16,7 +16,7 @@
     let audioFormat = '';
     let favoritePrompts = [];
 
-    // 音声解説形式のマッピング（内部値 -> 表示ラベル）
+    // 音声解説形式のマッピング（内部値 -> 表示ラベル） / Audio commentary format mapping (internal value -> display label)
     const AUDIO_FORMAT_MAP = {
         '詳細': ['詳細', 'Deep Dive'],
         '概要': ['概要', 'Brief'],
@@ -24,7 +24,7 @@
         '議論': ['議論', 'Debate']
     };
 
-    // 基本スタイルの注入
+    // 基本スタイルの注入 / Inject basic styles
     const style = document.createElement('style');
     style.textContent = `
         .cuecard-fav-btn {
@@ -61,7 +61,7 @@
             gap: 6px;
             margin-top: 12px;
             width: 100%;
-            flex-basis: 100%; /* 強制的に次の行へ送る */
+            flex-basis: 100%; /* 強制的に次の行へ送る / Force to the next line */
             clear: both;
         }
         .cuecard-fav-container.inline {
@@ -77,7 +77,7 @@
     `;
     document.head.appendChild(style);
 
-    // 設定とお気に入りをロードしてキャッシュ
+    // 設定とお気に入りをロードしてキャッシュ / Load and cache settings and favorites
     function refreshSettings() {
         if (!isContextValid()) return;
         chrome.storage.local.get(['autoDeepResearch', 'prompts', 'audioFormat'], (result) => {
@@ -90,7 +90,7 @@
         });
     }
 
-    // ストレージ変更を監視
+    // ストレージ変更を監視 / Monitor storage changes
     chrome.storage.onChanged.addListener((changes, area) => {
         if (area === 'local') {
             if (changes.autoDeepResearch) {
@@ -109,7 +109,7 @@
     refreshSettings();
 
     /**
-     * 入力フォーカス管理
+     * 入力フォーカス管理 / Input focus management
      */
     document.addEventListener('focusin', (e) => {
         const target = e.target;
@@ -119,7 +119,7 @@
     });
 
     /**
-     * テキスト挿入メッセージの受信
+     * テキスト挿入メッセージの受信 / Receive text insertion message
      */
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         if (sender.id !== chrome.runtime.id) return;
@@ -133,7 +133,7 @@
     function insertText(text, contextElement = null) {
         let target = lastFocusedElement;
 
-        // ボタンの近傍から入力欄を探す
+        // ボタンの近傍から入力欄を探す / Look for input field near the button
         if (contextElement) {
             const container = contextElement.closest('.control-wrapper') ||
                 contextElement.closest('.dialog-container') ||
@@ -347,7 +347,7 @@
                 if (!parent.querySelector('.cuecard-fav-container')) {
                     const favButtons = createFavoriteButtons('research');
                     if (favButtons) {
-                        // 親のレイアウトを調整（改行許可と左揃え）
+                        // 親のレイアウトを調整（改行許可と左揃え） / Adjust parent layout (allow wrapping and left alignment)
                         parent.style.display = 'flex';
                         parent.style.flexWrap = 'wrap';
                         parent.style.justifyContent = 'flex-start';
@@ -359,7 +359,7 @@
                 }
             });
 
-            // フォールバック: .actions-options が見つからない場合（念のため）
+            // フォールバック: .actions-options が見つからない場合（念のため） / Fallback: If .actions-options is not found (just in case)
             if (targetParents.length === 0) {
                 const triggers = Array.from(document.querySelectorAll('button[aria-haspopup="menu"]'));
                 const resBtn = triggers.find(b => (b.innerText || '').includes('Research'));
@@ -397,7 +397,7 @@
                 }
             }
 
-            // クリーンアップ
+            // クリーンアップ / Cleanup
             const clicked = document.querySelectorAll('[data-auto-clicked="true"], [data-auto-formatted="true"]');
             clicked.forEach(el => {
                 if (!document.body.contains(el) || el.offsetParent === null) {

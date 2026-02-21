@@ -1,10 +1,10 @@
 /**
- * Prompt Manager for NotebookLM: サイドパネル管理ロジック
+ * Prompt Manager for NotebookLM: サイドパネル管理ロジック / Side Panel Management Logic
  */
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    // アプリケーションの状態管理
+    // アプリケーションの状態管理 / Application State Management
     const state = {
         language: 'ja',
         currentInputTags: [],
@@ -14,12 +14,12 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     /**
-     * 静的要素の翻訳適用
+     * 静的要素の翻訳適用 / Apply translations to static elements
      */
     function updateStaticTranslations() {
         const langData = TRANSLATIONS[state.language];
 
-        // テキストの置換
+        // テキストの置換 / Replace text
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
             if (langData[key]) {
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // プレースホルダーの置換
+        // プレースホルダーの置換 / Replace placeholders
         document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
             const key = el.getAttribute('data-i18n-placeholder');
             if (langData[key]) {
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loadAndRenderPrompts();
     }
 
-    // バリデーション定数とカテゴリ定義（ここを一括管理の元にする）
+    // バリデーション定数とカテゴリ定義（ここを一括管理の元にする） / Validation constants and category definitions (Centralized management)
     const VALID_CATEGORIES = ['research', 'audio', 'video', 'report', 'flashcard', 'quiz', 'infographic', 'slide', 'datatable'];
     const MAX_TITLE_LENGTH = 20;
     const MAX_TAG_LENGTH = 20;
@@ -48,16 +48,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const MAX_TEXT_LENGTH = 5000;
     const MAX_PROMPTS_PER_CATEGORY = 20;
 
-    // コンテナ
+    // コンテナ / Containers
     const adminSection = document.getElementById('admin-section');
     const promptListContainer = document.getElementById('prompt-list-container');
-    const listContainers = {}; // 動的に紐付け
+    const listContainers = {}; // 動的に紐付け / Dynamically linked
 
-    // ボタン
+    // ボタン / Buttons
     const saveBtn = document.getElementById('save-btn');
     const cancelBtn = document.getElementById('cancel-btn');
 
-    // フォーム入力
+    // フォーム入力 / Form inputs
     const languageSelect = document.getElementById('language-select');
     const titleInput = document.getElementById('prompt-title');
     const categoryInput = document.getElementById('prompt-category');
@@ -72,19 +72,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const tagsCharCountDisplay = document.getElementById('tags-char-count');
     const adminTitle = document.getElementById('admin-title');
 
-    // フィルター要素
+    // フィルター要素 / Filter elements
     const searchInput = document.getElementById('search-input');
     const tagCloud = document.getElementById('tag-cloud');
 
-    // 設定要素 (動的生成されるためここでの取得は不要)
+    // 設定要素 (動的生成されるためここでの取得は不要) / Settings elements (No need to retrieve here as they are dynamically generated)
 
-    // カスタムモーダル要素
+    // カスタムモーダル要素 / Custom modal elements
     const confirmModal = document.getElementById('custom-confirm-modal');
     const confirmMessage = document.getElementById('confirm-message');
     const confirmYesBtn = document.getElementById('confirm-yes-btn');
     const confirmNoBtn = document.getElementById('confirm-no-btn');
 
-    // 言語切替イベント
+    // 言語切替イベント / Language switch event
     if (languageSelect) {
         languageSelect.addEventListener('change', (e) => {
             state.language = e.target.value;
@@ -95,18 +95,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * カテゴリセクションの動的生成
+     * カテゴリセクションの動的生成 / Dynamic generation of category sections
      */
     function initCategorySections() {
         if (!promptListContainer) return;
-        promptListContainer.innerHTML = ''; // クリア
+        promptListContainer.innerHTML = ''; // クリア / Clear
 
         VALID_CATEGORIES.forEach(cat => {
             const section = document.createElement('section');
             section.className = 'category-section';
             section.dataset.category = cat;
 
-            // 各カテゴリ固有の追加設定（Deep Research, Audio Formatなど）
+            // 各カテゴリ固有の追加設定（Deep Research, Audio Formatなど） / Category-specific settings (Deep Research, Audio Format, etc.)
             let extraSettingsHtml = '';
             if (cat === 'research') {
                 extraSettingsHtml = `
@@ -150,17 +150,17 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             promptListContainer.appendChild(section);
 
-            // コンテナ参照を保持
+            // コンテナ参照を保持 / Hold container references
             listContainers[cat] = section.querySelector(`#list-${cat}`);
 
-            // アコーディオン開閉イベント
+            // アコーディオン開閉イベント / Accordion open/close event
             const header = section.querySelector('.category-header');
             header.addEventListener('click', (e) => {
-                if (e.target.closest('.btn-add-category')) return;
+                if (e.target.closest('.btn-add-category')) return; // ＋ボタンのクリックはアコーディオン開閉しない / Click on the + button does not open/close the accordion
                 header.classList.toggle('collapsed');
             });
 
-            // ＋ボタンイベント
+            // ＋ボタンイベント / + button event
             const addBtn = section.querySelector('.btn-add-category');
             addBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // 動的に追加された要素ので、要素参照を再初期化する必要があるもの
+        // 動的に追加された要素ので、要素参照を再初期化する必要があるもの / Elements that were dynamically added and need their references re-initialized
         const autoDeepResearchInputNew = document.getElementById('setting-auto-deep-research');
         const audioFormatInputNew = document.getElementById('setting-audio-format');
 
@@ -188,9 +188,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // フィルタリング状態
+    // フィルタリング状態 / Filtering state
 
-    // 初期プロンプトデータ
+    // 初期プロンプトデータ / Initial prompt data
     const initialPrompts = [
         { title: '銘柄分析用', category: 'research', tags: ['調査', '分析'], text: '以下の銘柄について、直近の決算短信と中期経営計画から、今後の成長性とリスク要因を箇条書きで分析してください。', isFavorite: true },
         { title: 'Stock Analysis', category: 'research', tags: ['Research', 'Analysis'], text: 'Analyze the growth potential and risk factors of the following stock based on its latest financial results and medium-term business plan in bullet points.', isFavorite: true },
@@ -201,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     /**
-     * 文字数カウントの更新
+     * 文字数カウントの更新 / Update character count
      */
     function updateCharCount() {
         if (!textInput) return;
@@ -243,15 +243,15 @@ document.addEventListener('DOMContentLoaded', () => {
         titleInput.addEventListener('input', updateTitleCharCount);
     }
 
-    // タグ入力ロジック
+    // タグ入力ロジック / Tag input logic
     if (tagsInputElement) {
-        // コンテナクリックで入力にフォーカス
+        // コンテナクリックで入力にフォーカス / Focus input on container click
         tagsInputContainer.addEventListener('click', () => {
             tagsInputElement.focus();
         });
 
         tagsInputElement.addEventListener('keydown', (e) => {
-            if (e.isComposing) return; // IME変換中は無視
+            if (e.isComposing) return; // IME変換中は無視 / Ignore during IME composition
 
             if (e.key === 'Enter' || e.key === ',') {
                 e.preventDefault();
@@ -275,23 +275,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 showValidationError(tagsInputContainer, `タグは${MAX_TAG_LENGTH}文字以内で入力してください。`);
                 return;
             }
-            // 重複チェック（オプション）
+            // 重複チェック（オプション） / Duplicate check (optional)
             if (!state.currentInputTags.includes(val)) {
                 state.currentInputTags.push(val);
                 renderInputTags();
                 updateTagsCharCount();
             }
             tagsInputElement.value = '';
-            clearValidationErrors(); // エラーがあれば消す
+            clearValidationErrors(); // エラーがあれば消す / Clear validation errors if any
         }
     }
 
     function renderInputTags() {
-        // 既存のチップを削除（input以外）
+        // 既存のチップを削除（input以外） / Remove existing chips (except input)
         const chips = tagsInputContainer.querySelectorAll('.tag-chip-input');
         chips.forEach(c => c.remove());
 
-        // チップを再生成してinputの前に挿入
+        // チップを再生成してinputの前に挿入 / Regenerate chips and insert them before input
         state.currentInputTags.forEach((tag, index) => {
             const chip = document.createElement('div');
             chip.className = 'tag-chip-input';
@@ -314,12 +314,12 @@ document.addEventListener('DOMContentLoaded', () => {
             tagsInputContainer.insertBefore(chip, tagsInputElement);
         });
 
-        // 隠しフィールド更新
+        // 隠しフィールド更新 / Update hidden field
         tagsHiddenInput.value = state.currentInputTags.join(',');
     }
 
     /**
-     * 検索入力イベント
+     * 検索入力イベント / Search input event
      */
     if (searchInput) {
         searchInput.addEventListener('input', (e) => {
@@ -329,11 +329,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * プロンプトと設定をストレージから読み込み
+     * プロンプトと設定をストレージから読み込み / Load prompts and settings from storage
      */
     function loadAndRenderPrompts() {
         chrome.storage.local.get(['prompts', 'autoDeepResearch', 'audioFormat', 'language'], (result) => {
-            // 言語設定の反映
+            // 言語設定の反映 / Reflect language setting
             if (result.language) {
                 state.language = result.language;
                 if (languageSelect) languageSelect.value = state.language;
@@ -349,12 +349,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 chrome.storage.local.set({ prompts: prompts });
             }
 
-            // カテゴリ欠損の補完（移行用）
+            // カテゴリ欠損の補完（移行用） / Complete missing categories (for migration)
             prompts.forEach(p => {
                 if (!p.category) p.category = 'research';
             });
 
-            // 設定の反映
+            // 設定の反映 / Reflect settings
             const autoDeepResearchInputLocal = document.getElementById('setting-auto-deep-research');
             const audioFormatInputLocal = document.getElementById('setting-audio-format');
 
@@ -372,7 +372,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     /**
-     * タグクラウドの更新
+     * タグクラウドの更新 / Update tag cloud
      */
     function updateTagCloud(prompts) {
         if (!tagCloud) return;
@@ -408,17 +408,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * カテゴリ別にリストを描画
+     * カテゴリ別にリストを描画 / Render list by category
      */
     function renderCategorizedList(prompts) {
-        // 各コンテナをクリア
+        // 各コンテナをクリア / Clear each container
         Object.values(listContainers).forEach(c => {
             if (c) while (c.firstChild) c.removeChild(c.firstChild);
         });
 
-        // フィルタリング
+        // フィルタリング / Filtering
         let filtered = prompts.filter(p => {
-            // AND検索: 選択されたすべてのタグを持っているか
+            // AND検索: 選択されたすべてのタグを持っているか / AND search: Check if it has all selected tags
             const matchesTag = state.selectedTags.size === 0 ||
                 (p.tags && Array.from(state.selectedTags).every(t => p.tags.includes(t)));
             const matchesSearch = !state.searchQuery ||
@@ -428,19 +428,20 @@ document.addEventListener('DOMContentLoaded', () => {
             return matchesTag && matchesSearch;
         });
 
-        // カテゴリごとに描画
+        // カテゴリごとに描画 / Render per category
         const categories = ['research', 'audio', 'video', 'report', 'flashcard', 'quiz', 'infographic', 'slide', 'datatable'];
         categories.forEach(cat => {
             if (!listContainers[cat]) return;
 
             const catPrompts = filtered.filter(p => {
+                // 'research' カテゴリの場合、カテゴリ未設定のものも救済する / If 'research' category, also include prompts with no category
                 if (cat === 'research') {
                     return p.category === cat || !p.category;
                 }
                 return p.category === cat;
             });
 
-            // お気に入り優先ソート
+            // お気に入り優先ソート / Sort favorites first
             catPrompts.sort((a, b) => {
                 if (a.isFavorite === b.isFavorite) return 0;
                 return a.isFavorite ? -1 : 1;
@@ -452,7 +453,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 listContainers[cat].appendChild(item);
             });
 
-            // プロンプトがない場合は「なし」を表示
+            // プロンプトがない場合は「なし」を表示 / Display "None" if there are no prompts
             if (catPrompts.length === 0 && !state.searchQuery && state.selectedTags.size === 0) {
                 const empty = document.createElement('div');
                 empty.style.padding = '8px 12px';
@@ -466,7 +467,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * プロンプト要素の作成
+     * プロンプト要素の作成 / Create prompt element
      */
     function createPromptElement(prompt, index) {
         const item = document.createElement('div');
@@ -480,7 +481,7 @@ document.addEventListener('DOMContentLoaded', () => {
         title.innerText = prompt.title;
         header.appendChild(title);
 
-        // 操作ボタン（常時表示）
+        // 操作ボタン（常時表示） / Action buttons (always visible)
         const actions = document.createElement('div');
         actions.className = 'item-actions';
 
@@ -506,7 +507,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         item.appendChild(header);
 
-        // タグ表示
+        // タグ表示 / Tag display
         if (prompt.tags && prompt.tags.length > 0) {
             const tagList = document.createElement('div');
             tagList.className = 'cue-tags';
@@ -529,7 +530,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * 編集モード
+     * 編集モード / Edit mode
      */
     function enterEditMode(index, prompt) {
         editIndexInput.value = index;
@@ -550,16 +551,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * 保存/更新
+     * 保存/更新 / Save or Update
      */
     if (saveBtn) {
         saveBtn.onclick = () => {
             const isUpdate = parseInt(editIndexInput.value) >= 0;
             const message = TRANSLATIONS[state.language][isUpdate ? 'confirm-update' : 'confirm-save'];
 
-            // バリデーションチェック（簡易）
+            // バリデーションチェック（簡易） / Simple validation check
             if (!titleInput.value.trim() || !textInput.value.trim()) {
-                // エラー表示のため、バリデーションロジックだけ実行させる
+                // エラー表示のため、バリデーションロジックだけ実行させる / Execute only validation logic for error display
                 executeSave();
                 return;
             }
@@ -617,7 +618,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const prompts = Array.isArray(result.prompts) ? result.prompts : [];
             const newPrompt = { title, category, tags, text, isFavorite };
 
-            // カテゴリ別の件数上限チェック（新規追加時のみ）
+            // カテゴリ別の件数上限チェック（新規追加時のみ） / Per-category limit check (only for new additions)
             if (editIndex < 0) {
                 const catCount = prompts.filter(p => (p.category || 'research') === category).length;
                 if (catCount >= MAX_PROMPTS_PER_CATEGORY) {
@@ -660,7 +661,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * バリデーションエラーの表示
+     * バリデーションエラーの表示 / Display validation error
      */
     function showValidationError(inputElement, message) {
         inputElement.classList.add('input-error');
@@ -724,7 +725,7 @@ document.addEventListener('DOMContentLoaded', () => {
         state.onConfirmAction = null;
     }
 
-    // モーダルの外側をクリックして閉じる
+    // モーダルの外側をクリックして閉じる / Close modal when clicking outside
     window.onclick = (event) => {
         if (event.target === confirmModal) {
             closeModal();
@@ -743,7 +744,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (cancelBtn) {
         cancelBtn.onclick = () => {
-            // 入力が空なら確認せずにリセット
+            // 入力が空なら確認せずにリセット / Reset without confirmation if input is empty
             if (!titleInput.value.trim() && !textInput.value.trim() && parseInt(editIndexInput.value) === -1) {
                 resetForm();
                 return;
@@ -754,7 +755,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    // 初期起動
+    // 初期起動 / Initial startup
     initCategorySections();
     loadAndRenderPrompts();
 });
