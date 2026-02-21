@@ -947,6 +947,28 @@
                 }
             }
 
+            // C. メインチャットエリア (omnibar) / Main chat area (omnibar)
+            const queryBoxContainer = document.querySelector('.query-box-container');
+            if (queryBoxContainer && queryBoxContainer.parentElement) {
+                if (!queryBoxContainer.parentElement.querySelector('.cuecard-fav-container.chat-main-fav')) {
+                    const chatButtons = createFavoriteButtons('chat', 'chat');
+                    if (chatButtons) {
+                        chatButtons.classList.add('chat-main-fav');
+                        // スタイルの調整: 左寄せ、余白など / Style adjustment: Left aligned, margin, etc.
+                        chatButtons.style.display = 'flex';
+                        chatButtons.style.flexWrap = 'wrap';
+                        chatButtons.style.justifyContent = 'flex-start';
+                        chatButtons.style.gap = '4px';
+                        chatButtons.style.marginBottom = '8px';
+                        chatButtons.style.paddingLeft = '16px';
+                        chatButtons.style.width = '100%';
+
+                        queryBoxContainer.parentElement.insertBefore(chatButtons, queryBoxContainer);
+                        log('Injected chat favorite buttons above the main query box.');
+                    }
+                }
+            }
+
             if (isProcessing) return;
 
             // --- 3. メニュー展開（設定有効時） ---
