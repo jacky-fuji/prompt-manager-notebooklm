@@ -22,8 +22,10 @@
     let infographicDetailLevel = '';
     let slideFormat = '';
     let slideLength = '';
+    let audioLength = '';
     let favoritePrompts = [];
 
+    // 音声解説形式のマッピング（内部値 -> 表示ラベル） / Audio commentary format mapping (internal value -> display label)
     const AUDIO_FORMAT_MAP = {
         '詳細': ['詳細', 'Deep Dive'],
         '概要': ['概要', 'Brief'],
@@ -125,10 +127,11 @@
     // 設定とお気に入りをロードしてキャッシュ / Load and cache settings and favorites
     function refreshSettings() {
         if (!isContextValid()) return;
-        chrome.storage.local.get(['autoDeepResearch', 'prompts', 'audioFormat', 'flashcardCardCount', 'flashcardDifficulty', 'quizQuestionCount', 'quizDifficulty', 'infographicLayout', 'infographicDetailLevel', 'slideFormat', 'slideLength'], (result) => {
+        chrome.storage.local.get(['autoDeepResearch', 'prompts', 'audioFormat', 'audioLength', 'flashcardCardCount', 'flashcardDifficulty', 'quizQuestionCount', 'quizDifficulty', 'infographicLayout', 'infographicDetailLevel', 'slideFormat', 'slideLength'], (result) => {
             if (chrome.runtime.lastError) return;
             autoDeepResearchEnabled = !!result.autoDeepResearch;
             audioFormat = result.audioFormat || '詳細';
+            audioLength = result.audioLength || '標準';
             flashcardCardCount = result.flashcardCardCount || '標準';
             flashcardDifficulty = result.flashcardDifficulty || '標準';
             quizQuestionCount = result.quizQuestionCount || '標準';
@@ -151,6 +154,9 @@
             }
             if (changes.audioFormat) {
                 audioFormat = changes.audioFormat.newValue || '';
+            }
+            if (changes.audioLength) {
+                audioLength = changes.audioLength.newValue || '';
             }
             if (changes.flashcardCardCount) {
                 flashcardCardCount = changes.flashcardCardCount.newValue || '';
