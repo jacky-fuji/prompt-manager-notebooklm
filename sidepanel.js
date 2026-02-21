@@ -10,7 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
         currentInputTags: [],
         searchQuery: '',
         selectedTags: new Set(),
-        onConfirmAction: null
+        onConfirmAction: null,
+        videoTab: 'focus'
     };
 
     /**
@@ -72,6 +73,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const tagsCharCountDisplay = document.getElementById('tags-char-count');
     const adminTitle = document.getElementById('admin-title');
 
+    // 動画サブカテゴリ要素 / Video subcategory elements
+    const videoSubcategoryGroup = document.getElementById('video-subcategory-group');
+    const videoSubcategoryHidden = document.getElementById('prompt-video-subcategory');
+    const videoSubFocusRadio = document.getElementById('video-sub-focus');
+    const videoSubStyleRadio = document.getElementById('video-sub-style');
+
     // フィルター要素 / Filter elements
     const searchInput = document.getElementById('search-input');
     const tagCloud = document.getElementById('tag-cloud');
@@ -93,6 +100,24 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+
+    // カテゴリ切替時のサブカテゴリ表示 / Show/hide subcategory based on category selection
+    if (categoryInput) {
+        categoryInput.addEventListener('change', (e) => {
+            if (e.target.value === 'video') {
+                videoSubcategoryGroup.style.display = 'block';
+            } else {
+                videoSubcategoryGroup.style.display = 'none';
+            }
+        });
+    }
+
+    // サブカテゴリラジオボタンの同期 / Sync subcategory radio buttons
+    const handleSubCategoryChange = (e) => {
+        videoSubcategoryHidden.value = e.target.value;
+    };
+    if (videoSubFocusRadio) videoSubFocusRadio.addEventListener('change', handleSubCategoryChange);
+    if (videoSubStyleRadio) videoSubStyleRadio.addEventListener('change', handleSubCategoryChange);
 
     /**
      * カテゴリセクションの動的生成 / Dynamic generation of category sections
@@ -164,6 +189,14 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <option value="Paper-craft" data-i18n="opt-video-style-papercraft">ペーパークラフト</option>
                             </select>
                         </div>
+                    </div>
+                    <div class="video-tabs" style="display: flex; gap: 4px; margin-bottom: 8px; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;">
+                        <button class="tab-btn ${state.videoTab === 'focus' ? 'active' : ''}" data-video-tab="focus" 
+                            style="background: none; border: none; padding: 4px 8px; font-size: 11px; cursor: pointer; color: ${state.videoTab === 'focus' ? '#2563eb' : '#64748b'}; border-bottom: 2px solid ${state.videoTab === 'focus' ? '#2563eb' : 'transparent'};"
+                            data-i18n="opt-video-focus">フォーカス</button>
+                        <button class="tab-btn ${state.videoTab === 'style' ? 'active' : ''}" data-video-tab="style"
+                            style="background: none; border: none; padding: 4px 8px; font-size: 11px; cursor: pointer; color: ${state.videoTab === 'style' ? '#2563eb' : '#64748b'}; border-bottom: 2px solid ${state.videoTab === 'style' ? '#2563eb' : 'transparent'};"
+                            data-i18n="opt-video-custom-style">カスタムスタイル</button>
                     </div>`;
             } else if (cat === 'flashcard') {
                 extraSettingsHtml = `
@@ -272,14 +305,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // ＋ボタンイベント / + button event
             const addBtn = section.querySelector('.btn-add-category');
-            addBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const category = addBtn.dataset.category;
-                resetForm();
-                categoryInput.value = category;
-                adminSection.scrollIntoView({ behavior: 'smooth' });
-                titleInput.focus();
-            });
+            if (addBtn) {
+                addBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const category = addBtn.dataset.category;
+                    resetForm();
+                    categoryInput.value = category;
+                    adminSection.scrollIntoView({ behavior: 'smooth' });
+                    titleInput.focus();
+                });
+            }
+
+            // タブ切替イベント（videoカテゴリのみ） / Tab switch event (video category only)
+            if (cat === 'video') {
+                const tabButtons = section.querySelectorAll('.video-tabs .tab-btn');
+                tabButtons.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        state.videoTab = btn.dataset.videoTab;
+                        tabButtons.forEach(b => {
+                            const isActive = b.dataset.videoTab === state.videoTab;
+                            b.classList.toggle('active', isActive);
+                            b.style.color = isActive ? '#2563eb' : '#64748b';
+                            b.style.borderBottom = `2px solid ${isActive ? '#2563eb' : 'transparent'}`;
+                        });
+                        loadAndRenderPrompts();
+                    });
+                });
+            }
         });
 
         // 動的に追加された要素ので、要素参照を再初期化する必要があるもの / Elements that were dynamically added and need their references re-initialized
@@ -676,6 +728,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (cat === 'research') {
                     return p.category === cat || !p.category;
                 }
+                if (cat === 'video') {
+                    if (p.category !== 'video') return false;
+                    const sub = p.subCategory || 'focus';
+                    return sub === state.videoTab;
+                }
                 return p.category === cat;
             });
 
@@ -791,6 +848,18 @@ document.addEventListener('DOMContentLoaded', () => {
         textInput.value = prompt.text;
         adminTitle.innerText = TRANSLATIONS[state.language]['admin-edit-title'];
         saveBtn.innerText = TRANSLATIONS[state.language]['btn-update'];
+
+        // サブカテゴリの復元 / Restore subcategory
+        if (prompt.category === 'video') {
+            videoSubcategoryGroup.style.display = 'block';
+            const sub = prompt.subCategory || 'focus';
+            videoSubcategoryHidden.value = sub;
+            videoSubFocusRadio.checked = (sub === 'focus');
+            videoSubStyleRadio.checked = (sub === 'style');
+        } else {
+            videoSubcategoryGroup.style.display = 'none';
+        }
+
         updateCharCount();
         updateTitleCharCount();
         updateTagsCharCount();
@@ -864,11 +933,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         chrome.storage.local.get(['prompts'], (result) => {
             const prompts = Array.isArray(result.prompts) ? result.prompts : [];
-            const newPrompt = { title, category, tags, text, isFavorite };
+            const subCategory = category === 'video' ? (videoSubcategoryHidden.value || 'focus') : undefined;
+            const newPrompt = { title, category, subCategory, tags, text, isFavorite };
 
             // カテゴリ別の件数上限チェック（新規追加時のみ） / Per-category limit check (only for new additions)
             if (editIndex < 0) {
-                const catCount = prompts.filter(p => (p.category || 'research') === category).length;
+                const catCount = prompts.filter(p => {
+                    if ((p.category || 'research') !== category) return false;
+                    if (category === 'video') {
+                        return (p.subCategory || 'focus') === subCategory;
+                    }
+                    return true;
+                }).length;
+
                 if (catCount >= MAX_PROMPTS_PER_CATEGORY) {
                     showValidationError(categoryInput, TRANSLATIONS[state.language]['err-cat-limit']);
                     return;
@@ -903,6 +980,12 @@ document.addEventListener('DOMContentLoaded', () => {
         textInput.value = '';
         adminTitle.innerText = TRANSLATIONS[state.language]['admin-add-title'];
         saveBtn.innerText = TRANSLATIONS[state.language]['btn-save'];
+
+        // サブカテゴリリセット / Subcategory reset
+        videoSubcategoryGroup.style.display = 'none';
+        videoSubcategoryHidden.value = 'focus';
+        videoSubFocusRadio.checked = true;
+
         updateCharCount();
         updateTitleCharCount();
         updateTagsCharCount();

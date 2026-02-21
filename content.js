@@ -314,15 +314,28 @@
     /**
      * お気に入りボタンの生成
      * @param {string} categoryFilter - カテゴリで絞り込む場合 ('audio', 'research'等)
+     * @param {string} subCategoryFilter - サブカテゴリで絞り込む場合
      */
-    function createFavoriteButtons(categoryFilter = null) {
+    function createFavoriteButtons(categoryFilter = null, subCategoryFilter = null) {
         let filtered = favoritePrompts;
         if (categoryFilter) {
             filtered = favoritePrompts.filter(p => {
                 // 特定のカテゴリに合致するか、'research'指定時はカテゴリ未設定のものも救済する
-                if (p.category === categoryFilter) return true;
-                if (categoryFilter === 'research' && !p.category) return true;
-                return false;
+                if (p.category !== categoryFilter) {
+                    if (categoryFilter === 'research' && !p.category) {
+                        // 救済対象
+                    } else {
+                        return false;
+                    }
+                }
+
+                // サブカテゴリのチェック
+                if (subCategoryFilter) {
+                    const sub = p.subCategory || 'focus';
+                    return sub === subCategoryFilter;
+                }
+
+                return true;
             });
         }
 
@@ -756,6 +769,7 @@
 
                 const text = (label.innerText || '').trim();
                 let category = null;
+                let subCategory = null;
 
                 // 各カテゴリのターゲットラベルを内容（テキスト）で厳密に照合
                 if (text.includes('作成したいレポートの内容を記入してください') || text.includes('Describe the report you want to create')) {
@@ -782,10 +796,16 @@
                     category = 'audio';
                 } else if (label.id === 'videoFocus-label') {
                     category = 'video';
+                    subCategory = 'focus';
+                } else if (text.includes('独自のビジュアル スタイルを説明してください') ||
+                    text.includes('独自のビジュアルスタイルを説明してください') ||
+                    text.includes('Describe a custom visual style')) {
+                    category = 'video';
+                    subCategory = 'style';
                 }
 
                 if (category) {
-                    const favButtons = createFavoriteButtons(category);
+                    const favButtons = createFavoriteButtons(category, subCategory);
                     if (favButtons) {
                         label.style.display = 'inline-flex';
                         label.style.alignItems = 'center';
