@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const MAX_TITLE_LENGTH = 20;
     const MAX_TAG_LENGTH = 20;
     const MAX_TAG_COUNT = 10;
-    const MAX_TEXT_LENGTH = 5000;
+    const MAX_TEXT_LENGTH = 10000;
     const MAX_PROMPTS_PER_CATEGORY = 20;
 
     // コンテナ / Containers
