@@ -26,6 +26,18 @@
         '議論': ['議論', 'Debate']
     };
 
+    // フラッシュカード設定のマッピング / Flashcard setting mapping
+    const FLASHCARD_COUNT_MAP = {
+        '少なめ': ['少なめ', 'Fewer'],
+        '標準': ['標準', 'Standard'],
+        '多め': ['多め', 'More']
+    };
+    const FLASHCARD_DIFFICULTY_MAP = {
+        '簡単': ['簡単', 'Easy'],
+        '標準': ['標準', 'Medium'],
+        '難しい': ['難しい', 'Hard']
+    };
+
     // 基本スタイルの注入 / Inject basic styles
     const style = document.createElement('style');
     style.textContent = `
@@ -321,9 +333,10 @@
                         // カードの枚数 / Number of Cards
                         if (flashcardCardCount && (headerText.includes('カードの枚数') || headerText.includes('Number of Cards'))) {
                             const buttons = col.querySelectorAll('button');
+                            const targetTexts = FLASHCARD_COUNT_MAP[flashcardCardCount] || [flashcardCardCount];
                             for (const btn of buttons) {
                                 const btnText = btn.innerText.trim();
-                                if (btnText.includes(flashcardCardCount)) {
+                                if (targetTexts.some(txt => btnText.includes(txt))) {
                                     if (btn.classList.contains('unselected-option-button')) {
                                         btn.click();
                                         log(`Auto-selected flashcard count: ${flashcardCardCount}`);
@@ -337,9 +350,10 @@
                         // 難易度レベル / Level of Difficulty
                         if (flashcardDifficulty && (headerText.includes('難易度レベル') || headerText.includes('Level of Difficulty'))) {
                             const buttons = col.querySelectorAll('button');
+                            const targetTexts = FLASHCARD_DIFFICULTY_MAP[flashcardDifficulty] || [flashcardDifficulty];
                             for (const btn of buttons) {
                                 const btnText = btn.innerText.trim();
-                                if (btnText.includes(flashcardDifficulty)) {
+                                if (targetTexts.some(txt => btnText.includes(txt))) {
                                     if (btn.classList.contains('unselected-option-button')) {
                                         btn.click();
                                         log(`Auto-selected flashcard difficulty: ${flashcardDifficulty}`);
