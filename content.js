@@ -158,11 +158,31 @@
 
         target.focus();
         try {
-            document.execCommand('insertText', false, text);
+            if (target.tagName === 'TEXTAREA' || target.tagName === 'INPUT') {
+                target.setRangeText(text, target.selectionStart, target.selectionEnd, 'end');
+                // フレームワークにイベントを通知
+                target.dispatchEvent(new Event('input', { bubbles: true }));
+            } else if (target.isContentEditable) {
+                // contenteditable要素の場合
+                const selection = window.getSelection();
+                if (selection.rangeCount > 0) {
+                    const range = selection.getRangeAt(0);
+                    range.deleteContents();
+                    range.insertNode(document.createTextNode(text));
+                    // カーソルを末尾に移動
+                    range.collapse(false);
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                    target.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+            } else {
+                // フォールバック
+                document.execCommand('insertText', false, text);
+            }
             // lastFocusedElement を更新しておく
             lastFocusedElement = target;
         } catch (err) {
-            if (DEBUG) console.error('[CueCard] Insertion failed', err);
+            if (DEBUG) console.error('[Prompt Manager] Insertion failed', err);
         }
     }
 
