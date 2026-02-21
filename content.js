@@ -100,10 +100,10 @@
             if (chrome.runtime.lastError) return;
             autoDeepResearchEnabled = !!result.autoDeepResearch;
             audioFormat = result.audioFormat || '';
-            flashcardCardCount = result.flashcardCardCount || '';
-            flashcardDifficulty = result.flashcardDifficulty || '';
-            quizQuestionCount = result.quizQuestionCount || '';
-            quizDifficulty = result.quizDifficulty || '';
+            flashcardCardCount = result.flashcardCardCount || '標準';
+            flashcardDifficulty = result.flashcardDifficulty || '標準';
+            quizQuestionCount = result.quizQuestionCount || '標準';
+            quizDifficulty = result.quizDifficulty || '標準';
             if (result.prompts) {
                 favoritePrompts = result.prompts.filter(p => p.isFavorite);
             }

@@ -139,7 +139,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="setting-item">
                             <span class="setting-label" data-i18n="setting-card-count">カードの枚数</span>
                             <select id="setting-flashcard-card-count" class="setting-select">
-                                <option value="">(自動選択なし)</option>
                                 <option value="少なめ" data-i18n="opt-fewer">少なめ</option>
                                 <option value="標準" data-i18n="opt-standard">標準（デフォルト）</option>
                                 <option value="多め" data-i18n="opt-more">多め</option>
@@ -148,7 +147,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="setting-item" style="margin-top: 4px;">
                             <span class="setting-label" data-i18n="setting-difficulty">難易度レベル</span>
                             <select id="setting-flashcard-difficulty" class="setting-select">
-                                <option value="">(自動選択なし)</option>
                                 <option value="簡単" data-i18n="opt-easy">簡単</option>
                                 <option value="標準" data-i18n="opt-medium">標準（デフォルト）</option>
                                 <option value="難しい" data-i18n="opt-hard">難しい</option>
@@ -161,7 +159,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="setting-item">
                             <span class="setting-label" data-i18n="setting-question-count">質問の数</span>
                             <select id="setting-quiz-question-count" class="setting-select">
-                                <option value="">(自動選択なし)</option>
                                 <option value="少なめ" data-i18n="opt-fewer">少なめ</option>
                                 <option value="標準" data-i18n="opt-standard">標準（デフォルト）</option>
                                 <option value="多め" data-i18n="opt-more">多め</option>
@@ -170,7 +167,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="setting-item" style="margin-top: 4px;">
                             <span class="setting-label" data-i18n="setting-difficulty">難易度レベル</span>
                             <select id="setting-quiz-difficulty" class="setting-select">
-                                <option value="">(自動選択なし)</option>
                                 <option value="簡単" data-i18n="opt-easy">簡単</option>
                                 <option value="標準" data-i18n="opt-medium">標準（デフォルト）</option>
                                 <option value="難しい" data-i18n="opt-hard">難しい</option>
@@ -436,21 +432,21 @@ document.addEventListener('DOMContentLoaded', () => {
             const flashcardCardCountInputLocal = document.getElementById('setting-flashcard-card-count');
             const flashcardDifficultyInputLocal = document.getElementById('setting-flashcard-difficulty');
 
-            if (flashcardCardCountInputLocal && result.flashcardCardCount) {
-                flashcardCardCountInputLocal.value = result.flashcardCardCount;
+            if (flashcardCardCountInputLocal) {
+                flashcardCardCountInputLocal.value = result.flashcardCardCount || '標準';
             }
-            if (flashcardDifficultyInputLocal && result.flashcardDifficulty) {
-                flashcardDifficultyInputLocal.value = result.flashcardDifficulty;
+            if (flashcardDifficultyInputLocal) {
+                flashcardDifficultyInputLocal.value = result.flashcardDifficulty || '標準';
             }
 
             const quizQuestionCountInputLocal = document.getElementById('setting-quiz-question-count');
             const quizDifficultyInputLocal = document.getElementById('setting-quiz-difficulty');
 
-            if (quizQuestionCountInputLocal && result.quizQuestionCount) {
-                quizQuestionCountInputLocal.value = result.quizQuestionCount;
+            if (quizQuestionCountInputLocal) {
+                quizQuestionCountInputLocal.value = result.quizQuestionCount || '標準';
             }
-            if (quizDifficultyInputLocal && result.quizDifficulty) {
-                quizDifficultyInputLocal.value = result.quizDifficulty;
+            if (quizDifficultyInputLocal) {
+                quizDifficultyInputLocal.value = result.quizDifficulty || '標準';
             }
 
             updateTagCloud(prompts);
