@@ -450,6 +450,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     const category = addBtn.dataset.category;
                     resetForm();
                     categoryInput.value = category;
+                    // サブカテゴリの表示を更新 / Update subcategory visibility
+                    videoSubcategoryGroup.style.display = category === 'video' ? 'block' : 'none';
+                    chatSubcategoryGroup.style.display = category === 'chat' ? 'block' : 'none';
                     adminSection.scrollIntoView({ behavior: 'smooth' });
                     titleInput.focus();
                 });
@@ -933,12 +936,21 @@ document.addEventListener('DOMContentLoaded', () => {
         // サブカテゴリの復元 / Restore subcategory
         if (prompt.category === 'video') {
             videoSubcategoryGroup.style.display = 'block';
+            chatSubcategoryGroup.style.display = 'none';
             const sub = prompt.subCategory || 'focus';
             videoSubcategoryHidden.value = sub;
             videoSubFocusRadio.checked = (sub === 'focus');
             videoSubStyleRadio.checked = (sub === 'style');
+        } else if (prompt.category === 'chat') {
+            chatSubcategoryGroup.style.display = 'block';
+            videoSubcategoryGroup.style.display = 'none';
+            const sub = prompt.subCategory || 'chat';
+            chatSubcategoryHidden.value = sub;
+            chatSubMainRadio.checked = (sub === 'chat');
+            chatSubStyleRadio.checked = (sub === 'style');
         } else {
             videoSubcategoryGroup.style.display = 'none';
+            chatSubcategoryGroup.style.display = 'none';
         }
 
         updateCharCount();
@@ -1073,6 +1085,10 @@ document.addEventListener('DOMContentLoaded', () => {
         videoSubcategoryGroup.style.display = 'none';
         videoSubcategoryHidden.value = 'focus';
         videoSubFocusRadio.checked = true;
+
+        chatSubcategoryGroup.style.display = 'none';
+        chatSubcategoryHidden.value = 'chat';
+        chatSubMainRadio.checked = true;
 
         updateCharCount();
         updateTitleCharCount();
