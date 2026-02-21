@@ -193,10 +193,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="video-tabs" style="display: flex; gap: 4px; margin-bottom: 8px; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;">
                         <button class="tab-btn ${state.videoTab === 'focus' ? 'active' : ''}" data-video-tab="focus" 
                             style="background: none; border: none; padding: 4px 8px; font-size: 11px; cursor: pointer; color: ${state.videoTab === 'focus' ? '#2563eb' : '#64748b'}; border-bottom: 2px solid ${state.videoTab === 'focus' ? '#2563eb' : 'transparent'};"
-                            data-i18n="opt-video-focus">フォーカス</button>
+                            data-i18n="opt-video-focus">AIホストの焦点</button>
                         <button class="tab-btn ${state.videoTab === 'style' ? 'active' : ''}" data-video-tab="style"
                             style="background: none; border: none; padding: 4px 8px; font-size: 11px; cursor: pointer; color: ${state.videoTab === 'style' ? '#2563eb' : '#64748b'}; border-bottom: 2px solid ${state.videoTab === 'style' ? '#2563eb' : 'transparent'};"
-                            data-i18n="opt-video-custom-style">カスタムスタイル</button>
+                            data-i18n="opt-video-custom-style">カスタムビジュアルスタイル</button>
                     </div>`;
             } else if (cat === 'flashcard') {
                 extraSettingsHtml = `
@@ -279,7 +279,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             section.innerHTML = `
-                <div class="category-header collapsed" id="header-${cat}">
+                <div class="category-header" id="header-${cat}">
                     <div class="category-header-left">
                         <span class="arrow">▼</span>
                         <span class="title" data-i18n="cat-${cat}"></span>
@@ -749,14 +749,8 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             // プロンプトがある場合は展開、ない場合は閉じる / Expand if there are prompts, collapse if not
+            // 【修正】原則すべて展開状態にするため、自動開閉ロジックを削除 / [Fix] Logic removed to keep all expanded by default
             const header = document.getElementById(`header-${cat}`);
-            if (header) {
-                if (catPrompts.length > 0) {
-                    header.classList.remove('collapsed');
-                } else {
-                    header.classList.add('collapsed');
-                }
-            }
 
             // プロンプトがない場合は「なし」を表示 / Display "None" if there are no prompts
             if (catPrompts.length === 0 && !state.searchQuery && state.selectedTags.size === 0) {
