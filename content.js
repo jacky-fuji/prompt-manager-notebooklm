@@ -14,6 +14,8 @@
     let lastFocusedElement = null;
     let autoDeepResearchEnabled = false;
     let audioFormat = '';
+    let flashcardCardCount = '';
+    let flashcardDifficulty = '';
     let favoritePrompts = [];
 
     // 音声解説形式のマッピング（内部値 -> 表示ラベル） / Audio commentary format mapping (internal value -> display label)
@@ -80,10 +82,12 @@
     // 設定とお気に入りをロードしてキャッシュ / Load and cache settings and favorites
     function refreshSettings() {
         if (!isContextValid()) return;
-        chrome.storage.local.get(['autoDeepResearch', 'prompts', 'audioFormat'], (result) => {
+        chrome.storage.local.get(['autoDeepResearch', 'prompts', 'audioFormat', 'flashcardCardCount', 'flashcardDifficulty'], (result) => {
             if (chrome.runtime.lastError) return;
             autoDeepResearchEnabled = !!result.autoDeepResearch;
             audioFormat = result.audioFormat || '';
+            flashcardCardCount = result.flashcardCardCount || '';
+            flashcardDifficulty = result.flashcardDifficulty || '';
             if (result.prompts) {
                 favoritePrompts = result.prompts.filter(p => p.isFavorite);
             }
@@ -98,6 +102,12 @@
             }
             if (changes.audioFormat) {
                 audioFormat = changes.audioFormat.newValue || '';
+            }
+            if (changes.flashcardCardCount) {
+                flashcardCardCount = changes.flashcardCardCount.newValue || '';
+            }
+            if (changes.flashcardDifficulty) {
+                flashcardDifficulty = changes.flashcardDifficulty.newValue || '';
             }
             if (changes.prompts) {
                 const newPrompts = changes.prompts.newValue;
@@ -285,6 +295,64 @@
                                 break;
                             }
                         }
+                    }
+                }
+            }
+
+
+            // C. フラッシュカード形式の自動選択 / Auto-select flashcard format
+            if (flashcardCardCount || flashcardDifficulty) {
+                const dialogs = document.querySelectorAll('mat-dialog-container:not([data-auto-formatted-flash="true"]), configurable-form-dialog:not([data-auto-formatted-flash="true"])');
+                const flashDialog = Array.from(dialogs).find(d => {
+                    const text = d.innerText || '';
+                    return text.includes('フラッシュカード') || text.includes('Flashcards');
+                });
+
+                if (flashDialog) {
+                    let countDone = !flashcardCardCount;
+                    let diffDone = !flashcardDifficulty;
+
+                    const rows = flashDialog.querySelectorAll('.row .column');
+                    rows.forEach(col => {
+                        const h2 = col.querySelector('h2');
+                        if (!h2) return;
+                        const headerText = h2.innerText.trim();
+
+                        // カードの枚数 / Number of Cards
+                        if (flashcardCardCount && (headerText.includes('カードの枚数') || headerText.includes('Number of Cards'))) {
+                            const buttons = col.querySelectorAll('button');
+                            for (const btn of buttons) {
+                                const btnText = btn.innerText.trim();
+                                if (btnText.includes(flashcardCardCount)) {
+                                    if (btn.classList.contains('unselected-option-button')) {
+                                        btn.click();
+                                        log(`Auto-selected flashcard count: ${flashcardCardCount}`);
+                                    }
+                                    countDone = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        // 難易度レベル / Level of Difficulty
+                        if (flashcardDifficulty && (headerText.includes('難易度レベル') || headerText.includes('Level of Difficulty'))) {
+                            const buttons = col.querySelectorAll('button');
+                            for (const btn of buttons) {
+                                const btnText = btn.innerText.trim();
+                                if (btnText.includes(flashcardDifficulty)) {
+                                    if (btn.classList.contains('unselected-option-button')) {
+                                        btn.click();
+                                        log(`Auto-selected flashcard difficulty: ${flashcardDifficulty}`);
+                                    }
+                                    diffDone = true;
+                                    break;
+                                }
+                            }
+                        }
+                    });
+
+                    if (countDone && diffDone) {
+                        flashDialog.setAttribute('data-auto-formatted-flash', 'true');
                     }
                 }
             }

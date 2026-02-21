@@ -133,6 +133,28 @@ document.addEventListener('DOMContentLoaded', () => {
                             </select>
                         </div>
                     </div>`;
+            } else if (cat === 'flashcard') {
+                extraSettingsHtml = `
+                    <div class="settings-panel" style="margin-bottom: 8px;">
+                        <div class="setting-item">
+                            <span class="setting-label" data-i18n="setting-card-count">カードの枚数</span>
+                            <select id="setting-flashcard-card-count" class="setting-select">
+                                <option value="">(自動選択なし)</option>
+                                <option value="少なめ" data-i18n="opt-fewer">少なめ</option>
+                                <option value="標準" data-i18n="opt-standard">標準（デフォルト）</option>
+                                <option value="多め" data-i18n="opt-more">多め</option>
+                            </select>
+                        </div>
+                        <div class="setting-item" style="margin-top: 4px;">
+                            <span class="setting-label" data-i18n="setting-difficulty">難易度レベル</span>
+                            <select id="setting-flashcard-difficulty" class="setting-select">
+                                <option value="">(自動選択なし)</option>
+                                <option value="簡単" data-i18n="opt-easy">簡単</option>
+                                <option value="標準" data-i18n="opt-medium">標準（デフォルト）</option>
+                                <option value="難しい" data-i18n="opt-hard">難しい</option>
+                            </select>
+                        </div>
+                    </div>`;
             }
 
             section.innerHTML = `
@@ -175,6 +197,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // 動的に追加された要素ので、要素参照を再初期化する必要があるもの / Elements that were dynamically added and need their references re-initialized
         const autoDeepResearchInputNew = document.getElementById('setting-auto-deep-research');
         const audioFormatInputNew = document.getElementById('setting-audio-format');
+        const flashcardCardCountInputNew = document.getElementById('setting-flashcard-card-count');
+        const flashcardDifficultyInputNew = document.getElementById('setting-flashcard-difficulty');
 
         if (autoDeepResearchInputNew) {
             autoDeepResearchInputNew.addEventListener('change', (e) => {
@@ -184,6 +208,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (audioFormatInputNew) {
             audioFormatInputNew.addEventListener('change', (e) => {
                 chrome.storage.local.set({ audioFormat: e.target.value });
+            });
+        }
+        if (flashcardCardCountInputNew) {
+            flashcardCardCountInputNew.addEventListener('change', (e) => {
+                chrome.storage.local.set({ flashcardCardCount: e.target.value });
+            });
+        }
+        if (flashcardDifficultyInputNew) {
+            flashcardDifficultyInputNew.addEventListener('change', (e) => {
+                chrome.storage.local.set({ flashcardDifficulty: e.target.value });
             });
         }
     }
@@ -332,7 +366,7 @@ document.addEventListener('DOMContentLoaded', () => {
      * プロンプトと設定をストレージから読み込み / Load prompts and settings from storage
      */
     function loadAndRenderPrompts() {
-        chrome.storage.local.get(['prompts', 'autoDeepResearch', 'audioFormat', 'language'], (result) => {
+        chrome.storage.local.get(['prompts', 'autoDeepResearch', 'audioFormat', 'flashcardCardCount', 'flashcardDifficulty', 'language'], (result) => {
             // 言語設定の反映 / Reflect language setting
             if (result.language) {
                 state.language = result.language;
@@ -363,6 +397,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             if (audioFormatInputLocal && result.audioFormat) {
                 audioFormatInputLocal.value = result.audioFormat;
+            }
+
+            const flashcardCardCountInputLocal = document.getElementById('setting-flashcard-card-count');
+            const flashcardDifficultyInputLocal = document.getElementById('setting-flashcard-difficulty');
+
+            if (flashcardCardCountInputLocal && result.flashcardCardCount) {
+                flashcardCardCountInputLocal.value = result.flashcardCardCount;
+            }
+            if (flashcardDifficultyInputLocal && result.flashcardDifficulty) {
+                flashcardDifficultyInputLocal.value = result.flashcardDifficulty;
             }
 
             updateTagCloud(prompts);
