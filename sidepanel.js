@@ -40,19 +40,13 @@ document.addEventListener('DOMContentLoaded', () => {
         loadAndRenderPrompts();
     }
 
+    // バリデーション定数とカテゴリ定義（ここを一括管理の元にする）
+    const VALID_CATEGORIES = ['research', 'audio', 'video', 'report', 'flashcard', 'quiz', 'infographic', 'slide', 'datatable'];
+
     // コンテナ
     const adminSection = document.getElementById('admin-section');
-    const listContainers = {
-        research: document.getElementById('list-research'),
-        audio: document.getElementById('list-audio'),
-        video: document.getElementById('list-video'),
-        report: document.getElementById('list-report'),
-        flashcard: document.getElementById('list-flashcard'),
-        quiz: document.getElementById('list-quiz'),
-        infographic: document.getElementById('list-infographic'),
-        slide: document.getElementById('list-slide'),
-        datatable: document.getElementById('list-datatable')
-    };
+    const promptListContainer = document.getElementById('prompt-list-container');
+    const listContainers = {}; // 動的に紐付け
 
     // ボタン
     const saveBtn = document.getElementById('save-btn');
@@ -97,13 +91,99 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // バリデーション定数
-    const VALID_CATEGORIES = ['research', 'audio', 'video', 'report', 'flashcard', 'quiz', 'infographic', 'slide', 'datatable'];
-    const MAX_TITLE_LENGTH = 20;
-    const MAX_TAG_LENGTH = 20;
-    const MAX_TAG_COUNT = 10;
-    const MAX_TEXT_LENGTH = 5000;
-    const MAX_PROMPTS_PER_CATEGORY = 20;
+    /**
+     * カテゴリセクションの動的生成
+     */
+    function initCategorySections() {
+        if (!promptListContainer) return;
+        promptListContainer.innerHTML = ''; // クリア
+
+        VALID_CATEGORIES.forEach(cat => {
+            const section = document.createElement('section');
+            section.className = 'category-section';
+            section.dataset.category = cat;
+
+            // 各カテゴリ固有の追加設定（Deep Research, Audio Formatなど）
+            let extraSettingsHtml = '';
+            if (cat === 'research') {
+                extraSettingsHtml = `
+                    <div class="settings-panel" style="margin-bottom: 8px;">
+                        <div class="setting-item">
+                            <span class="setting-label" data-i18n="setting-deep-research">Deep Research をデフォルトにする</span>
+                            <label class="switch">
+                                <input type="checkbox" id="setting-auto-deep-research">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>`;
+            } else if (cat === 'audio') {
+                extraSettingsHtml = `
+                    <div class="settings-panel" style="margin-bottom: 8px;">
+                        <div class="setting-item">
+                            <span class="setting-label" data-i18n="setting-audio-format">デフォルト形式</span>
+                            <select id="setting-audio-format" class="setting-select">
+                                <option value="">(自動選択なし)</option>
+                                <option value="詳細" data-i18n="opt-detail">詳細</option>
+                                <option value="概要" data-i18n="opt-summary">概要</option>
+                                <option value="評論" data-i18n="opt-critique">評論</option>
+                                <option value="議論" data-i18n="opt-debate">議論</option>
+                            </select>
+                        </div>
+                    </div>`;
+            }
+
+            section.innerHTML = `
+                <div class="category-header collapsed" id="header-${cat}">
+                    <div class="category-header-left">
+                        <span class="arrow">▼</span>
+                        <span class="title" data-i18n="cat-${cat}"></span>
+                    </div>
+                    <button class="btn-add-category" data-category="${cat}" title="追加">＋</button>
+                </div>
+                <div class="category-content">
+                    ${extraSettingsHtml}
+                    <div class="cue-list" id="list-${cat}"></div>
+                </div>
+            `;
+            promptListContainer.appendChild(section);
+
+            // コンテナ参照を保持
+            listContainers[cat] = section.querySelector(`#list-${cat}`);
+
+            // アコーディオン開閉イベント
+            const header = section.querySelector('.category-header');
+            header.addEventListener('click', (e) => {
+                if (e.target.closest('.btn-add-category')) return;
+                header.classList.toggle('collapsed');
+            });
+
+            // ＋ボタンイベント
+            const addBtn = section.querySelector('.btn-add-category');
+            addBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const category = addBtn.dataset.category;
+                resetForm();
+                categoryInput.value = category;
+                adminSection.scrollIntoView({ behavior: 'smooth' });
+                titleInput.focus();
+            });
+        });
+
+        // 動的に追加された要素ので、要素参照を再初期化する必要があるもの
+        const autoDeepResearchInputNew = document.getElementById('setting-auto-deep-research');
+        const audioFormatInputNew = document.getElementById('setting-audio-format');
+
+        if (autoDeepResearchInputNew) {
+            autoDeepResearchInputNew.addEventListener('change', (e) => {
+                chrome.storage.local.set({ autoDeepResearch: e.target.checked });
+            });
+        }
+        if (audioFormatInputNew) {
+            audioFormatInputNew.addEventListener('change', (e) => {
+                chrome.storage.local.set({ audioFormat: e.target.value });
+            });
+        }
+    }
 
     // フィルタリング状態
 
@@ -116,30 +196,6 @@ document.addEventListener('DOMContentLoaded', () => {
         { title: '動画スクリプト作成', category: 'video', tags: ['YouTube'], text: 'このトピックに基づいた5分間のYouTube動画用台本（導入、構成、結び）を、親しみやすい語り口で作成してください。', isFavorite: false }
     ];
 
-    /**
-     * アコーディオンの開閉制御
-     */
-    document.querySelectorAll('.category-header').forEach(header => {
-        header.addEventListener('click', (e) => {
-            // ＋ボタンのクリックはアコーディオン開閉しない
-            if (e.target.closest('.btn-add-category')) return;
-            header.classList.toggle('collapsed');
-        });
-    });
-
-    /**
-     * カテゴリ別「＋」ボタン：フォームのカテゴリを設定してスクロール
-     */
-    document.querySelectorAll('.btn-add-category').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const category = btn.dataset.category;
-            resetForm();
-            categoryInput.value = category;
-            adminSection.scrollIntoView({ behavior: 'smooth' });
-            titleInput.focus();
-        });
-    });
 
     /**
      * 文字数カウントの更新
@@ -296,11 +352,14 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             // 設定の反映
-            if (autoDeepResearchInput) {
-                autoDeepResearchInput.checked = !!result.autoDeepResearch;
+            const autoDeepResearchInputLocal = document.getElementById('setting-auto-deep-research');
+            const audioFormatInputLocal = document.getElementById('setting-audio-format');
+
+            if (autoDeepResearchInputLocal) {
+                autoDeepResearchInputLocal.checked = !!result.autoDeepResearch;
             }
-            if (audioFormatInput && result.audioFormat) {
-                audioFormatInput.value = result.audioFormat;
+            if (audioFormatInputLocal && result.audioFormat) {
+                audioFormatInputLocal.value = result.audioFormat;
             }
 
             updateTagCloud(prompts);
@@ -308,20 +367,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    /**
-     * 設定変更イベント
-     */
-    if (autoDeepResearchInput) {
-        autoDeepResearchInput.addEventListener('change', (e) => {
-            chrome.storage.local.set({ autoDeepResearch: e.target.checked });
-        });
-    }
-
-    if (audioFormatInput) {
-        audioFormatInput.addEventListener('change', (e) => {
-            chrome.storage.local.set({ audioFormat: e.target.value });
-        });
-    }
 
     /**
      * タグクラウドの更新
@@ -707,5 +752,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 初期起動
+    initCategorySections();
     loadAndRenderPrompts();
 });
