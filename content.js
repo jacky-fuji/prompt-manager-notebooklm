@@ -888,10 +888,6 @@
                     text.includes('Describe a custom visual style')) {
                     category = 'video';
                     subCategory = 'style';
-                } else if (text.includes('会話の目的、スタイル、役割') ||
-                    text.includes('conversational goal')) {
-                    category = 'chat';
-                    subCategory = 'style';
                 }
 
                 if (category) {
@@ -962,6 +958,30 @@
 
                         omnibar.parentElement.insertBefore(chatButtons, omnibar);
                         log('Injected chat favorite buttons before omnibar.');
+                    }
+                }
+            }
+
+            // D. 会話のスタイルダイアログ (Customize Chat) / Conversation Style dialog
+            const styleToggles = document.querySelector('.prompt-section-toggles');
+            if (styleToggles && styleToggles.parentElement) {
+                const parent = styleToggles.parentElement;
+                if (!parent.querySelector('.cuecard-fav-container.chat-style-fav')) {
+                    const chatButtons = createFavoriteButtons('chat', 'style');
+                    if (chatButtons) {
+                        chatButtons.classList.add('chat-style-fav');
+                        // スタイルの調整: 左寄せ、余白など / Style adjustment: Left aligned, margin, etc.
+                        chatButtons.style.display = 'flex';
+                        chatButtons.style.flexWrap = 'wrap';
+                        chatButtons.style.justifyContent = 'flex-start';
+                        chatButtons.style.gap = '6px';
+                        chatButtons.style.marginTop = '12px';
+                        chatButtons.style.marginBottom = '12px';
+                        chatButtons.style.width = '100%';
+
+                        // トグルグループの直後に挿入 / Insert immediately after the toggle group
+                        styleToggles.parentNode.insertBefore(chatButtons, styleToggles.nextSibling);
+                        log('Injected chat style favorite buttons to the customize dialog.');
                     }
                 }
             }
