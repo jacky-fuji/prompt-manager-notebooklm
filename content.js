@@ -337,17 +337,16 @@
         if (categoryFilter) {
             filtered = favoritePrompts.filter(p => {
                 // 特定のカテゴリに合致するか、'research'指定時はカテゴリ未設定のものも救済する
-                if (p.category !== categoryFilter) {
-                    if (categoryFilter === 'research' && !p.category) {
-                        // 救済対象
-                    } else {
-                        return false;
-                    }
-                }
+                const pCat = p.category || 'research';
+                if (pCat !== categoryFilter) return false;
 
                 // サブカテゴリのチェック
                 if (subCategoryFilter) {
-                    const sub = p.subCategory || 'focus';
+                    let sub = p.subCategory;
+                    if (!sub) {
+                        if (pCat === 'video') sub = 'focus';
+                        if (pCat === 'chat') sub = 'chat';
+                    }
                     return sub === subCategoryFilter;
                 }
 
@@ -892,6 +891,7 @@
                 } else if (text.includes('会話の目的、スタイル、役割') ||
                     text.includes('conversational goal')) {
                     category = 'chat';
+                    subCategory = 'style';
                 }
 
                 if (category) {
@@ -911,16 +911,20 @@
             const targetParents = document.querySelectorAll('.actions-options');
             targetParents.forEach(parent => {
                 if (!parent.querySelector('.cuecard-fav-container')) {
-                    const favButtons = createFavoriteButtons('research');
-                    if (favButtons) {
+                    const resButtons = createFavoriteButtons('research');
+                    const chatButtons = createFavoriteButtons('chat', 'chat');
+
+                    if (resButtons || chatButtons) {
                         // 親のレイアウトを調整（改行許可と左揃え） / Adjust parent layout (allow wrapping and left alignment)
                         parent.style.display = 'flex';
                         parent.style.flexWrap = 'wrap';
                         parent.style.justifyContent = 'flex-start';
                         parent.style.alignItems = 'flex-start';
+                        parent.style.gap = '4px';
 
-                        parent.appendChild(favButtons);
-                        log('Injected research favorite buttons to an .actions-options container.');
+                        if (resButtons) parent.appendChild(resButtons);
+                        if (chatButtons) parent.appendChild(chatButtons);
+                        log('Injected research/chat favorite buttons to an .actions-options container.');
                     }
                 }
             });
@@ -930,12 +934,15 @@
                 const triggers = Array.from(document.querySelectorAll('button[aria-haspopup="menu"]'));
                 const resBtn = triggers.find(b => (b.innerText || '').includes('Research'));
                 if (resBtn && resBtn.parentElement && !resBtn.parentElement.querySelector('.cuecard-fav-container')) {
-                    const favButtons = createFavoriteButtons('research');
-                    if (favButtons) {
+                    const resButtons = createFavoriteButtons('research');
+                    const chatButtons = createFavoriteButtons('chat', 'chat');
+                    if (resButtons || chatButtons) {
                         const fallBackParent = resBtn.parentElement;
                         fallBackParent.style.display = 'flex';
                         fallBackParent.style.flexWrap = 'wrap';
-                        fallBackParent.appendChild(favButtons);
+                        fallBackParent.style.gap = '4px';
+                        if (resButtons) fallBackParent.appendChild(resButtons);
+                        if (chatButtons) fallBackParent.appendChild(chatButtons);
                     }
                 }
             }

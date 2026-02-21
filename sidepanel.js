@@ -11,7 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
         searchQuery: '',
         selectedTags: new Set(),
         onConfirmAction: null,
-        videoTab: 'focus'
+        videoTab: 'focus',
+        chatTab: 'chat'
     };
 
     /**
@@ -79,6 +80,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const videoSubFocusRadio = document.getElementById('video-sub-focus');
     const videoSubStyleRadio = document.getElementById('video-sub-style');
 
+    // チャットサブカテゴリ要素 / Chat subcategory elements
+    const chatSubcategoryGroup = document.getElementById('chat-subcategory-group');
+    const chatSubcategoryHidden = document.getElementById('prompt-chat-subcategory');
+    const chatSubMainRadio = document.getElementById('chat-sub-main');
+    const chatSubStyleRadio = document.getElementById('chat-sub-style');
+
     // フィルター要素 / Filter elements
     const searchInput = document.getElementById('search-input');
     const tagCloud = document.getElementById('tag-cloud');
@@ -104,11 +111,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // カテゴリ切替時のサブカテゴリ表示 / Show/hide subcategory based on category selection
     if (categoryInput) {
         categoryInput.addEventListener('change', (e) => {
-            if (e.target.value === 'video') {
-                videoSubcategoryGroup.style.display = 'block';
-            } else {
-                videoSubcategoryGroup.style.display = 'none';
-            }
+            videoSubcategoryGroup.style.display = e.target.value === 'video' ? 'block' : 'none';
+            chatSubcategoryGroup.style.display = e.target.value === 'chat' ? 'block' : 'none';
         });
     }
 
@@ -118,6 +122,113 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     if (videoSubFocusRadio) videoSubFocusRadio.addEventListener('change', handleSubCategoryChange);
     if (videoSubStyleRadio) videoSubStyleRadio.addEventListener('change', handleSubCategoryChange);
+
+    const handleChatSubCategoryChange = (e) => {
+        chatSubcategoryHidden.value = e.target.value;
+    };
+    if (chatSubMainRadio) chatSubMainRadio.addEventListener('change', handleChatSubCategoryChange);
+    if (chatSubStyleRadio) chatSubStyleRadio.addEventListener('change', handleChatSubCategoryChange);
+
+    // 動的に追加された要素ので、要素参照を再初期化する必要があるもの / Elements that were dynamically added and need their references re-initialized
+    const initializeDynamicListeners = () => {
+        const autoDeepResearchInputNew = document.getElementById('setting-auto-deep-research');
+        const chatGoalInputNew = document.getElementById('setting-chat-goal');
+        const chatLengthInputNew = document.getElementById('setting-chat-length');
+        const audioFormatInputNew = document.getElementById('setting-audio-format');
+        const audioLengthInputNew = document.getElementById('setting-audio-length');
+        const reportFormatInputNew = document.getElementById('setting-report-format');
+        const videoFormatInputNew = document.getElementById('setting-video-format');
+        const videoStyleInputNew = document.getElementById('setting-video-style');
+        const flashcardCardCountInputNew = document.getElementById('setting-flashcard-card-count');
+        const flashcardDifficultyInputNew = document.getElementById('setting-flashcard-difficulty');
+        const quizQuestionCountInputNew = document.getElementById('setting-quiz-question-count');
+        const quizDifficultyInputNew = document.getElementById('setting-quiz-difficulty');
+        const infographicLayoutInputNew = document.getElementById('setting-infographic-layout');
+        const infographicDetailLevelInputNew = document.getElementById('setting-infographic-detail-level');
+        const slideFormatInputNew = document.getElementById('setting-slide-format');
+        const slideLengthInputNew = document.getElementById('setting-slide-length');
+
+        if (autoDeepResearchInputNew) {
+            autoDeepResearchInputNew.addEventListener('change', (e) => {
+                chrome.storage.local.set({ autoDeepResearch: e.target.checked });
+            });
+        }
+        if (chatGoalInputNew) {
+            chatGoalInputNew.addEventListener('change', (e) => {
+                chrome.storage.local.set({ chatGoal: e.target.value });
+            });
+        }
+        if (chatLengthInputNew) {
+            chatLengthInputNew.addEventListener('change', (e) => {
+                chrome.storage.local.set({ chatLength: e.target.value });
+            });
+        }
+        if (audioFormatInputNew) {
+            audioFormatInputNew.addEventListener('change', (e) => {
+                chrome.storage.local.set({ audioFormat: e.target.value });
+            });
+        }
+        if (audioLengthInputNew) {
+            audioLengthInputNew.addEventListener('change', (e) => {
+                chrome.storage.local.set({ audioLength: e.target.value });
+            });
+        }
+        if (reportFormatInputNew) {
+            reportFormatInputNew.addEventListener('change', (e) => {
+                chrome.storage.local.set({ reportFormat: e.target.value });
+            });
+        }
+        if (videoFormatInputNew) {
+            videoFormatInputNew.addEventListener('change', (e) => {
+                chrome.storage.local.set({ videoFormat: e.target.value });
+            });
+        }
+        if (videoStyleInputNew) {
+            videoStyleInputNew.addEventListener('change', (e) => {
+                chrome.storage.local.set({ videoStyle: e.target.value });
+            });
+        }
+        if (flashcardCardCountInputNew) {
+            flashcardCardCountInputNew.addEventListener('change', (e) => {
+                chrome.storage.local.set({ flashcardCardCount: e.target.value });
+            });
+        }
+        if (flashcardDifficultyInputNew) {
+            flashcardDifficultyInputNew.addEventListener('change', (e) => {
+                chrome.storage.local.set({ flashcardDifficulty: e.target.value });
+            });
+        }
+        if (quizQuestionCountInputNew) {
+            quizQuestionCountInputNew.addEventListener('change', (e) => {
+                chrome.storage.local.set({ quizQuestionCount: e.target.value });
+            });
+        }
+        if (quizDifficultyInputNew) {
+            quizDifficultyInputNew.addEventListener('change', (e) => {
+                chrome.storage.local.set({ quizDifficulty: e.target.value });
+            });
+        }
+        if (infographicLayoutInputNew) {
+            infographicLayoutInputNew.addEventListener('change', (e) => {
+                chrome.storage.local.set({ infographicLayout: e.target.value });
+            });
+        }
+        if (infographicDetailLevelInputNew) {
+            infographicDetailLevelInputNew.addEventListener('change', (e) => {
+                chrome.storage.local.set({ infographicDetailLevel: e.target.value });
+            });
+        }
+        if (slideFormatInputNew) {
+            slideFormatInputNew.addEventListener('change', (e) => {
+                chrome.storage.local.set({ slideFormat: e.target.value });
+            });
+        }
+        if (slideLengthInputNew) {
+            slideLengthInputNew.addEventListener('change', (e) => {
+                chrome.storage.local.set({ slideLength: e.target.value });
+            });
+        }
+    };
 
     /**
      * カテゴリセクションの動的生成 / Dynamic generation of category sections
@@ -163,6 +274,14 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <option value="Shorter" data-i18n="opt-chat-length-shorter">短め</option>
                             </select>
                         </div>
+                    </div>
+                    <div class="chat-tabs" style="display: flex; gap: 4px; margin-bottom: 8px; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;">
+                        <button class="tab-btn ${state.chatTab === 'chat' ? 'active' : ''}" data-chat-tab="chat" 
+                            style="background: none; border: none; padding: 4px 8px; font-size: 11px; cursor: pointer; color: ${state.chatTab === 'chat' ? '#2563eb' : '#64748b'}; border-bottom: 2px solid ${state.chatTab === 'chat' ? '#2563eb' : 'transparent'};"
+                            data-i18n="opt-chat-main">チャット</button>
+                        <button class="tab-btn ${state.chatTab === 'style' ? 'active' : ''}" data-chat-tab="style"
+                            style="background: none; border: none; padding: 4px 8px; font-size: 11px; cursor: pointer; color: ${state.chatTab === 'style' ? '#2563eb' : '#64748b'}; border-bottom: 2px solid ${state.chatTab === 'style' ? '#2563eb' : 'transparent'};"
+                            data-i18n="opt-chat-style">会話のスタイル</button>
                     </div>`;
             } else if (cat === 'audio') {
                 extraSettingsHtml = `
@@ -352,117 +471,28 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 });
             }
+
+            // タブ切替イベント（chatカテゴリ） / Tab switch event (chat category)
+            if (cat === 'chat') {
+                const tabButtons = section.querySelectorAll('.chat-tabs .tab-btn');
+                tabButtons.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        state.chatTab = btn.dataset.chatTab;
+                        tabButtons.forEach(b => {
+                            const isActive = b.dataset.chatTab === state.chatTab;
+                            b.classList.toggle('active', isActive);
+                            b.style.color = isActive ? '#2563eb' : '#64748b';
+                            b.style.borderBottom = `2px solid ${isActive ? '#2563eb' : 'transparent'}`;
+                        });
+                        loadAndRenderPrompts();
+                    });
+                });
+            }
         });
-
-        // 動的に追加された要素ので、要素参照を再初期化する必要があるもの / Elements that were dynamically added and need their references re-initialized
-        const autoDeepResearchInputNew = document.getElementById('setting-auto-deep-research');
-        const chatGoalInputNew = document.getElementById('setting-chat-goal');
-        const chatLengthInputNew = document.getElementById('setting-chat-length');
-        const audioFormatInputNew = document.getElementById('setting-audio-format');
-        const audioLengthInputNew = document.getElementById('setting-audio-length');
-        const reportFormatInputNew = document.getElementById('setting-report-format');
-        const videoFormatInputNew = document.getElementById('setting-video-format');
-        const videoStyleInputNew = document.getElementById('setting-video-style');
-        const flashcardCardCountInputNew = document.getElementById('setting-flashcard-card-count');
-        const flashcardDifficultyInputNew = document.getElementById('setting-flashcard-difficulty');
-        const quizQuestionCountInputNew = document.getElementById('setting-quiz-question-count');
-        const quizDifficultyInputNew = document.getElementById('setting-quiz-difficulty');
-        const infographicLayoutInputNew = document.getElementById('setting-infographic-layout');
-        const infographicDetailLevelInputNew = document.getElementById('setting-infographic-detail-level');
-        const slideFormatInputNew = document.getElementById('setting-slide-format');
-        const slideLengthInputNew = document.getElementById('setting-slide-length');
-
-        if (autoDeepResearchInputNew) {
-            autoDeepResearchInputNew.addEventListener('change', (e) => {
-                chrome.storage.local.set({ autoDeepResearch: e.target.checked });
-            });
-        }
-        if (chatGoalInputNew) {
-            chatGoalInputNew.addEventListener('change', (e) => {
-                chrome.storage.local.set({ chatGoal: e.target.value });
-            });
-        }
-        if (chatLengthInputNew) {
-            chatLengthInputNew.addEventListener('change', (e) => {
-                chrome.storage.local.set({ chatLength: e.target.value });
-            });
-        }
-        if (audioFormatInputNew) {
-            audioFormatInputNew.addEventListener('change', (e) => {
-                chrome.storage.local.set({ audioFormat: e.target.value });
-            });
-        }
-        if (audioLengthInputNew) {
-            audioLengthInputNew.addEventListener('change', (e) => {
-                chrome.storage.local.set({ audioLength: e.target.value });
-            });
-        }
-        if (reportFormatInputNew) {
-            reportFormatInputNew.addEventListener('change', (e) => {
-                chrome.storage.local.set({ reportFormat: e.target.value });
-            });
-        }
-        if (videoFormatInputNew) {
-            videoFormatInputNew.addEventListener('change', (e) => {
-                chrome.storage.local.set({ videoFormat: e.target.value });
-            });
-        }
-        if (videoStyleInputNew) {
-            videoStyleInputNew.addEventListener('change', (e) => {
-                chrome.storage.local.set({ videoStyle: e.target.value });
-            });
-        }
-        if (flashcardCardCountInputNew) {
-            flashcardCardCountInputNew.addEventListener('change', (e) => {
-                chrome.storage.local.set({ flashcardCardCount: e.target.value });
-            });
-        }
-        if (flashcardDifficultyInputNew) {
-            flashcardDifficultyInputNew.addEventListener('change', (e) => {
-                chrome.storage.local.set({ flashcardDifficulty: e.target.value });
-            });
-        }
-        if (quizQuestionCountInputNew) {
-            quizQuestionCountInputNew.addEventListener('change', (e) => {
-                chrome.storage.local.set({ quizQuestionCount: e.target.value });
-            });
-        }
-        if (quizDifficultyInputNew) {
-            quizDifficultyInputNew.addEventListener('change', (e) => {
-                chrome.storage.local.set({ quizDifficulty: e.target.value });
-            });
-        }
-        if (infographicLayoutInputNew) {
-            infographicLayoutInputNew.addEventListener('change', (e) => {
-                chrome.storage.local.set({ infographicLayout: e.target.value });
-            });
-        }
-        if (infographicDetailLevelInputNew) {
-            infographicDetailLevelInputNew.addEventListener('change', (e) => {
-                chrome.storage.local.set({ infographicDetailLevel: e.target.value });
-            });
-        }
-        if (slideFormatInputNew) {
-            slideFormatInputNew.addEventListener('change', (e) => {
-                chrome.storage.local.set({ slideFormat: e.target.value });
-            });
-        }
-        if (slideLengthInputNew) {
-            slideLengthInputNew.addEventListener('change', (e) => {
-                chrome.storage.local.set({ slideLength: e.target.value });
-            });
-        }
-        if (slideFormatInputNew) {
-            slideFormatInputNew.addEventListener('change', (e) => {
-                chrome.storage.local.set({ slideFormat: e.target.value });
-            });
-        }
-        if (slideLengthInputNew) {
-            slideLengthInputNew.addEventListener('change', (e) => {
-                chrome.storage.local.set({ slideLength: e.target.value });
-            });
-        }
+        initializeDynamicListeners();
     }
+
+
 
     // フィルタリング状態 / Filtering state
 
@@ -785,6 +815,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     const sub = p.subCategory || 'focus';
                     return sub === state.videoTab;
                 }
+                if (cat === 'chat') {
+                    if (p.category !== 'chat') return false;
+                    const sub = p.subCategory || 'chat';
+                    return sub === state.chatTab;
+                }
                 return p.category === cat;
             });
 
@@ -979,7 +1014,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         chrome.storage.local.get(['prompts'], (result) => {
             const prompts = Array.isArray(result.prompts) ? result.prompts : [];
-            const subCategory = category === 'video' ? (videoSubcategoryHidden.value || 'focus') : undefined;
+            let subCategory = undefined;
+            if (category === 'video') {
+                subCategory = videoSubcategoryHidden.value || 'focus';
+            } else if (category === 'chat') {
+                subCategory = chatSubcategoryHidden.value || 'chat';
+            }
             const newPrompt = { title, category, subCategory, tags, text, isFavorite };
 
             // カテゴリ別の件数上限チェック（新規追加時のみ） / Per-category limit check (only for new additions)
@@ -988,6 +1028,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     if ((p.category || 'research') !== category) return false;
                     if (category === 'video') {
                         return (p.subCategory || 'focus') === subCategory;
+                    } else if (category === 'chat') {
+                        return (p.subCategory || 'chat') === subCategory;
                     }
                     return true;
                 }).length;
