@@ -13,7 +13,7 @@ body {
 .container {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
 }
 
 .header {
@@ -21,8 +21,8 @@ body {
     justify-content: space-between;
     align-items: center;
     border-bottom: 2px solid #e2e8f0;
-    padding-bottom: 8px;
-    margin-bottom: 8px;
+    padding-bottom: 6px;
+    margin-bottom: 4px;
 }
 
 .header-left {
@@ -125,12 +125,12 @@ body {
 .admin-section {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
     background: #f1f5f9;
-    padding: 12px;
+    padding: 10px;
     border-radius: 10px;
     border: 1px dashed #cbd5e1;
-    margin-top: 16px;
+    margin-top: 8px;
 }
 
 .admin-section h2 {
@@ -265,7 +265,7 @@ textarea {
 .common-controls {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
 }
 
 #search-input {
@@ -285,7 +285,7 @@ textarea {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
-    margin-bottom: 12px;
+    margin-bottom: 4px;
 }
 
 .tag-chip {
@@ -460,7 +460,7 @@ input:checked+.slider:before {
 
 /* カテゴリ・アコーディオン */
 .category-section {
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     border: 1px solid #e2e8f0;
     border-radius: 12px;
     overflow: hidden;
@@ -468,7 +468,7 @@ input:checked+.slider:before {
 }
 
 .category-header {
-    padding: 10px 12px;
+    padding: 8px 12px;
     background: #f8fafc;
     cursor: pointer;
     display: flex;
