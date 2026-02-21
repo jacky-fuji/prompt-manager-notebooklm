@@ -293,7 +293,7 @@
         }
 
         if (!target) {
-            alert('入力欄をクリックしてから実行してください。');
+            alert('Please click on the input field before proceeding.\n入力欄をクリックしてから実行してください。');
             return;
         }
 
