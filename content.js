@@ -53,18 +53,18 @@
         'Explainer': ['説明動画', 'Explainer'],
         'Brief': ['概要', 'Brief']
     };
-    // ビジュアルスタイルのマッピング / Visual style mapping (carousel labels are always in English)
+    // ビジュアルスタイルのマッピング / Visual style mapping (JP labels for Japanese UI, EN for English)
     const VIDEO_STYLE_MAP = {
-        'Auto-select': ['Auto-select'],
-        'Custom': ['Custom'],
-        'Classic': ['Classic'],
-        'Whiteboard': ['Whiteboard'],
-        'Kawaii': ['Kawaii'],
-        'Anime': ['Anime'],
-        'Watercolor': ['Watercolor'],
-        'Retro print': ['Retro print'],
-        'Heritage': ['Heritage'],
-        'Paper-craft': ['Paper-craft']
+        'Auto-select': ['Auto-select', '自動選択'],
+        'Custom': ['Custom', 'カスタム'],
+        'Classic': ['Classic', 'クラシック'],
+        'Whiteboard': ['Whiteboard', 'ホワイトボード'],
+        'Kawaii': ['Kawaii', 'カワイイ'],
+        'Anime': ['Anime', 'アニメ'],
+        'Watercolor': ['Watercolor', '水彩画'],
+        'Retro print': ['Retro print', 'レトロスタイル'],
+        'Heritage': ['Heritage', '遺産'],
+        'Paper-craft': ['Paper-craft', 'ペーパークラフト']
     };
 
     // フラッシュカード設定のマッピング / Flashcard setting mapping
