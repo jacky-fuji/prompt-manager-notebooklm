@@ -966,22 +966,38 @@
             const styleToggles = document.querySelector('.prompt-section-toggles');
             if (styleToggles && styleToggles.parentElement) {
                 const parent = styleToggles.parentElement;
-                if (!parent.querySelector('.cuecard-fav-container.chat-style-fav')) {
-                    const chatButtons = createFavoriteButtons('chat', 'style');
-                    if (chatButtons) {
-                        chatButtons.classList.add('chat-style-fav');
-                        // スタイルの調整: 左寄せ、余白など / Style adjustment: Left aligned, margin, etc.
-                        chatButtons.style.display = 'flex';
-                        chatButtons.style.flexWrap = 'wrap';
-                        chatButtons.style.justifyContent = 'flex-start';
-                        chatButtons.style.gap = '6px';
-                        chatButtons.style.marginTop = '12px';
-                        chatButtons.style.marginBottom = '12px';
-                        chatButtons.style.width = '100%';
 
-                        // トグルグループの直後に挿入 / Insert immediately after the toggle group
-                        styleToggles.parentNode.insertBefore(chatButtons, styleToggles.nextSibling);
-                        log('Injected chat style favorite buttons to the customize dialog.');
+                // 「カスタム」が選択されているか確認 / Check if "Custom" is selected
+                const checkedToggle = styleToggles.querySelector('.mat-button-toggle-checked');
+                const isCustomSelected = checkedToggle && (
+                    checkedToggle.innerText.includes('Custom') ||
+                    checkedToggle.innerText.includes('カスタム') ||
+                    (checkedToggle.querySelector('button') && checkedToggle.querySelector('button').getAttribute('aria-label') === 'Custom button')
+                );
+
+                let chatButtons = parent.querySelector('.cuecard-fav-container.chat-style-fav');
+
+                if (isCustomSelected) {
+                    if (!chatButtons) {
+                        chatButtons = createFavoriteButtons('chat', 'style');
+                        if (chatButtons) {
+                            chatButtons.classList.add('chat-style-fav');
+                            chatButtons.style.display = 'flex';
+                            chatButtons.style.flexWrap = 'wrap';
+                            chatButtons.style.justifyContent = 'flex-start';
+                            chatButtons.style.gap = '6px';
+                            chatButtons.style.marginTop = '12px';
+                            chatButtons.style.marginBottom = '12px';
+                            chatButtons.style.width = '100%';
+                            styleToggles.parentNode.insertBefore(chatButtons, styleToggles.nextSibling);
+                            log('Injected chat style favorite buttons (active).');
+                        }
+                    } else {
+                        chatButtons.style.display = 'flex';
+                    }
+                } else {
+                    if (chatButtons) {
+                        chatButtons.style.display = 'none';
                     }
                 }
             }
