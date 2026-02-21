@@ -109,13 +109,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    let currentLang = 'ja';
+    // アプリケーションの状態管理
+    const state = {
+        language: 'ja',
+        currentInputTags: [],
+        searchQuery: '',
+        selectedTags: new Set(),
+        onConfirmAction: null
+    };
 
     /**
      * 静的要素の翻訳適用
      */
     function updateStaticTranslations() {
-        const langData = TRANSLATIONS[currentLang];
+        const langData = TRANSLATIONS[state.language];
 
         // テキストの置換
         document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -134,9 +141,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    /**
-     * 言語切替時の全適用
-     */
     function applyLanguageChange() {
         loadAndRenderPrompts();
     }
@@ -166,7 +170,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const tagsInputContainer = document.getElementById('tags-input-container');
     const tagsInputElement = document.getElementById('prompt-tags-input');
     const tagsHiddenInput = document.getElementById('prompt-tags');
-    let currentInputTags = [];
     const favoriteInput = document.getElementById('prompt-favorite');
     const textInput = document.getElementById('prompt-text');
     const editIndexInput = document.getElementById('edit-index');
@@ -188,13 +191,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const confirmMessage = document.getElementById('confirm-message');
     const confirmYesBtn = document.getElementById('confirm-yes-btn');
     const confirmNoBtn = document.getElementById('confirm-no-btn');
-    let onConfirmAction = null;
 
     // 言語切替イベント
     if (languageSelect) {
         languageSelect.addEventListener('change', (e) => {
-            currentLang = e.target.value;
-            chrome.storage.local.set({ language: currentLang }, () => {
+            state.language = e.target.value;
+            chrome.storage.local.set({ language: state.language }, () => {
                 applyLanguageChange();
             });
         });
@@ -209,8 +211,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const MAX_PROMPTS_PER_CATEGORY = 20;
 
     // フィルタリング状態
-    const selectedTags = new Set();
-    let searchQuery = '';
 
     // 初期プロンプトデータ
     const initialPrompts = [
@@ -272,8 +272,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateTagsCharCount() {
-        const count = currentInputTags.length;
-        const suffix = TRANSLATIONS[currentLang]['tag-suffix'];
+        const count = state.currentInputTags.length;
+        const suffix = TRANSLATIONS[state.language]['tag-suffix'];
         tagsCharCountDisplay.innerText = `${count} / ${MAX_TAG_COUNT}${suffix}`;
         if (count >= MAX_TAG_COUNT) {
             tagsCharCountDisplay.classList.add('warning');
@@ -302,8 +302,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.key === 'Enter' || e.key === ',') {
                 e.preventDefault();
                 addTagFromInput();
-            } else if (e.key === 'Backspace' && tagsInputElement.value === '' && currentInputTags.length > 0) {
-                currentInputTags.pop();
+            } else if (e.key === 'Backspace' && tagsInputElement.value === '' && state.currentInputTags.length > 0) {
+                state.currentInputTags.pop();
                 renderInputTags();
                 updateTagsCharCount();
             }
@@ -317,19 +317,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function addTagFromInput() {
         const val = tagsInputElement.value.trim().replace(/,/g, '');
         if (val) {
-            if (currentInputTags.length >= MAX_TAG_COUNT) {
-                // 最大個数制限
-                showValidationError(tagsInputContainer, `タグは${MAX_TAG_COUNT}個までです。`);
-                tagsInputElement.value = '';
-                return;
-            }
             if (val.length > MAX_TAG_LENGTH) {
                 showValidationError(tagsInputContainer, `タグは${MAX_TAG_LENGTH}文字以内で入力してください。`);
                 return;
             }
             // 重複チェック（オプション）
-            if (!currentInputTags.includes(val)) {
-                currentInputTags.push(val);
+            if (!state.currentInputTags.includes(val)) {
+                state.currentInputTags.push(val);
                 renderInputTags();
                 updateTagsCharCount();
             }
@@ -344,7 +338,7 @@ document.addEventListener('DOMContentLoaded', () => {
         chips.forEach(c => c.remove());
 
         // チップを再生成してinputの前に挿入
-        currentInputTags.forEach((tag, index) => {
+        state.currentInputTags.forEach((tag, index) => {
             const chip = document.createElement('div');
             chip.className = 'tag-chip-input';
 
@@ -357,7 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
             removeBtn.innerHTML = '&times;';
             removeBtn.onclick = (e) => {
                 e.stopPropagation();
-                currentInputTags.splice(index, 1);
+                state.currentInputTags.splice(index, 1);
                 renderInputTags();
                 updateTagsCharCount();
             };
@@ -367,7 +361,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // 隠しフィールド更新
-        tagsHiddenInput.value = currentInputTags.join(',');
+        tagsHiddenInput.value = state.currentInputTags.join(',');
     }
 
     /**
@@ -375,7 +369,7 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     if (searchInput) {
         searchInput.addEventListener('input', (e) => {
-            searchQuery = e.target.value.toLowerCase();
+            state.searchQuery = e.target.value.toLowerCase();
             loadAndRenderPrompts();
         });
     }
@@ -387,8 +381,8 @@ document.addEventListener('DOMContentLoaded', () => {
         chrome.storage.local.get(['prompts', 'autoDeepResearch', 'audioFormat', 'language'], (result) => {
             // 言語設定の反映
             if (result.language) {
-                currentLang = result.language;
-                if (languageSelect) languageSelect.value = currentLang;
+                state.language = result.language;
+                if (languageSelect) languageSelect.value = state.language;
             }
             updateStaticTranslations();
             updateTagsCharCount();
@@ -446,23 +440,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
         while (tagCloud.firstChild) tagCloud.removeChild(tagCloud.firstChild);
         const allBtn = document.createElement('button');
-        allBtn.className = `tag-chip ${selectedTags.size === 0 ? 'active' : ''}`;
-        allBtn.innerText = TRANSLATIONS[currentLang]['tag-all'];
+        allBtn.className = `tag-chip ${state.selectedTags.size === 0 ? 'active' : ''}`;
+        allBtn.innerText = TRANSLATIONS[state.language]['tag-all'];
         allBtn.onclick = () => {
-            selectedTags.clear();
+            state.selectedTags.clear();
             loadAndRenderPrompts();
         };
         tagCloud.appendChild(allBtn);
 
         [...allTags].sort().forEach(tag => {
             const btn = document.createElement('button');
-            btn.className = `tag-chip ${selectedTags.has(tag) ? 'active' : ''}`;
+            btn.className = `tag-chip ${state.selectedTags.has(tag) ? 'active' : ''}`;
             btn.innerText = tag;
             btn.onclick = () => {
-                if (selectedTags.has(tag)) {
-                    selectedTags.delete(tag);
+                if (state.selectedTags.has(tag)) {
+                    state.selectedTags.delete(tag);
                 } else {
-                    selectedTags.add(tag);
+                    state.selectedTags.add(tag);
                 }
                 loadAndRenderPrompts();
             };
@@ -482,12 +476,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // フィルタリング
         let filtered = prompts.filter(p => {
             // AND検索: 選択されたすべてのタグを持っているか
-            const matchesTag = selectedTags.size === 0 ||
-                (p.tags && Array.from(selectedTags).every(t => p.tags.includes(t)));
-            const matchesSearch = !searchQuery ||
-                p.title.toLowerCase().includes(searchQuery) ||
-                p.text.toLowerCase().includes(searchQuery) ||
-                (p.tags && p.tags.some(t => t.toLowerCase().includes(searchQuery)));
+            const matchesTag = state.selectedTags.size === 0 ||
+                (p.tags && Array.from(state.selectedTags).every(t => p.tags.includes(t)));
+            const matchesSearch = !state.searchQuery ||
+                p.title.toLowerCase().includes(state.searchQuery) ||
+                p.text.toLowerCase().includes(state.searchQuery) ||
+                (p.tags && p.tags.some(t => t.toLowerCase().includes(state.searchQuery)));
             return matchesTag && matchesSearch;
         });
 
@@ -516,13 +510,13 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             // プロンプトがない場合は「なし」を表示
-            if (catPrompts.length === 0 && !searchQuery && selectedTags.size === 0) {
+            if (catPrompts.length === 0 && !state.searchQuery && state.selectedTags.size === 0) {
                 const empty = document.createElement('div');
                 empty.style.padding = '8px 12px';
                 empty.style.fontSize = '12px';
                 empty.style.color = '#94a3b8';
                 empty.style.textAlign = 'left';
-                empty.innerText = TRANSLATIONS[currentLang]['no-prompts'];
+                empty.innerText = TRANSLATIONS[state.language]['no-prompts'];
                 listContainers[cat].appendChild(empty);
             }
         });
@@ -599,12 +593,12 @@ document.addEventListener('DOMContentLoaded', () => {
         titleInput.value = prompt.title;
         categoryInput.value = prompt.category || 'research';
         tagsHiddenInput.value = prompt.tags ? prompt.tags.join(',') : '';
-        currentInputTags = prompt.tags ? [...prompt.tags] : [];
+        state.currentInputTags = prompt.tags ? [...prompt.tags] : [];
         renderInputTags();
         favoriteInput.checked = !!prompt.isFavorite;
         textInput.value = prompt.text;
-        adminTitle.innerText = TRANSLATIONS[currentLang]['admin-edit-title'];
-        saveBtn.innerText = TRANSLATIONS[currentLang]['btn-update'];
+        adminTitle.innerText = TRANSLATIONS[state.language]['admin-edit-title'];
+        saveBtn.innerText = TRANSLATIONS[state.language]['btn-update'];
         updateCharCount();
         updateTitleCharCount();
         updateTagsCharCount();
@@ -618,7 +612,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (saveBtn) {
         saveBtn.onclick = () => {
             const isUpdate = parseInt(editIndexInput.value) >= 0;
-            const message = TRANSLATIONS[currentLang][isUpdate ? 'confirm-update' : 'confirm-save'];
+            const message = TRANSLATIONS[state.language][isUpdate ? 'confirm-update' : 'confirm-save'];
 
             // バリデーションチェック（簡易）
             if (!titleInput.value.trim() || !textInput.value.trim()) {
@@ -627,7 +621,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            showConfirmModal(message, TRANSLATIONS[currentLang]['btn-confirm-yes'], TRANSLATIONS[currentLang]['btn-confirm-no'], () => {
+            showConfirmModal(message, TRANSLATIONS[state.language]['btn-confirm-yes'], TRANSLATIONS[state.language]['btn-confirm-no'], () => {
                 executeSave();
             });
         };
@@ -639,39 +633,38 @@ document.addEventListener('DOMContentLoaded', () => {
         const title = titleInput.value.trim();
         const category = categoryInput.value;
         const text = textInput.value.trim();
-        const tags = currentInputTags;
+        const tags = state.currentInputTags;
         const isFavorite = favoriteInput.checked;
         const editIndex = parseInt(editIndexInput.value);
 
         let hasError = false;
 
         if (!title) {
-            showValidationError(titleInput, TRANSLATIONS[currentLang]['err-title-empty']);
+            showValidationError(titleInput, TRANSLATIONS[state.language]['err-title-empty']);
             hasError = true;
         } else if (title.length > MAX_TITLE_LENGTH) {
-            showValidationError(titleInput, TRANSLATIONS[currentLang]['err-title-long']);
+            showValidationError(titleInput, TRANSLATIONS[state.language]['err-title-long']);
             hasError = true;
         }
 
         if (!text) {
-            showValidationError(textInput, TRANSLATIONS[currentLang]['err-text-empty']);
+            showValidationError(textInput, TRANSLATIONS[state.language]['err-text-empty']);
             hasError = true;
         } else if (text.length > MAX_TEXT_LENGTH) {
-            showValidationError(textInput, TRANSLATIONS[currentLang]['err-text-long']);
+            showValidationError(textInput, TRANSLATIONS[state.language]['err-text-long']);
             hasError = true;
         }
 
         if (!VALID_CATEGORIES.includes(category)) {
-            showValidationError(categoryInput, TRANSLATIONS[currentLang]['err-cat-invalid']);
+            showValidationError(categoryInput, TRANSLATIONS[state.language]['err-cat-invalid']);
             hasError = true;
         }
 
-        // const tags = tagsRaw ? tagsRaw.split(/[,,、\s]+/).filter(t => t.length > 0) : [];
         if (tags.length > MAX_TAG_COUNT) {
-            showValidationError(tagsInputContainer, TRANSLATIONS[currentLang]['err-tag-count']);
+            showValidationError(tagsInputContainer, TRANSLATIONS[state.language]['err-tag-count']);
             hasError = true;
         } else if (tags.some(t => t.length > MAX_TAG_LENGTH)) {
-            showValidationError(tagsInputContainer, TRANSLATIONS[currentLang]['err-tag-length']);
+            showValidationError(tagsInputContainer, TRANSLATIONS[state.language]['err-tag-length']);
             hasError = true;
         }
 
@@ -685,7 +678,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (editIndex < 0) {
                 const catCount = prompts.filter(p => (p.category || 'research') === category).length;
                 if (catCount >= MAX_PROMPTS_PER_CATEGORY) {
-                    showValidationError(categoryInput, TRANSLATIONS[currentLang]['err-cat-limit']);
+                    showValidationError(categoryInput, TRANSLATIONS[state.language]['err-cat-limit']);
                     return;
                 }
             }
@@ -711,13 +704,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         tagsInputElement.value = '';
         tagsHiddenInput.value = '';
-        currentInputTags = [];
+        state.currentInputTags = [];
         renderInputTags();
 
         favoriteInput.checked = false;
         textInput.value = '';
-        adminTitle.innerText = TRANSLATIONS[currentLang]['admin-add-title'];
-        saveBtn.innerText = TRANSLATIONS[currentLang]['btn-save'];
+        adminTitle.innerText = TRANSLATIONS[state.language]['admin-add-title'];
+        saveBtn.innerText = TRANSLATIONS[state.language]['btn-save'];
         updateCharCount();
         updateTitleCharCount();
         updateTagsCharCount();
@@ -750,8 +743,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function deletePrompt(index, title) {
-        const message = `${TRANSLATIONS[currentLang]['confirm-delete-prefix']}${title}${TRANSLATIONS[currentLang]['confirm-delete-suffix']}`;
-        showConfirmModal(message, TRANSLATIONS[currentLang]['btn-confirm-delete'], TRANSLATIONS[currentLang]['btn-confirm-no'], () => {
+        const message = `${TRANSLATIONS[state.language]['confirm-delete-prefix']}${title}${TRANSLATIONS[state.language]['confirm-delete-suffix']}`;
+        showConfirmModal(message, TRANSLATIONS[state.language]['btn-confirm-delete'], TRANSLATIONS[state.language]['btn-confirm-no'], () => {
             chrome.storage.local.get(['prompts'], (result) => {
                 const prompts = result.prompts || [];
                 prompts.splice(index, 1);
@@ -766,14 +759,14 @@ document.addEventListener('DOMContentLoaded', () => {
         confirmMessage.innerText = message;
         confirmYesBtn.innerText = yesLabel;
         confirmNoBtn.innerText = noLabel;
-        onConfirmAction = onConfirm;
+        state.onConfirmAction = onConfirm;
         confirmModal.classList.add('active');
     }
 
     if (confirmYesBtn) {
         confirmYesBtn.onclick = () => {
-            if (onConfirmAction) {
-                onConfirmAction();
+            if (state.onConfirmAction) {
+                state.onConfirmAction();
             }
             closeModal();
         };
@@ -785,7 +778,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function closeModal() {
         confirmModal.classList.remove('active');
-        onConfirmAction = null;
+        state.onConfirmAction = null;
     }
 
     // モーダルの外側をクリックして閉じる
@@ -799,7 +792,7 @@ document.addEventListener('DOMContentLoaded', () => {
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             if (tabs[0]) {
                 chrome.tabs.sendMessage(tabs[0].id, { action: 'insertText', text: text }, (res) => {
-                    if (chrome.runtime.lastError) alert(TRANSLATIONS[currentLang]['reload-page']);
+                    if (chrome.runtime.lastError) alert(TRANSLATIONS[state.language]['reload-page']);
                 });
             }
         });
@@ -812,7 +805,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 resetForm();
                 return;
             }
-            showConfirmModal(TRANSLATIONS[currentLang]['confirm-cancel'], TRANSLATIONS[currentLang]['btn-confirm-yes'], TRANSLATIONS[currentLang]['btn-confirm-no'], () => {
+            showConfirmModal(TRANSLATIONS[state.language]['confirm-cancel'], TRANSLATIONS[state.language]['btn-confirm-yes'], TRANSLATIONS[state.language]['btn-confirm-no'], () => {
                 resetForm();
             });
         };

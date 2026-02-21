@@ -7,4 +7,4 @@ Thumbs.db
 *.zip
 
 # Local development
-_ignore/
+ignore/
