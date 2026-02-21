@@ -16,6 +16,8 @@
     let audioFormat = '';
     let flashcardCardCount = '';
     let flashcardDifficulty = '';
+    let quizQuestionCount = '';
+    let quizDifficulty = '';
     let favoritePrompts = [];
 
     // 音声解説形式のマッピング（内部値 -> 表示ラベル） / Audio commentary format mapping (internal value -> display label)
@@ -94,12 +96,14 @@
     // 設定とお気に入りをロードしてキャッシュ / Load and cache settings and favorites
     function refreshSettings() {
         if (!isContextValid()) return;
-        chrome.storage.local.get(['autoDeepResearch', 'prompts', 'audioFormat', 'flashcardCardCount', 'flashcardDifficulty'], (result) => {
+        chrome.storage.local.get(['autoDeepResearch', 'prompts', 'audioFormat', 'flashcardCardCount', 'flashcardDifficulty', 'quizQuestionCount', 'quizDifficulty'], (result) => {
             if (chrome.runtime.lastError) return;
             autoDeepResearchEnabled = !!result.autoDeepResearch;
             audioFormat = result.audioFormat || '';
             flashcardCardCount = result.flashcardCardCount || '';
             flashcardDifficulty = result.flashcardDifficulty || '';
+            quizQuestionCount = result.quizQuestionCount || '';
+            quizDifficulty = result.quizDifficulty || '';
             if (result.prompts) {
                 favoritePrompts = result.prompts.filter(p => p.isFavorite);
             }
@@ -120,6 +124,12 @@
             }
             if (changes.flashcardDifficulty) {
                 flashcardDifficulty = changes.flashcardDifficulty.newValue || '';
+            }
+            if (changes.quizQuestionCount) {
+                quizQuestionCount = changes.quizQuestionCount.newValue || '';
+            }
+            if (changes.quizDifficulty) {
+                quizDifficulty = changes.quizDifficulty.newValue || '';
             }
             if (changes.prompts) {
                 const newPrompts = changes.prompts.newValue;
@@ -367,6 +377,65 @@
 
                     if (countDone && diffDone) {
                         flashDialog.setAttribute('data-auto-formatted-flash', 'true');
+                    }
+                }
+            }
+
+            // D. クイズ形式の自動選択 / Auto-select quiz format
+            if (quizQuestionCount || quizDifficulty) {
+                const dialogs = document.querySelectorAll('mat-dialog-container:not([data-auto-formatted-quiz="true"]), configurable-form-dialog:not([data-auto-formatted-quiz="true"])');
+                const quizDialog = Array.from(dialogs).find(d => {
+                    const text = d.innerText || '';
+                    return text.includes('クイズ') || text.includes('Quiz');
+                });
+
+                if (quizDialog) {
+                    let countDone = !quizQuestionCount;
+                    let diffDone = !quizDifficulty;
+
+                    const rows = quizDialog.querySelectorAll('.row .column');
+                    rows.forEach(col => {
+                        const h2 = col.querySelector('h2');
+                        if (!h2) return;
+                        const headerText = h2.innerText.trim();
+
+                        // 質問の数 / Number of Questions
+                        if (quizQuestionCount && (headerText.includes('質問の数') || headerText.includes('Number of Questions'))) {
+                            const buttons = col.querySelectorAll('button');
+                            const targetTexts = FLASHCARD_COUNT_MAP[quizQuestionCount] || [quizQuestionCount];
+                            for (const btn of buttons) {
+                                const btnText = btn.innerText.trim();
+                                if (targetTexts.some(txt => btnText.includes(txt))) {
+                                    if (btn.classList.contains('unselected-option-button')) {
+                                        btn.click();
+                                        log(`Auto-selected quiz question count: ${quizQuestionCount}`);
+                                    }
+                                    countDone = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        // 難易度レベル / Level of Difficulty
+                        if (quizDifficulty && (headerText.includes('難易度レベル') || headerText.includes('Level of Difficulty'))) {
+                            const buttons = col.querySelectorAll('button');
+                            const targetTexts = FLASHCARD_DIFFICULTY_MAP[quizDifficulty] || [quizDifficulty];
+                            for (const btn of buttons) {
+                                const btnText = btn.innerText.trim();
+                                if (targetTexts.some(txt => btnText.includes(txt))) {
+                                    if (btn.classList.contains('unselected-option-button')) {
+                                        btn.click();
+                                        log(`Auto-selected quiz difficulty: ${quizDifficulty}`);
+                                    }
+                                    diffDone = true;
+                                    break;
+                                }
+                            }
+                        }
+                    });
+
+                    if (countDone && diffDone) {
+                        quizDialog.setAttribute('data-auto-formatted-quiz', 'true');
                     }
                 }
             }

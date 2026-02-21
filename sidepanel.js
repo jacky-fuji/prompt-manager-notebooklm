@@ -155,6 +155,28 @@ document.addEventListener('DOMContentLoaded', () => {
                             </select>
                         </div>
                     </div>`;
+            } else if (cat === 'quiz') {
+                extraSettingsHtml = `
+                    <div class="settings-panel" style="margin-bottom: 8px;">
+                        <div class="setting-item">
+                            <span class="setting-label" data-i18n="setting-question-count">質問の数</span>
+                            <select id="setting-quiz-question-count" class="setting-select">
+                                <option value="">(自動選択なし)</option>
+                                <option value="少なめ" data-i18n="opt-fewer">少なめ</option>
+                                <option value="標準" data-i18n="opt-standard">標準（デフォルト）</option>
+                                <option value="多め" data-i18n="opt-more">多め</option>
+                            </select>
+                        </div>
+                        <div class="setting-item" style="margin-top: 4px;">
+                            <span class="setting-label" data-i18n="setting-difficulty">難易度レベル</span>
+                            <select id="setting-quiz-difficulty" class="setting-select">
+                                <option value="">(自動選択なし)</option>
+                                <option value="簡単" data-i18n="opt-easy">簡単</option>
+                                <option value="標準" data-i18n="opt-medium">標準（デフォルト）</option>
+                                <option value="難しい" data-i18n="opt-hard">難しい</option>
+                            </select>
+                        </div>
+                    </div>`;
             }
 
             section.innerHTML = `
@@ -199,6 +221,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const audioFormatInputNew = document.getElementById('setting-audio-format');
         const flashcardCardCountInputNew = document.getElementById('setting-flashcard-card-count');
         const flashcardDifficultyInputNew = document.getElementById('setting-flashcard-difficulty');
+        const quizQuestionCountInputNew = document.getElementById('setting-quiz-question-count');
+        const quizDifficultyInputNew = document.getElementById('setting-quiz-difficulty');
 
         if (autoDeepResearchInputNew) {
             autoDeepResearchInputNew.addEventListener('change', (e) => {
@@ -218,6 +242,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (flashcardDifficultyInputNew) {
             flashcardDifficultyInputNew.addEventListener('change', (e) => {
                 chrome.storage.local.set({ flashcardDifficulty: e.target.value });
+            });
+        }
+        if (quizQuestionCountInputNew) {
+            quizQuestionCountInputNew.addEventListener('change', (e) => {
+                chrome.storage.local.set({ quizQuestionCount: e.target.value });
+            });
+        }
+        if (quizDifficultyInputNew) {
+            quizDifficultyInputNew.addEventListener('change', (e) => {
+                chrome.storage.local.set({ quizDifficulty: e.target.value });
             });
         }
     }
@@ -366,7 +400,7 @@ document.addEventListener('DOMContentLoaded', () => {
      * プロンプトと設定をストレージから読み込み / Load prompts and settings from storage
      */
     function loadAndRenderPrompts() {
-        chrome.storage.local.get(['prompts', 'autoDeepResearch', 'audioFormat', 'flashcardCardCount', 'flashcardDifficulty', 'language'], (result) => {
+        chrome.storage.local.get(['prompts', 'autoDeepResearch', 'audioFormat', 'flashcardCardCount', 'flashcardDifficulty', 'quizQuestionCount', 'quizDifficulty', 'language'], (result) => {
             // 言語設定の反映 / Reflect language setting
             if (result.language) {
                 state.language = result.language;
@@ -407,6 +441,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             if (flashcardDifficultyInputLocal && result.flashcardDifficulty) {
                 flashcardDifficultyInputLocal.value = result.flashcardDifficulty;
+            }
+
+            const quizQuestionCountInputLocal = document.getElementById('setting-quiz-question-count');
+            const quizDifficultyInputLocal = document.getElementById('setting-quiz-difficulty');
+
+            if (quizQuestionCountInputLocal && result.quizQuestionCount) {
+                quizQuestionCountInputLocal.value = result.quizQuestionCount;
+            }
+            if (quizDifficultyInputLocal && result.quizDifficulty) {
+                quizDifficultyInputLocal.value = result.quizDifficulty;
             }
 
             updateTagCloud(prompts);
