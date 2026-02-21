@@ -125,7 +125,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="setting-item">
                             <span class="setting-label" data-i18n="setting-audio-format">デフォルト形式</span>
                             <select id="setting-audio-format" class="setting-select">
-                                <option value="">(自動選択なし)</option>
                                 <option value="詳細" data-i18n="opt-detail">詳細</option>
                                 <option value="概要" data-i18n="opt-summary">概要</option>
                                 <option value="評論" data-i18n="opt-critique">評論</option>
@@ -425,8 +424,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (autoDeepResearchInputLocal) {
                 autoDeepResearchInputLocal.checked = !!result.autoDeepResearch;
             }
-            if (audioFormatInputLocal && result.audioFormat) {
-                audioFormatInputLocal.value = result.audioFormat;
+            if (audioFormatInputLocal) {
+                audioFormatInputLocal.value = result.audioFormat || '詳細';
             }
 
             const flashcardCardCountInputLocal = document.getElementById('setting-flashcard-card-count');

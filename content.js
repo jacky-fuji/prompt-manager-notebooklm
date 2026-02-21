@@ -99,7 +99,7 @@
         chrome.storage.local.get(['autoDeepResearch', 'prompts', 'audioFormat', 'flashcardCardCount', 'flashcardDifficulty', 'quizQuestionCount', 'quizDifficulty'], (result) => {
             if (chrome.runtime.lastError) return;
             autoDeepResearchEnabled = !!result.autoDeepResearch;
-            audioFormat = result.audioFormat || '';
+            audioFormat = result.audioFormat || '詳細';
             flashcardCardCount = result.flashcardCardCount || '標準';
             flashcardDifficulty = result.flashcardDifficulty || '標準';
             quizQuestionCount = result.quizQuestionCount || '標準';
