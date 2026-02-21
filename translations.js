@@ -28,7 +28,6 @@ const TRANSLATIONS = {
         'setting-layout': 'レイアウト',
         'setting-detail-level': '詳細レベル',
         'opt-fewer': '少なめ',
-        'opt-fewer': '少なめ',
         'opt-standard': '標準',
         'opt-more': '多め',
         'opt-easy': '簡単',
