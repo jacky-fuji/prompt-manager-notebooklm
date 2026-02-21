@@ -948,23 +948,24 @@
             }
 
             // C. メインチャットエリア (omnibar) / Main chat area (omnibar)
-            const queryBoxContainer = document.querySelector('.query-box-container');
-            if (queryBoxContainer && queryBoxContainer.parentElement) {
-                if (!queryBoxContainer.parentElement.querySelector('.cuecard-fav-container.chat-main-fav')) {
+            const omnibar = document.querySelector('omnibar');
+            if (omnibar && omnibar.parentElement) {
+                if (!omnibar.parentElement.querySelector('.cuecard-fav-container.chat-main-fav')) {
                     const chatButtons = createFavoriteButtons('chat', 'chat');
                     if (chatButtons) {
                         chatButtons.classList.add('chat-main-fav');
-                        // スタイルの調整: 左寄せ、余白など / Style adjustment: Left aligned, margin, etc.
+                        // omnibarの上に配置（入力エリアの外に出す） / Place above omnibar (outside the input area)
                         chatButtons.style.display = 'flex';
                         chatButtons.style.flexWrap = 'wrap';
-                        chatButtons.style.justifyContent = 'flex-start';
-                        chatButtons.style.gap = '4px';
-                        chatButtons.style.marginBottom = '8px';
-                        chatButtons.style.paddingLeft = '16px';
+                        chatButtons.style.justifyContent = 'center';
+                        chatButtons.style.gap = '6px';
+                        chatButtons.style.marginBottom = '12px';
+                        chatButtons.style.padding = '0 20px';
                         chatButtons.style.width = '100%';
+                        chatButtons.style.zIndex = '100'; // 前面に表示 / Ensure it's in front
 
-                        queryBoxContainer.parentElement.insertBefore(chatButtons, queryBoxContainer);
-                        log('Injected chat favorite buttons above the main query box.');
+                        omnibar.parentElement.insertBefore(chatButtons, omnibar);
+                        log('Injected chat favorite buttons before omnibar.');
                     }
                 }
             }
