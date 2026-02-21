@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Prompt Manager for NotebookLM",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Easy-to-use prompt manager for NotebookLM（NotebookLM専用のプロンプト入力支援ツール ）",
   "permissions": [
     "storage",
