@@ -797,7 +797,8 @@
                 } else if (label.id === 'videoFocus-label') {
                     category = 'video';
                     subCategory = 'focus';
-                } else if (text.includes('独自のビジュアル スタイルを説明してください') ||
+                } else if (text.includes('カスタム ビジュアル スタイルを説明してください') ||
+                    text.includes('独自のビジュアル スタイルを説明してください') ||
                     text.includes('独自のビジュアルスタイルを説明してください') ||
                     text.includes('Describe a custom visual style')) {
                     category = 'video';
