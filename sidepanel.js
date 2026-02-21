@@ -536,6 +536,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 listContainers[cat].appendChild(item);
             });
 
+            // プロンプトがある場合は展開、ない場合は閉じる / Expand if there are prompts, collapse if not
+            const header = document.getElementById(`header-${cat}`);
+            if (header) {
+                if (catPrompts.length > 0) {
+                    header.classList.remove('collapsed');
+                } else {
+                    header.classList.add('collapsed');
+                }
+            }
+
             // プロンプトがない場合は「なし」を表示 / Display "None" if there are no prompts
             if (catPrompts.length === 0 && !state.searchQuery && state.selectedTags.size === 0) {
                 const empty = document.createElement('div');
