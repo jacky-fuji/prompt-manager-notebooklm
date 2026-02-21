@@ -42,6 +42,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // バリデーション定数とカテゴリ定義（ここを一括管理の元にする）
     const VALID_CATEGORIES = ['research', 'audio', 'video', 'report', 'flashcard', 'quiz', 'infographic', 'slide', 'datatable'];
+    const MAX_TITLE_LENGTH = 20;
+    const MAX_TAG_LENGTH = 20;
+    const MAX_TAG_COUNT = 10;
+    const MAX_TEXT_LENGTH = 5000;
+    const MAX_PROMPTS_PER_CATEGORY = 20;
 
     // コンテナ
     const adminSection = document.getElementById('admin-section');
@@ -71,9 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('search-input');
     const tagCloud = document.getElementById('tag-cloud');
 
-    // 設定要素
-    const autoDeepResearchInput = document.getElementById('setting-auto-deep-research');
-    const audioFormatInput = document.getElementById('setting-audio-format');
+    // 設定要素 (動的生成されるためここでの取得は不要)
 
     // カスタムモーダル要素
     const confirmModal = document.getElementById('custom-confirm-modal');
