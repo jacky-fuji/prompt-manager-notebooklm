@@ -172,6 +172,26 @@ document.addEventListener('DOMContentLoaded', () => {
                             </select>
                         </div>
                     </div>`;
+            } else if (cat === 'infographic') {
+                extraSettingsHtml = `
+                    <div class="settings-panel" style="margin-bottom: 8px;">
+                        <div class="setting-item">
+                            <span class="setting-label" data-i18n="setting-layout">レイアウト</span>
+                            <select id="setting-infographic-layout" class="setting-select">
+                                <option value="横向き" data-i18n="opt-landscape">横向き</option>
+                                <option value="縦向き" data-i18n="opt-portrait">縦向き</option>
+                                <option value="正方形" data-i18n="opt-square">正方形</option>
+                            </select>
+                        </div>
+                        <div class="setting-item" style="margin-top: 4px;">
+                            <span class="setting-label" data-i18n="setting-detail-level">詳細レベル</span>
+                            <select id="setting-infographic-detail-level" class="setting-select">
+                                <option value="簡潔" data-i18n="opt-concise">簡潔</option>
+                                <option value="標準" data-i18n="opt-standard">標準（デフォルト）</option>
+                                <option value="詳細" data-i18n="opt-detailed">詳細</option>
+                            </select>
+                        </div>
+                    </div>`;
             }
 
             section.innerHTML = `
@@ -218,6 +238,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const flashcardDifficultyInputNew = document.getElementById('setting-flashcard-difficulty');
         const quizQuestionCountInputNew = document.getElementById('setting-quiz-question-count');
         const quizDifficultyInputNew = document.getElementById('setting-quiz-difficulty');
+        const infographicLayoutInputNew = document.getElementById('setting-infographic-layout');
+        const infographicDetailLevelInputNew = document.getElementById('setting-infographic-detail-level');
 
         if (autoDeepResearchInputNew) {
             autoDeepResearchInputNew.addEventListener('change', (e) => {
@@ -247,6 +269,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (quizDifficultyInputNew) {
             quizDifficultyInputNew.addEventListener('change', (e) => {
                 chrome.storage.local.set({ quizDifficulty: e.target.value });
+            });
+        }
+        if (infographicLayoutInputNew) {
+            infographicLayoutInputNew.addEventListener('change', (e) => {
+                chrome.storage.local.set({ infographicLayout: e.target.value });
+            });
+        }
+        if (infographicDetailLevelInputNew) {
+            infographicDetailLevelInputNew.addEventListener('change', (e) => {
+                chrome.storage.local.set({ infographicDetailLevel: e.target.value });
             });
         }
     }
@@ -395,7 +427,7 @@ document.addEventListener('DOMContentLoaded', () => {
      * プロンプトと設定をストレージから読み込み / Load prompts and settings from storage
      */
     function loadAndRenderPrompts() {
-        chrome.storage.local.get(['prompts', 'autoDeepResearch', 'audioFormat', 'flashcardCardCount', 'flashcardDifficulty', 'quizQuestionCount', 'quizDifficulty', 'language'], (result) => {
+        chrome.storage.local.get(['prompts', 'autoDeepResearch', 'audioFormat', 'flashcardCardCount', 'flashcardDifficulty', 'quizQuestionCount', 'quizDifficulty', 'infographicLayout', 'infographicDetailLevel', 'language'], (result) => {
             // 言語設定の反映 / Reflect language setting
             if (result.language) {
                 state.language = result.language;
@@ -446,6 +478,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             if (quizDifficultyInputLocal) {
                 quizDifficultyInputLocal.value = result.quizDifficulty || '標準';
+            }
+
+            const infographicLayoutInputLocal = document.getElementById('setting-infographic-layout');
+            const infographicDetailLevelInputLocal = document.getElementById('setting-infographic-detail-level');
+
+            if (infographicLayoutInputLocal) {
+                infographicLayoutInputLocal.value = result.infographicLayout || '横向き';
+            }
+            if (infographicDetailLevelInputLocal) {
+                infographicDetailLevelInputLocal.value = result.infographicDetailLevel || '標準';
             }
 
             updateTagCloud(prompts);

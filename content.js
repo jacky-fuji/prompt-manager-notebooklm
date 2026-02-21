@@ -18,6 +18,8 @@
     let flashcardDifficulty = '';
     let quizQuestionCount = '';
     let quizDifficulty = '';
+    let infographicLayout = '';
+    let infographicDetailLevel = '';
     let favoritePrompts = [];
 
     // 音声解説形式のマッピング（内部値 -> 表示ラベル） / Audio commentary format mapping (internal value -> display label)
@@ -38,6 +40,18 @@
         '簡単': ['簡単', 'Easy'],
         '標準': ['標準', 'Medium'],
         '難しい': ['難しい', 'Hard']
+    };
+
+    // インフォグラフィック設定のマッピング / Infographic setting mapping
+    const INFOGRAPHIC_LAYOUT_MAP = {
+        '横向き': ['横向き', 'Landscape'],
+        '縦向き': ['縦向き', 'Portrait'],
+        '正方形': ['正方形', 'Square']
+    };
+    const INFOGRAPHIC_DETAIL_LEVEL_MAP = {
+        '簡潔': ['簡潔', 'Concise'],
+        '標準': ['標準', 'Standard'],
+        '詳細': ['詳細', 'Detailed']
     };
 
     // 基本スタイルの注入 / Inject basic styles
@@ -96,7 +110,7 @@
     // 設定とお気に入りをロードしてキャッシュ / Load and cache settings and favorites
     function refreshSettings() {
         if (!isContextValid()) return;
-        chrome.storage.local.get(['autoDeepResearch', 'prompts', 'audioFormat', 'flashcardCardCount', 'flashcardDifficulty', 'quizQuestionCount', 'quizDifficulty'], (result) => {
+        chrome.storage.local.get(['autoDeepResearch', 'prompts', 'audioFormat', 'flashcardCardCount', 'flashcardDifficulty', 'quizQuestionCount', 'quizDifficulty', 'infographicLayout', 'infographicDetailLevel'], (result) => {
             if (chrome.runtime.lastError) return;
             autoDeepResearchEnabled = !!result.autoDeepResearch;
             audioFormat = result.audioFormat || '詳細';
@@ -104,6 +118,8 @@
             flashcardDifficulty = result.flashcardDifficulty || '標準';
             quizQuestionCount = result.quizQuestionCount || '標準';
             quizDifficulty = result.quizDifficulty || '標準';
+            infographicLayout = result.infographicLayout || '横向き';
+            infographicDetailLevel = result.infographicDetailLevel || '標準';
             if (result.prompts) {
                 favoritePrompts = result.prompts.filter(p => p.isFavorite);
             }
@@ -130,6 +146,12 @@
             }
             if (changes.quizDifficulty) {
                 quizDifficulty = changes.quizDifficulty.newValue || '';
+            }
+            if (changes.infographicLayout) {
+                infographicLayout = changes.infographicLayout.newValue || '';
+            }
+            if (changes.infographicDetailLevel) {
+                infographicDetailLevel = changes.infographicDetailLevel.newValue || '';
             }
             if (changes.prompts) {
                 const newPrompts = changes.prompts.newValue;
@@ -436,6 +458,68 @@
 
                     if (countDone && diffDone) {
                         quizDialog.setAttribute('data-auto-formatted-quiz', 'true');
+                    }
+                }
+            }
+
+            // E. インフォグラフィック形式の自動選択 / Auto-select infographic format
+            if (infographicLayout || infographicDetailLevel) {
+                const dialogs = document.querySelectorAll('mat-dialog-container:not([data-auto-formatted-infographic="true"]), configurable-form-dialog:not([data-auto-formatted-infographic="true"])');
+                const infoDialog = Array.from(dialogs).find(d => {
+                    const text = d.innerText || '';
+                    return text.includes('インフォグラフィック') || text.includes('Infographic');
+                });
+
+                if (infoDialog) {
+                    let layoutDone = !infographicLayout;
+                    let detailDone = !infographicDetailLevel;
+
+                    const wrappers = infoDialog.querySelectorAll('.control-wrapper');
+                    wrappers.forEach(wrapper => {
+                        const label = wrapper.querySelector('.control-label');
+                        if (!label) return;
+                        const labelText = label.innerText.trim();
+
+                        // レイアウト / Layout
+                        if (infographicLayout && (labelText.includes('レイアウト') || labelText.includes('Choose orientation'))) {
+                            const buttons = wrapper.querySelectorAll('mat-button-toggle button');
+                            const targetTexts = INFOGRAPHIC_LAYOUT_MAP[infographicLayout] || [infographicLayout];
+                            for (const btn of buttons) {
+                                // .mat-button-toggle-label-content is inside the button
+                                const btnText = btn.innerText.trim();
+                                if (targetTexts.some(txt => btnText.includes(txt))) {
+                                    const toggle = btn.closest('mat-button-toggle');
+                                    if (toggle && !toggle.classList.contains('mat-button-toggle-checked')) {
+                                        btn.click();
+                                        log(`Auto-selected infographic layout: ${infographicLayout}`);
+                                    }
+                                    layoutDone = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        // 詳細レベル / Level of detail
+                        if (infographicDetailLevel && (labelText.includes('詳細レベル') || labelText.includes('Level of detail'))) {
+                            const buttons = wrapper.querySelectorAll('mat-button-toggle button');
+                            const targetTexts = INFOGRAPHIC_DETAIL_LEVEL_MAP[infographicDetailLevel] || [infographicDetailLevel];
+                            for (const btn of buttons) {
+                                const btnText = btn.innerText.trim();
+                                if (targetTexts.some(txt => btnText.includes(txt))) {
+                                    const toggle = btn.closest('mat-button-toggle');
+                                    if (toggle && !toggle.classList.contains('mat-button-toggle-checked')) {
+                                        btn.click();
+                                        log(`Auto-selected infographic detail level: ${infographicDetailLevel}`);
+                                    }
+                                    detailDone = true;
+                                    break;
+                                }
+                            }
+                        }
+                    });
+
+                    if (layoutDone && detailDone) {
+                        infoDialog.setAttribute('data-auto-formatted-infographic', 'true');
                     }
                 }
             }
