@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // バリデーション定数とカテゴリ定義（ここを一括管理の元にする） / Validation constants and category definitions (Centralized management)
-    const VALID_CATEGORIES = ['research', 'audio', 'video', 'report', 'flashcard', 'quiz', 'infographic', 'slide', 'datatable'];
+    const VALID_CATEGORIES = ['research', 'chat', 'audio', 'video', 'report', 'flashcard', 'quiz', 'infographic', 'slide', 'datatable'];
     const MAX_TITLE_LENGTH = 20;
     const MAX_TAG_LENGTH = 20;
     const MAX_TAG_COUNT = 10;
@@ -142,6 +142,26 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <input type="checkbox" id="setting-auto-deep-research">
                                 <span class="slider round"></span>
                             </label>
+                        </div>
+                    </div>`;
+            } else if (cat === 'chat') {
+                extraSettingsHtml = `
+                    <div class="settings-panel" style="margin-bottom: 8px;">
+                        <div class="setting-item">
+                            <span class="setting-label" data-i18n="setting-chat-goal">会話の目的、スタイル、役割</span>
+                            <select id="setting-chat-goal" class="setting-select">
+                                <option value="Default" data-i18n="opt-chat-goal-default">デフォルト</option>
+                                <option value="Learning Guide" data-i18n="opt-chat-goal-learning">学習ガイド</option>
+                                <option value="Custom" data-i18n="opt-chat-goal-custom">カスタム</option>
+                            </select>
+                        </div>
+                        <div class="setting-item" style="margin-top: 4px;">
+                            <span class="setting-label" data-i18n="setting-chat-length">回答の長さ</span>
+                            <select id="setting-chat-length" class="setting-select">
+                                <option value="Default" data-i18n="opt-chat-length-default">デフォルト</option>
+                                <option value="Longer" data-i18n="opt-chat-length-longer">長め</option>
+                                <option value="Shorter" data-i18n="opt-chat-length-shorter">短め</option>
+                            </select>
                         </div>
                     </div>`;
             } else if (cat === 'audio') {
@@ -336,6 +356,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 動的に追加された要素ので、要素参照を再初期化する必要があるもの / Elements that were dynamically added and need their references re-initialized
         const autoDeepResearchInputNew = document.getElementById('setting-auto-deep-research');
+        const chatGoalInputNew = document.getElementById('setting-chat-goal');
+        const chatLengthInputNew = document.getElementById('setting-chat-length');
         const audioFormatInputNew = document.getElementById('setting-audio-format');
         const audioLengthInputNew = document.getElementById('setting-audio-length');
         const reportFormatInputNew = document.getElementById('setting-report-format');
@@ -353,6 +375,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (autoDeepResearchInputNew) {
             autoDeepResearchInputNew.addEventListener('change', (e) => {
                 chrome.storage.local.set({ autoDeepResearch: e.target.checked });
+            });
+        }
+        if (chatGoalInputNew) {
+            chatGoalInputNew.addEventListener('change', (e) => {
+                chrome.storage.local.set({ chatGoal: e.target.value });
+            });
+        }
+        if (chatLengthInputNew) {
+            chatLengthInputNew.addEventListener('change', (e) => {
+                chrome.storage.local.set({ chatLength: e.target.value });
             });
         }
         if (audioFormatInputNew) {
@@ -408,6 +440,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (infographicDetailLevelInputNew) {
             infographicDetailLevelInputNew.addEventListener('change', (e) => {
                 chrome.storage.local.set({ infographicDetailLevel: e.target.value });
+            });
+        }
+        if (slideFormatInputNew) {
+            slideFormatInputNew.addEventListener('change', (e) => {
+                chrome.storage.local.set({ slideFormat: e.target.value });
+            });
+        }
+        if (slideLengthInputNew) {
+            slideLengthInputNew.addEventListener('change', (e) => {
+                chrome.storage.local.set({ slideLength: e.target.value });
             });
         }
         if (slideFormatInputNew) {
@@ -566,7 +608,7 @@ document.addEventListener('DOMContentLoaded', () => {
      * プロンプトと設定をストレージから読み込み / Load prompts and settings from storage
      */
     function loadAndRenderPrompts() {
-        chrome.storage.local.get(['prompts', 'autoDeepResearch', 'audioFormat', 'audioLength', 'reportFormat', 'videoFormat', 'videoStyle', 'flashcardCardCount', 'flashcardDifficulty', 'quizQuestionCount', 'quizDifficulty', 'infographicLayout', 'infographicDetailLevel', 'slideFormat', 'slideLength', 'language'], (result) => {
+        chrome.storage.local.get(['prompts', 'autoDeepResearch', 'chatGoal', 'chatLength', 'audioFormat', 'audioLength', 'reportFormat', 'videoFormat', 'videoStyle', 'flashcardCardCount', 'flashcardDifficulty', 'quizQuestionCount', 'quizDifficulty', 'infographicLayout', 'infographicDetailLevel', 'slideFormat', 'slideLength', 'language'], (result) => {
             // 言語設定の反映 / Reflect language setting
             if (result.language) {
                 state.language = result.language;
@@ -598,6 +640,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (autoDeepResearchInputLocal) {
                 autoDeepResearchInputLocal.checked = !!result.autoDeepResearch;
+            }
+
+            const chatGoalInputLocal = document.getElementById('setting-chat-goal');
+            const chatLengthInputLocal = document.getElementById('setting-chat-length');
+
+            if (chatGoalInputLocal) {
+                chatGoalInputLocal.value = result.chatGoal || 'Default';
+            }
+            if (chatLengthInputLocal) {
+                chatLengthInputLocal.value = result.chatLength || 'Default';
             }
             if (audioFormatInputLocal) {
                 audioFormatInputLocal.value = result.audioFormat || '詳細';
@@ -719,7 +771,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // カテゴリごとに描画 / Render per category
-        const categories = ['research', 'audio', 'video', 'report', 'flashcard', 'quiz', 'infographic', 'slide', 'datatable'];
+        const categories = VALID_CATEGORIES;
         categories.forEach(cat => {
             if (!listContainers[cat]) return;
 

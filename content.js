@@ -26,6 +26,8 @@
     let reportFormat = '';
     let videoFormat = '';
     let videoStyle = '';
+    let chatGoal = '';
+    let chatLength = '';
     let favoritePrompts = [];
 
     // 音声解説形式のマッピング（内部値 -> 表示ラベル） / Audio commentary format mapping (internal value -> display label)
@@ -100,6 +102,17 @@
         '短め': ['短め', 'Short'],
         'デフォルト': ['デフォルト', 'Default']
     };
+    // チャット設定のマッピング / Chat setting mapping
+    const CHAT_GOAL_MAP = {
+        'Default': ['デフォルト', 'Default'],
+        'Learning Guide': ['学習ガイド', 'Learning Guide'],
+        'Custom': ['カスタム', 'Custom']
+    };
+    const CHAT_LENGTH_MAP = {
+        'Default': ['デフォルト', 'Default'],
+        'Longer': ['長め', 'Longer'],
+        'Shorter': ['短め', 'Shorter']
+    };
 
     // 基本スタイルの注入 / Inject basic styles
     const style = document.createElement('style');
@@ -158,7 +171,7 @@
     // 設定とお気に入りをロードしてキャッシュ / Load and cache settings and favorites
     function refreshSettings() {
         if (!isContextValid()) return;
-        chrome.storage.local.get(['autoDeepResearch', 'prompts', 'audioFormat', 'audioLength', 'reportFormat', 'videoFormat', 'videoStyle', 'flashcardCardCount', 'flashcardDifficulty', 'quizQuestionCount', 'quizDifficulty', 'infographicLayout', 'infographicDetailLevel', 'slideFormat', 'slideLength'], (result) => {
+        chrome.storage.local.get(['autoDeepResearch', 'prompts', 'audioFormat', 'audioLength', 'reportFormat', 'videoFormat', 'videoStyle', 'chatGoal', 'chatLength', 'flashcardCardCount', 'flashcardDifficulty', 'quizQuestionCount', 'quizDifficulty', 'infographicLayout', 'infographicDetailLevel', 'slideFormat', 'slideLength'], (result) => {
             if (chrome.runtime.lastError) return;
             autoDeepResearchEnabled = !!result.autoDeepResearch;
             audioFormat = result.audioFormat || '詳細';
@@ -166,6 +179,8 @@
             reportFormat = result.reportFormat || '独自に作成';
             videoFormat = result.videoFormat || 'Explainer';
             videoStyle = result.videoStyle || 'Auto-select';
+            chatGoal = result.chatGoal || 'Default';
+            chatLength = result.chatLength || 'Default';
             flashcardCardCount = result.flashcardCardCount || '標準';
             flashcardDifficulty = result.flashcardDifficulty || '標準';
             quizQuestionCount = result.quizQuestionCount || '標準';
@@ -759,6 +774,76 @@
                 }
             }
 
+            // G. チャット形式の自動選択 / Auto-select chat format
+            if (chatGoal || chatLength) {
+                const dialogs = document.querySelectorAll('mat-dialog-container:not([data-auto-formatted-chat="true"]), configurable-form-dialog:not([data-auto-formatted-chat="true"])');
+                const chatDialog = Array.from(dialogs).find(d => {
+                    const text = d.innerText || '';
+                    return text.includes('チャットを設定') || text.includes('Configure Chat');
+                });
+
+                if (chatDialog) {
+                    let goalDone = !chatGoal;
+                    let lengthDone = !chatLength;
+
+                    // 会話の目的、スタイル、役割の定義 / Define your conversational goal, style, or role
+                    if (chatGoal && !goalDone) {
+                        const wrappers = chatDialog.querySelectorAll('.prompt-section, .style-section');
+                        for (const wrapper of wrappers) {
+                            const title = wrapper.querySelector('.section-title');
+                            if (!title) continue;
+                            const titleText = title.innerText.trim();
+                            if (titleText.includes('目的') || titleText.includes('conversational goal')) {
+                                const buttons = wrapper.querySelectorAll('mat-button-toggle button');
+                                const targetTexts = CHAT_GOAL_MAP[chatGoal] || [chatGoal];
+                                for (const btn of buttons) {
+                                    const btnText = btn.innerText.trim();
+                                    if (targetTexts.some(txt => btnText.includes(txt))) {
+                                        const toggle = btn.closest('mat-button-toggle');
+                                        if (toggle && !toggle.classList.contains('mat-button-toggle-checked')) {
+                                            btn.click();
+                                            log(`Auto-selected chat goal: ${chatGoal}`);
+                                        }
+                                        goalDone = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // 回答の長さを選択 / Choose your response length
+                    if (chatLength && !lengthDone) {
+                        const wrappers = chatDialog.querySelectorAll('.prompt-section, .style-section');
+                        for (const wrapper of wrappers) {
+                            const title = wrapper.querySelector('.section-title');
+                            if (!title) continue;
+                            const titleText = title.innerText.trim();
+                            if (titleText.includes('長さ') || titleText.includes('response length')) {
+                                const buttons = wrapper.querySelectorAll('mat-button-toggle button');
+                                const targetTexts = CHAT_LENGTH_MAP[chatLength] || [chatLength];
+                                for (const btn of buttons) {
+                                    const btnText = btn.innerText.trim();
+                                    if (targetTexts.some(txt => btnText.includes(txt))) {
+                                        const toggle = btn.closest('mat-button-toggle');
+                                        if (toggle && !toggle.classList.contains('mat-button-toggle-checked')) {
+                                            btn.click();
+                                            log(`Auto-selected chat length: ${chatLength}`);
+                                        }
+                                        lengthDone = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (goalDone && lengthDone) {
+                        chatDialog.setAttribute('data-auto-formatted-chat', 'true');
+                    }
+                }
+            }
+
 
             // --- 2. お気に入りボタンの注入 ---
 
@@ -804,6 +889,9 @@
                     text.includes('Describe a custom visual style')) {
                     category = 'video';
                     subCategory = 'style';
+                } else if (text.includes('会話の目的、スタイル、役割') ||
+                    text.includes('conversational goal')) {
+                    category = 'chat';
                 }
 
                 if (category) {
