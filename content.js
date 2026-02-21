@@ -912,9 +912,8 @@
             targetParents.forEach(parent => {
                 if (!parent.querySelector('.cuecard-fav-container')) {
                     const resButtons = createFavoriteButtons('research');
-                    const chatButtons = createFavoriteButtons('chat', 'chat');
 
-                    if (resButtons || chatButtons) {
+                    if (resButtons) {
                         // 親のレイアウトを調整（改行許可と左揃え） / Adjust parent layout (allow wrapping and left alignment)
                         parent.style.display = 'flex';
                         parent.style.flexWrap = 'wrap';
@@ -922,9 +921,8 @@
                         parent.style.alignItems = 'flex-start';
                         parent.style.gap = '4px';
 
-                        if (resButtons) parent.appendChild(resButtons);
-                        if (chatButtons) parent.appendChild(chatButtons);
-                        log('Injected research/chat favorite buttons to an .actions-options container.');
+                        parent.appendChild(resButtons);
+                        log('Injected research favorite buttons to an .actions-options container.');
                     }
                 }
             });
@@ -935,14 +933,12 @@
                 const resBtn = triggers.find(b => (b.innerText || '').includes('Research'));
                 if (resBtn && resBtn.parentElement && !resBtn.parentElement.querySelector('.cuecard-fav-container')) {
                     const resButtons = createFavoriteButtons('research');
-                    const chatButtons = createFavoriteButtons('chat', 'chat');
-                    if (resButtons || chatButtons) {
+                    if (resButtons) {
                         const fallBackParent = resBtn.parentElement;
                         fallBackParent.style.display = 'flex';
                         fallBackParent.style.flexWrap = 'wrap';
                         fallBackParent.style.gap = '4px';
-                        if (resButtons) fallBackParent.appendChild(resButtons);
-                        if (chatButtons) fallBackParent.appendChild(chatButtons);
+                        fallBackParent.appendChild(resButtons);
                     }
                 }
             }
@@ -957,7 +953,7 @@
                         // omnibarの上に配置（入力エリアの外に出す） / Place above omnibar (outside the input area)
                         chatButtons.style.display = 'flex';
                         chatButtons.style.flexWrap = 'wrap';
-                        chatButtons.style.justifyContent = 'center';
+                        chatButtons.style.justifyContent = 'flex-start';
                         chatButtons.style.gap = '6px';
                         chatButtons.style.marginBottom = '12px';
                         chatButtons.style.padding = '0 20px';
