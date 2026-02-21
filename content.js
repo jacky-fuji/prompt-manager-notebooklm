@@ -20,6 +20,8 @@
     let quizDifficulty = '';
     let infographicLayout = '';
     let infographicDetailLevel = '';
+    let slideFormat = '';
+    let slideLength = '';
     let favoritePrompts = [];
 
     // 音声解説形式のマッピング（内部値 -> 表示ラベル） / Audio commentary format mapping (internal value -> display label)
@@ -52,6 +54,16 @@
         '簡潔': ['簡潔', 'Concise'],
         '標準': ['標準', 'Standard'],
         '詳細': ['詳細', 'Detailed']
+    };
+
+    // スライド資料設定のマッピング / Slide setting mapping
+    const SLIDE_FORMAT_MAP = {
+        '詳細': ['詳細なスライド', 'Detailed Deck'],
+        'プレゼンター用': ['プレゼンターのスライド', 'Presenter Slides']
+    };
+    const SLIDE_LENGTH_MAP = {
+        '短め': ['短め', 'Short'],
+        'デフォルト': ['デフォルト', 'Default']
     };
 
     // 基本スタイルの注入 / Inject basic styles
@@ -110,7 +122,7 @@
     // 設定とお気に入りをロードしてキャッシュ / Load and cache settings and favorites
     function refreshSettings() {
         if (!isContextValid()) return;
-        chrome.storage.local.get(['autoDeepResearch', 'prompts', 'audioFormat', 'flashcardCardCount', 'flashcardDifficulty', 'quizQuestionCount', 'quizDifficulty', 'infographicLayout', 'infographicDetailLevel'], (result) => {
+        chrome.storage.local.get(['autoDeepResearch', 'prompts', 'audioFormat', 'flashcardCardCount', 'flashcardDifficulty', 'quizQuestionCount', 'quizDifficulty', 'infographicLayout', 'infographicDetailLevel', 'slideFormat', 'slideLength'], (result) => {
             if (chrome.runtime.lastError) return;
             autoDeepResearchEnabled = !!result.autoDeepResearch;
             audioFormat = result.audioFormat || '詳細';
@@ -120,6 +132,8 @@
             quizDifficulty = result.quizDifficulty || '標準';
             infographicLayout = result.infographicLayout || '横向き';
             infographicDetailLevel = result.infographicDetailLevel || '標準';
+            slideFormat = result.slideFormat || '詳細';
+            slideLength = result.slideLength || 'デフォルト';
             if (result.prompts) {
                 favoritePrompts = result.prompts.filter(p => p.isFavorite);
             }
@@ -152,6 +166,12 @@
             }
             if (changes.infographicDetailLevel) {
                 infographicDetailLevel = changes.infographicDetailLevel.newValue || '';
+            }
+            if (changes.slideFormat) {
+                slideFormat = changes.slideFormat.newValue || '';
+            }
+            if (changes.slideLength) {
+                slideLength = changes.slideLength.newValue || '';
             }
             if (changes.prompts) {
                 const newPrompts = changes.prompts.newValue;
@@ -520,6 +540,72 @@
 
                     if (layoutDone && detailDone) {
                         infoDialog.setAttribute('data-auto-formatted-infographic', 'true');
+                    }
+                }
+            }
+
+            // F. スライド資料形式の自動選択 / Auto-select slide deck format
+            if (slideFormat || slideLength) {
+                const dialogs = document.querySelectorAll('mat-dialog-container:not([data-auto-formatted-slide="true"]), configurable-form-dialog:not([data-auto-formatted-slide="true"])');
+                const slideDialog = Array.from(dialogs).find(d => {
+                    const text = (d.innerText || '').toLowerCase();
+                    return text.includes('スライド') || text.includes('deck');
+                });
+
+                if (slideDialog) {
+                    let formatDone = !slideFormat;
+                    let lengthDone = !slideLength;
+
+                    const wrappers = slideDialog.querySelectorAll('.control-wrapper');
+                    wrappers.forEach(wrapper => {
+                        const label = wrapper.querySelector('.control-label');
+                        if (!label) return;
+                        const labelText = label.innerText.trim();
+
+                        // 形式 / Format (mat-radio-button handling)
+                        if (slideFormat && (labelText.includes('形式') || labelText.includes('Format'))) {
+                            const radioButtons = wrapper.querySelectorAll('mat-radio-button');
+                            const targetTexts = SLIDE_FORMAT_MAP[slideFormat] || [slideFormat];
+                            for (const radio of radioButtons) {
+                                const radioText = radio.innerText.trim();
+                                if (targetTexts.some(txt => radioText.includes(txt))) {
+                                    if (!radio.classList.contains('mat-mdc-radio-checked')) {
+                                        // Try clicking native input, or radio itself
+                                        const input = radio.querySelector('input[type="radio"]');
+                                        if (input) {
+                                            input.click();
+                                        } else {
+                                            radio.click();
+                                        }
+                                        log(`Auto-selected slide format: ${slideFormat}`);
+                                    }
+                                    formatDone = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        // 長さ / Length (mat-button-toggle handling)
+                        if (slideLength && (labelText.includes('長さ') || labelText.includes('Length'))) {
+                            const buttons = wrapper.querySelectorAll('mat-button-toggle button');
+                            const targetTexts = SLIDE_LENGTH_MAP[slideLength] || [slideLength];
+                            for (const btn of buttons) {
+                                const btnText = btn.innerText.trim();
+                                if (targetTexts.some(txt => btnText.includes(txt))) {
+                                    const toggle = btn.closest('mat-button-toggle');
+                                    if (toggle && !toggle.classList.contains('mat-button-toggle-checked')) {
+                                        btn.click();
+                                        log(`Auto-selected slide length: ${slideLength}`);
+                                    }
+                                    lengthDone = true;
+                                    break;
+                                }
+                            }
+                        }
+                    });
+
+                    if (formatDone && lengthDone) {
+                        slideDialog.setAttribute('data-auto-formatted-slide', 'true');
                     }
                 }
             }

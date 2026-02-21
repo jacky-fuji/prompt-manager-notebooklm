@@ -192,6 +192,24 @@ document.addEventListener('DOMContentLoaded', () => {
                             </select>
                         </div>
                     </div>`;
+            } else if (cat === 'slide') {
+                extraSettingsHtml = `
+                    <div class="settings-panel" style="margin-bottom: 8px;">
+                        <div class="setting-item">
+                            <span class="setting-label" data-i18n="setting-slide-format">形式</span>
+                            <select id="setting-slide-format" class="setting-select">
+                                <option value="詳細" data-i18n="opt-slide-format-detailed">詳細</option>
+                                <option value="プレゼンター用" data-i18n="opt-slide-format-presenter">プレゼンター用</option>
+                            </select>
+                        </div>
+                        <div class="setting-item" style="margin-top: 4px;">
+                            <span class="setting-label" data-i18n="setting-slide-length">長さ</span>
+                            <select id="setting-slide-length" class="setting-select">
+                                <option value="短め" data-i18n="opt-slide-length-short">短め</option>
+                                <option value="デフォルト" data-i18n="opt-slide-length-default">標準（デフォルト）</option>
+                            </select>
+                        </div>
+                    </div>`;
             }
 
             section.innerHTML = `
@@ -240,6 +258,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const quizDifficultyInputNew = document.getElementById('setting-quiz-difficulty');
         const infographicLayoutInputNew = document.getElementById('setting-infographic-layout');
         const infographicDetailLevelInputNew = document.getElementById('setting-infographic-detail-level');
+        const slideFormatInputNew = document.getElementById('setting-slide-format');
+        const slideLengthInputNew = document.getElementById('setting-slide-length');
 
         if (autoDeepResearchInputNew) {
             autoDeepResearchInputNew.addEventListener('change', (e) => {
@@ -279,6 +299,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (infographicDetailLevelInputNew) {
             infographicDetailLevelInputNew.addEventListener('change', (e) => {
                 chrome.storage.local.set({ infographicDetailLevel: e.target.value });
+            });
+        }
+        if (slideFormatInputNew) {
+            slideFormatInputNew.addEventListener('change', (e) => {
+                chrome.storage.local.set({ slideFormat: e.target.value });
+            });
+        }
+        if (slideLengthInputNew) {
+            slideLengthInputNew.addEventListener('change', (e) => {
+                chrome.storage.local.set({ slideLength: e.target.value });
             });
         }
     }
@@ -427,7 +457,7 @@ document.addEventListener('DOMContentLoaded', () => {
      * プロンプトと設定をストレージから読み込み / Load prompts and settings from storage
      */
     function loadAndRenderPrompts() {
-        chrome.storage.local.get(['prompts', 'autoDeepResearch', 'audioFormat', 'flashcardCardCount', 'flashcardDifficulty', 'quizQuestionCount', 'quizDifficulty', 'infographicLayout', 'infographicDetailLevel', 'language'], (result) => {
+        chrome.storage.local.get(['prompts', 'autoDeepResearch', 'audioFormat', 'flashcardCardCount', 'flashcardDifficulty', 'quizQuestionCount', 'quizDifficulty', 'infographicLayout', 'infographicDetailLevel', 'slideFormat', 'slideLength', 'language'], (result) => {
             // 言語設定の反映 / Reflect language setting
             if (result.language) {
                 state.language = result.language;
@@ -488,6 +518,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             if (infographicDetailLevelInputLocal) {
                 infographicDetailLevelInputLocal.value = result.infographicDetailLevel || '標準';
+            }
+
+            const slideFormatInputLocal = document.getElementById('setting-slide-format');
+            const slideLengthInputLocal = document.getElementById('setting-slide-length');
+
+            if (slideFormatInputLocal) {
+                slideFormatInputLocal.value = result.slideFormat || '詳細';
+            }
+            if (slideLengthInputLocal) {
+                slideLengthInputLocal.value = result.slideLength || 'デフォルト';
             }
 
             updateTagCloud(prompts);
