@@ -108,7 +108,7 @@
             background: #f1f5f9;
             border: 1px solid #cbd5e1;
             border-radius: 8px;
-            padding: 4px 6px;
+            padding: 4px 10px;
             font-size: 10px;
             cursor: pointer;
             color: #475569;
@@ -117,11 +117,10 @@
             align-items: center;
             justify-content: center;
             gap: 2px;
-            width: calc(33.33% - 6px);
+            width: auto;
+            min-width: 40px;
             box-sizing: border-box;
             white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
         .cuecard-fav-btn:hover {
             background: #e2e8f0;
@@ -129,8 +128,10 @@
         }
         .cuecard-fav-btn.inline {
             width: auto;
-            max-width: 100px;
+            max-width: 200px;
             padding: 2px 6px;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .cuecard-fav-container {
             display: flex;
