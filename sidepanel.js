@@ -139,6 +139,32 @@ document.addEventListener('DOMContentLoaded', () => {
                             </select>
                         </div>
                     </div>`;
+            } else if (cat === 'video') {
+                extraSettingsHtml = `
+                    <div class="settings-panel" style="margin-bottom: 8px;">
+                        <div class="setting-item">
+                            <span class="setting-label" data-i18n="setting-video-format">形式</span>
+                            <select id="setting-video-format" class="setting-select">
+                                <option value="Explainer" data-i18n="opt-video-format-explainer">説明動画</option>
+                                <option value="Brief" data-i18n="opt-video-format-brief">概要</option>
+                            </select>
+                        </div>
+                        <div class="setting-item" style="margin-top: 4px;">
+                            <span class="setting-label" data-i18n="setting-video-style">ビジュアルスタイル</span>
+                            <select id="setting-video-style" class="setting-select">
+                                <option value="Auto-select" data-i18n="opt-video-style-auto">自動選択</option>
+                                <option value="Custom" data-i18n="opt-video-style-custom">カスタム</option>
+                                <option value="Classic" data-i18n="opt-video-style-classic">クラシック</option>
+                                <option value="Whiteboard" data-i18n="opt-video-style-whiteboard">ホワイトボード</option>
+                                <option value="Kawaii" data-i18n="opt-video-style-kawaii">カワイイ</option>
+                                <option value="Anime" data-i18n="opt-video-style-anime">アニメ</option>
+                                <option value="Watercolor" data-i18n="opt-video-style-watercolor">水彩画</option>
+                                <option value="Retro print" data-i18n="opt-video-style-retro">レトロスタイル</option>
+                                <option value="Heritage" data-i18n="opt-video-style-heritage">遺産</option>
+                                <option value="Paper-craft" data-i18n="opt-video-style-papercraft">ペーパークラフト</option>
+                            </select>
+                        </div>
+                    </div>`;
             } else if (cat === 'flashcard') {
                 extraSettingsHtml = `
                     <div class="settings-panel" style="margin-bottom: 8px;">
@@ -260,6 +286,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const autoDeepResearchInputNew = document.getElementById('setting-auto-deep-research');
         const audioFormatInputNew = document.getElementById('setting-audio-format');
         const audioLengthInputNew = document.getElementById('setting-audio-length');
+        const reportFormatInputNew = document.getElementById('setting-report-format');
+        const videoFormatInputNew = document.getElementById('setting-video-format');
+        const videoStyleInputNew = document.getElementById('setting-video-style');
         const flashcardCardCountInputNew = document.getElementById('setting-flashcard-card-count');
         const flashcardDifficultyInputNew = document.getElementById('setting-flashcard-difficulty');
         const quizQuestionCountInputNew = document.getElementById('setting-quiz-question-count');
@@ -282,6 +311,21 @@ document.addEventListener('DOMContentLoaded', () => {
         if (audioLengthInputNew) {
             audioLengthInputNew.addEventListener('change', (e) => {
                 chrome.storage.local.set({ audioLength: e.target.value });
+            });
+        }
+        if (reportFormatInputNew) {
+            reportFormatInputNew.addEventListener('change', (e) => {
+                chrome.storage.local.set({ reportFormat: e.target.value });
+            });
+        }
+        if (videoFormatInputNew) {
+            videoFormatInputNew.addEventListener('change', (e) => {
+                chrome.storage.local.set({ videoFormat: e.target.value });
+            });
+        }
+        if (videoStyleInputNew) {
+            videoStyleInputNew.addEventListener('change', (e) => {
+                chrome.storage.local.set({ videoStyle: e.target.value });
             });
         }
         if (flashcardCardCountInputNew) {
@@ -470,7 +514,7 @@ document.addEventListener('DOMContentLoaded', () => {
      * プロンプトと設定をストレージから読み込み / Load prompts and settings from storage
      */
     function loadAndRenderPrompts() {
-        chrome.storage.local.get(['prompts', 'autoDeepResearch', 'audioFormat', 'audioLength', 'flashcardCardCount', 'flashcardDifficulty', 'quizQuestionCount', 'quizDifficulty', 'infographicLayout', 'infographicDetailLevel', 'slideFormat', 'slideLength', 'language'], (result) => {
+        chrome.storage.local.get(['prompts', 'autoDeepResearch', 'audioFormat', 'audioLength', 'reportFormat', 'videoFormat', 'videoStyle', 'flashcardCardCount', 'flashcardDifficulty', 'quizQuestionCount', 'quizDifficulty', 'infographicLayout', 'infographicDetailLevel', 'slideFormat', 'slideLength', 'language'], (result) => {
             // 言語設定の反映 / Reflect language setting
             if (result.language) {
                 state.language = result.language;
@@ -496,6 +540,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const autoDeepResearchInputLocal = document.getElementById('setting-auto-deep-research');
             const audioFormatInputLocal = document.getElementById('setting-audio-format');
             const audioLengthInputLocal = document.getElementById('setting-audio-length');
+            const reportFormatInputLocal = document.getElementById('setting-report-format');
+            const videoFormatInputLocal = document.getElementById('setting-video-format');
+            const videoStyleInputLocal = document.getElementById('setting-video-style');
 
             if (autoDeepResearchInputLocal) {
                 autoDeepResearchInputLocal.checked = !!result.autoDeepResearch;
@@ -505,6 +552,15 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             if (audioLengthInputLocal) {
                 audioLengthInputLocal.value = result.audioLength || '標準';
+            }
+            if (reportFormatInputLocal) {
+                reportFormatInputLocal.value = result.reportFormat || '独自に作成';
+            }
+            if (videoFormatInputLocal) {
+                videoFormatInputLocal.value = result.videoFormat || 'Explainer';
+            }
+            if (videoStyleInputLocal) {
+                videoStyleInputLocal.value = result.videoStyle || 'Auto-select';
             }
 
             const flashcardCardCountInputLocal = document.getElementById('setting-flashcard-card-count');

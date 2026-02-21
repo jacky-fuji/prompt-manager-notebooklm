@@ -23,6 +23,9 @@
     let slideFormat = '';
     let slideLength = '';
     let audioLength = '';
+    let reportFormat = '';
+    let videoFormat = '';
+    let videoStyle = '';
     let favoritePrompts = [];
 
     // 音声解説形式のマッピング（内部値 -> 表示ラベル） / Audio commentary format mapping (internal value -> display label)
@@ -35,6 +38,33 @@
     const AUDIO_LENGTH_MAP = {
         '短め': ['短め', 'Short'],
         '標準': ['デフォルト', 'Default']
+    };
+
+    // レポート形式のマッピング / Report format mapping
+    const REPORT_FORMAT_MAP = {
+        '独自に作成': ['独自に作成', 'Create Your Own'],
+        '概要説明資料': ['概要説明資料', 'Briefing Doc'],
+        '学習ガイド': ['学習ガイド', 'Study Guide'],
+        'ブログ投稿': ['ブログ投稿', 'Blog Post']
+    };
+    // 動画解説形式のマッピング / Video overview format mapping
+    // ラベルはJP/EN共通で英語表記
+    const VIDEO_FORMAT_MAP = {
+        'Explainer': ['説明動画', 'Explainer'],
+        'Brief': ['概要', 'Brief']
+    };
+    // ビジュアルスタイルのマッピング / Visual style mapping (carousel labels are always in English)
+    const VIDEO_STYLE_MAP = {
+        'Auto-select': ['Auto-select'],
+        'Custom': ['Custom'],
+        'Classic': ['Classic'],
+        'Whiteboard': ['Whiteboard'],
+        'Kawaii': ['Kawaii'],
+        'Anime': ['Anime'],
+        'Watercolor': ['Watercolor'],
+        'Retro print': ['Retro print'],
+        'Heritage': ['Heritage'],
+        'Paper-craft': ['Paper-craft']
     };
 
     // フラッシュカード設定のマッピング / Flashcard setting mapping
@@ -127,11 +157,14 @@
     // 設定とお気に入りをロードしてキャッシュ / Load and cache settings and favorites
     function refreshSettings() {
         if (!isContextValid()) return;
-        chrome.storage.local.get(['autoDeepResearch', 'prompts', 'audioFormat', 'audioLength', 'flashcardCardCount', 'flashcardDifficulty', 'quizQuestionCount', 'quizDifficulty', 'infographicLayout', 'infographicDetailLevel', 'slideFormat', 'slideLength'], (result) => {
+        chrome.storage.local.get(['autoDeepResearch', 'prompts', 'audioFormat', 'audioLength', 'reportFormat', 'videoFormat', 'videoStyle', 'flashcardCardCount', 'flashcardDifficulty', 'quizQuestionCount', 'quizDifficulty', 'infographicLayout', 'infographicDetailLevel', 'slideFormat', 'slideLength'], (result) => {
             if (chrome.runtime.lastError) return;
             autoDeepResearchEnabled = !!result.autoDeepResearch;
             audioFormat = result.audioFormat || '詳細';
             audioLength = result.audioLength || '標準';
+            reportFormat = result.reportFormat || '独自に作成';
+            videoFormat = result.videoFormat || 'Explainer';
+            videoStyle = result.videoStyle || 'Auto-select';
             flashcardCardCount = result.flashcardCardCount || '標準';
             flashcardDifficulty = result.flashcardDifficulty || '標準';
             quizQuestionCount = result.quizQuestionCount || '標準';
@@ -157,6 +190,15 @@
             }
             if (changes.audioLength) {
                 audioLength = changes.audioLength.newValue || '';
+            }
+            if (changes.reportFormat) {
+                reportFormat = changes.reportFormat.newValue || '';
+            }
+            if (changes.videoFormat) {
+                videoFormat = changes.videoFormat.newValue || '';
+            }
+            if (changes.videoStyle) {
+                videoStyle = changes.videoStyle.newValue || '';
             }
             if (changes.flashcardCardCount) {
                 flashcardCardCount = changes.flashcardCardCount.newValue || '';
@@ -645,6 +687,60 @@
 
                     if (formatDone && lengthDone) {
                         slideDialog.setAttribute('data-auto-formatted-slide', 'true');
+                    }
+                }
+            }
+
+            // H. 動画解説の自動選択 / Auto-select video overview settings
+            if (videoFormat || videoStyle) {
+                const dialogs = document.querySelectorAll('mat-dialog-container:not([data-auto-formatted-video="true"]), configurable-form-dialog:not([data-auto-formatted-video="true"])');
+                const videoDialog = Array.from(dialogs).find(d => {
+                    const text = d.innerText || '';
+                    return text.includes('動画解説をカスタマイズ') || text.includes('Customize Video Overview');
+                });
+
+                if (videoDialog) {
+                    let formatDone = !videoFormat;
+                    let styleDone = !videoStyle;
+
+                    // 形式の選択 (tile-label)
+                    if (videoFormat && !formatDone) {
+                        const targetLabels = VIDEO_FORMAT_MAP[videoFormat] || [videoFormat];
+                        const tileLabels = videoDialog.querySelectorAll('.tile-label');
+                        for (const lbl of tileLabels) {
+                            if (targetLabels.some(t => lbl.innerText.trim().includes(t))) {
+                                const radio = lbl.closest('mat-radio-button');
+                                if (radio && !radio.classList.contains('mat-mdc-radio-checked')) {
+                                    const clickTarget = radio.querySelector('.tile-content') || radio.querySelector('input') || radio;
+                                    clickTarget.click();
+                                    log(`Auto-selected video format: ${videoFormat}`);
+                                }
+                                formatDone = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    // ビジュアルスタイルの選択 (carousel .mat-body-small)
+                    if (videoStyle && !styleDone) {
+                        const targetLabels = VIDEO_STYLE_MAP[videoStyle] || [videoStyle];
+                        const carouselLabels = videoDialog.querySelectorAll('.carousel-radio-button .mat-body-small');
+                        for (const lbl of carouselLabels) {
+                            if (targetLabels.some(t => lbl.innerText.trim().includes(t))) {
+                                const radio = lbl.closest('mat-radio-button');
+                                if (radio && !radio.classList.contains('mat-mdc-radio-checked')) {
+                                    const input = radio.querySelector('input[type="radio"]');
+                                    if (input) input.click(); else radio.click();
+                                    log(`Auto-selected video style: ${videoStyle}`);
+                                }
+                                styleDone = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (formatDone && styleDone) {
+                        videoDialog.setAttribute('data-auto-formatted-video', 'true');
                     }
                 }
             }
