@@ -24,12 +24,15 @@
     let slideLength = '';
     let favoritePrompts = [];
 
-    // 音声解説形式のマッピング（内部値 -> 表示ラベル） / Audio commentary format mapping (internal value -> display label)
     const AUDIO_FORMAT_MAP = {
         '詳細': ['詳細', 'Deep Dive'],
         '概要': ['概要', 'Brief'],
         '評論': ['評論', 'Critique'],
         '議論': ['議論', 'Debate']
+    };
+    const AUDIO_LENGTH_MAP = {
+        '短め': ['短め', 'Short'],
+        '標準': ['デフォルト', 'Default']
     };
 
     // フラッシュカード設定のマッピング / Flashcard setting mapping
@@ -326,8 +329,8 @@
                 }
             }
 
-            // B. 音声解説形式の自動選択
-            if (audioFormat) {
+            // B. 音声解説設定の自動選択
+            if (audioFormat || audioLength) {
                 // 未処理のダイアログを探す
                 const dialogs = document.querySelectorAll('mat-dialog-container:not([data-auto-formatted="true"]), configurable-form-dialog:not([data-auto-formatted="true"])');
                 const audioDialog = Array.from(dialogs).find(d => {
@@ -336,29 +339,59 @@
                 });
 
                 if (audioDialog) {
-                    const labels = audioDialog.querySelectorAll('.tile-label');
-                    const targetLabels = AUDIO_FORMAT_MAP[audioFormat] || [audioFormat];
+                    let formatDone = !audioFormat;
+                    let lengthDone = !audioLength;
 
-                    for (const label of labels) {
-                        const labelText = label.innerText.trim();
-                        if (targetLabels.includes(labelText)) {
-                            const radioButton = label.closest('mat-radio-button') || label.closest('.mat-mdc-radio-button') || label.closest('.mat-radio-button');
-                            if (radioButton) {
-                                // 既に選択済みなら完了マークを付けて終了
-                                if (radioButton.classList.contains('mat-mdc-radio-checked') || radioButton.getAttribute('aria-checked') === 'true' || radioButton.classList.contains('mat-radio-checked')) {
-                                    audioDialog.setAttribute('data-auto-formatted', 'true');
+                    // 形式の選択
+                    if (audioFormat && !formatDone) {
+                        const labels = audioDialog.querySelectorAll('.tile-label');
+                        const targetLabels = AUDIO_FORMAT_MAP[audioFormat] || [audioFormat];
+
+                        for (const label of labels) {
+                            const labelText = label.innerText.trim();
+                            if (targetLabels.includes(labelText)) {
+                                const radioButton = label.closest('mat-radio-button') || label.closest('.mat-mdc-radio-button') || label.closest('.mat-radio-button');
+                                if (radioButton) {
+                                    if (!radioButton.classList.contains('mat-mdc-radio-checked') && radioButton.getAttribute('aria-checked') !== 'true' && !radioButton.classList.contains('mat-radio-checked')) {
+                                        const clickTarget = radioButton.querySelector('.tile-content') || radioButton.querySelector('input') || radioButton;
+                                        clickTarget.click();
+                                        log(`Auto-selected audio format: ${audioFormat}`);
+                                    }
+                                    formatDone = true;
                                     break;
                                 }
-
-                                // クリック対象を特定（視覚的なカード部分 .tile-content または input を優先）
-                                const clickTarget = radioButton.querySelector('.tile-content') || radioButton.querySelector('input') || radioButton;
-                                clickTarget.click();
-
-                                audioDialog.setAttribute('data-auto-formatted', 'true');
-                                log(`Auto-selected audio format: ${audioFormat}`);
-                                break;
                             }
                         }
+                    }
+
+                    // 長さの選択
+                    if (audioLength && !lengthDone) {
+                        const wrappers = audioDialog.querySelectorAll('.control-wrapper');
+                        wrappers.forEach(wrapper => {
+                            const label = wrapper.querySelector('.control-label');
+                            if (!label) return;
+                            const labelText = label.innerText.trim();
+                            if (labelText.includes('長さ') || labelText.includes('Length')) {
+                                const buttons = wrapper.querySelectorAll('mat-button-toggle button');
+                                const targetTexts = AUDIO_LENGTH_MAP[audioLength] || [audioLength];
+                                for (const btn of buttons) {
+                                    const btnText = btn.innerText.trim();
+                                    if (targetTexts.some(txt => btnText.includes(txt))) {
+                                        const toggle = btn.closest('mat-button-toggle');
+                                        if (toggle && !toggle.classList.contains('mat-button-toggle-checked')) {
+                                            btn.click();
+                                            log(`Auto-selected audio length: ${audioLength}`);
+                                        }
+                                        lengthDone = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        });
+                    }
+
+                    if (formatDone && lengthDone) {
+                        audioDialog.setAttribute('data-auto-formatted', 'true');
                     }
                 }
             }

@@ -131,6 +131,13 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <option value="議論" data-i18n="opt-debate">議論</option>
                             </select>
                         </div>
+                        <div class="setting-item" style="margin-top: 4px;">
+                            <span class="setting-label" data-i18n="setting-audio-length">長さ</span>
+                            <select id="setting-audio-length" class="setting-select">
+                                <option value="短め" data-i18n="opt-audio-length-short">短め</option>
+                                <option value="標準" data-i18n="opt-audio-length-default">標準</option>
+                            </select>
+                        </div>
                     </div>`;
             } else if (cat === 'flashcard') {
                 extraSettingsHtml = `
@@ -252,6 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // 動的に追加された要素ので、要素参照を再初期化する必要があるもの / Elements that were dynamically added and need their references re-initialized
         const autoDeepResearchInputNew = document.getElementById('setting-auto-deep-research');
         const audioFormatInputNew = document.getElementById('setting-audio-format');
+        const audioLengthInputNew = document.getElementById('setting-audio-length');
         const flashcardCardCountInputNew = document.getElementById('setting-flashcard-card-count');
         const flashcardDifficultyInputNew = document.getElementById('setting-flashcard-difficulty');
         const quizQuestionCountInputNew = document.getElementById('setting-quiz-question-count');
@@ -269,6 +277,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (audioFormatInputNew) {
             audioFormatInputNew.addEventListener('change', (e) => {
                 chrome.storage.local.set({ audioFormat: e.target.value });
+            });
+        }
+        if (audioLengthInputNew) {
+            audioLengthInputNew.addEventListener('change', (e) => {
+                chrome.storage.local.set({ audioLength: e.target.value });
             });
         }
         if (flashcardCardCountInputNew) {
@@ -457,7 +470,7 @@ document.addEventListener('DOMContentLoaded', () => {
      * プロンプトと設定をストレージから読み込み / Load prompts and settings from storage
      */
     function loadAndRenderPrompts() {
-        chrome.storage.local.get(['prompts', 'autoDeepResearch', 'audioFormat', 'flashcardCardCount', 'flashcardDifficulty', 'quizQuestionCount', 'quizDifficulty', 'infographicLayout', 'infographicDetailLevel', 'slideFormat', 'slideLength', 'language'], (result) => {
+        chrome.storage.local.get(['prompts', 'autoDeepResearch', 'audioFormat', 'audioLength', 'flashcardCardCount', 'flashcardDifficulty', 'quizQuestionCount', 'quizDifficulty', 'infographicLayout', 'infographicDetailLevel', 'slideFormat', 'slideLength', 'language'], (result) => {
             // 言語設定の反映 / Reflect language setting
             if (result.language) {
                 state.language = result.language;
@@ -482,12 +495,16 @@ document.addEventListener('DOMContentLoaded', () => {
             // 設定の反映 / Reflect settings
             const autoDeepResearchInputLocal = document.getElementById('setting-auto-deep-research');
             const audioFormatInputLocal = document.getElementById('setting-audio-format');
+            const audioLengthInputLocal = document.getElementById('setting-audio-length');
 
             if (autoDeepResearchInputLocal) {
                 autoDeepResearchInputLocal.checked = !!result.autoDeepResearch;
             }
             if (audioFormatInputLocal) {
                 audioFormatInputLocal.value = result.audioFormat || '詳細';
+            }
+            if (audioLengthInputLocal) {
+                audioLengthInputLocal.value = result.audioLength || '標準';
             }
 
             const flashcardCardCountInputLocal = document.getElementById('setting-flashcard-card-count');
