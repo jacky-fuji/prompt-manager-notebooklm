@@ -5,3 +5,6 @@ Thumbs.db
 # Extension specific
 *.log
 *.zip
+
+# Local development
+task.md
