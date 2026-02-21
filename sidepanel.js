@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <span class="setting-label" data-i18n="setting-card-count">カードの枚数</span>
                             <select id="setting-flashcard-card-count" class="setting-select">
                                 <option value="少なめ" data-i18n="opt-fewer">少なめ</option>
-                                <option value="標準" data-i18n="opt-standard">標準（デフォルト）</option>
+                                <option value="標準" data-i18n="opt-standard">標準</option>
                                 <option value="多め" data-i18n="opt-more">多め</option>
                             </select>
                         </div>
@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <span class="setting-label" data-i18n="setting-difficulty">難易度レベル</span>
                             <select id="setting-flashcard-difficulty" class="setting-select">
                                 <option value="簡単" data-i18n="opt-easy">簡単</option>
-                                <option value="標準" data-i18n="opt-medium">標準（デフォルト）</option>
+                                <option value="標準" data-i18n="opt-medium">標準</option>
                                 <option value="難しい" data-i18n="opt-hard">難しい</option>
                             </select>
                         </div>
@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <span class="setting-label" data-i18n="setting-question-count">質問の数</span>
                             <select id="setting-quiz-question-count" class="setting-select">
                                 <option value="少なめ" data-i18n="opt-fewer">少なめ</option>
-                                <option value="標準" data-i18n="opt-standard">標準（デフォルト）</option>
+                                <option value="標準" data-i18n="opt-standard">標準</option>
                                 <option value="多め" data-i18n="opt-more">多め</option>
                             </select>
                         </div>
@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <span class="setting-label" data-i18n="setting-difficulty">難易度レベル</span>
                             <select id="setting-quiz-difficulty" class="setting-select">
                                 <option value="簡単" data-i18n="opt-easy">簡単</option>
-                                <option value="標準" data-i18n="opt-medium">標準（デフォルト）</option>
+                                <option value="標準" data-i18n="opt-medium">標準</option>
                                 <option value="難しい" data-i18n="opt-hard">難しい</option>
                             </select>
                         </div>
@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <span class="setting-label" data-i18n="setting-detail-level">詳細レベル</span>
                             <select id="setting-infographic-detail-level" class="setting-select">
                                 <option value="簡潔" data-i18n="opt-concise">簡潔</option>
-                                <option value="標準" data-i18n="opt-standard">標準（デフォルト）</option>
+                                <option value="標準" data-i18n="opt-standard">標準</option>
                                 <option value="詳細" data-i18n="opt-detailed">詳細</option>
                             </select>
                         </div>
@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <span class="setting-label" data-i18n="setting-slide-length">長さ</span>
                             <select id="setting-slide-length" class="setting-select">
                                 <option value="短め" data-i18n="opt-slide-length-short">短め</option>
-                                <option value="デフォルト" data-i18n="opt-slide-length-default">標準（デフォルト）</option>
+                                <option value="デフォルト" data-i18n="opt-slide-length-default">標準</option>
                             </select>
                         </div>
                     </div>`;
