@@ -4,7 +4,7 @@
 const TRANSLATIONS = {
     ja: {
         'app-title': 'Prompt Manager for NotebookLM',
-        'label-language': '言語切替',
+        'label-language': '言語',
         'search-placeholder': '保存済みのプロンプトを検索...',
         'tag-all': 'すべて',
         'cat-research': 'ソース検索',
