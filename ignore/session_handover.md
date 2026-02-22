@@ -21,7 +21,7 @@
 
 1. **Import/Export (JSON)**: Implement backup/share functionality.
 2. **Robustness Refactor**:
-    - Split `content.js` into smaller modules (Observer, Injector, etc.).
+    - ~~Split `content.js` into smaller modules~~ (Skipped for now: Splitting entails a high chance of regression errors and requires extensive manual re-testing across all NotebookLM UI variants. Decided to keep `content.js` monolithic while it is stable).
 3. **Execution History**: Track when prompts were used.
 
 ## ⚠️ Important Files
