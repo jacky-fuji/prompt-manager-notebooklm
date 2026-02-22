@@ -56,9 +56,11 @@
 ### Manual Installation (for Developers)
 
 1. Clone this repository:
+
    ```bash
    git clone https://github.com/jacky-fuji/prompt-manager-notebooklm.git
    ```
+
 2. Open Chrome and navigate to `chrome://extensions/`.
 3. Enable **Developer mode** (toggle in the top-right corner).
 4. Click **Load unpacked** and select the cloned repository folder.
@@ -122,9 +124,18 @@ This project is licensed under the [MIT License](LICENSE).
 
 ---
 
+## 🔒 Privacy Policy
+
+Your privacy is important to us. All prompt data and settings are stored locally on your device using `chrome.storage.local`. No data is collected or transmitted to external servers.
+
+For full details, please see our [Privacy Policy (PRIVACY.md)](PRIVACY.md).
+
+---
+
 ## 👤 Author
 
 **jacky-fuji**
+
 - GitHub: [@jacky-fuji](https://github.com/jacky-fuji)
 - Extension: [Prompt Manager for NotebookLM](https://chromewebstore.google.com/detail/ggfipajknejdemmbagcpgofmbniidkem)
 
