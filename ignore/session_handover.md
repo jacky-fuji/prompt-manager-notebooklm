@@ -24,6 +24,13 @@
     - ~~Split `content.js` into smaller modules~~ (Skipped for now: Splitting entails a high chance of regression errors and requires extensive manual re-testing across all NotebookLM UI variants. Decided to keep `content.js` monolithic while it is stable).
 3. **Execution History**: Track when prompts were used.
 
+### Phase 3: Translate Comments
+
+- **Status:** Done (v1.3.2)
+- **Summary:** All Japanese comments in code files (`selectors.js`, `background.js`, `content.js`, `sidepanel.js`, `sidepanel.css`, `sidepanel.html`, `translations.js`) have been translated to English. clarified and improved English comments. UI strings (JA) are preserved.
+- **Key Changes:** Transitioned codebase to English-only commenting standard. Verified no remaining Japanese characters in comments.
+- **Next Steps:** Proceed with the implementation of the Execution History or Import/Export features.
+
 ## ⚠️ Important Files
 
 - `ignore/task.md`: The main roadmap and idea list.
