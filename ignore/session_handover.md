@@ -4,7 +4,7 @@
 
 - **Version**: v1.3.2
 - **Branch**: `dev` is ahead of `main`.
-- **Release**: v1.3.2 merged to `dev` (Privacy Policy added, Selectors extracted).
+- **Release**: v1.3.2 merged to `dev` (Privacy Policy added, Selectors extracted, MutationObserver optimized).
 
 ## ✅ Accomplishments (This Session)
 
