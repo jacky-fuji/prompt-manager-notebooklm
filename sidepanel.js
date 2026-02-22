@@ -1193,4 +1193,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initial startup
     initCategorySections();
     loadAndRenderPrompts();
+
+    // Display version
+    const versionDisplay = document.getElementById('version-display');
+    if (versionDisplay) {
+        const version = chrome.runtime.getManifest().version;
+        versionDisplay.innerText = `v${version}`;
+    }
 });

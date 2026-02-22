@@ -608,3 +608,11 @@ input:checked+.slider:before {
     margin: 16px 0 20px 0;
     line-height: 1.5;
 }
+
+.version-display {
+    text-align: right;
+    font-size: 10px;
+    color: #94a3b8;
+    margin-top: 12px;
+    padding-bottom: 4px;
+}
