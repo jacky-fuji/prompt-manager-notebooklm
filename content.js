@@ -426,6 +426,7 @@
      */
     function setupObserver() {
         let isProcessing = false;
+        let observerTimer = null;
 
         const observer = new MutationObserver(() => {
             if (!isContextValid()) {
@@ -433,70 +434,323 @@
                 return;
             }
 
-            // --- 1. 自動選択機能 (RPA的な動作) ---
+            if (observerTimer) return; // Ignore mutations if we already have a frame scheduled
 
-            // A. Deep Research 自動選択
-            if (autoDeepResearchEnabled) {
-                const deepBtn = document.querySelector(SELECTORS.DEEP_RESEARCH_BTN);
-                if (deepBtn && deepBtn.getAttribute('data-auto-clicked') !== 'true') {
-                    deepBtn.setAttribute('data-auto-clicked', 'true');
-                    deepBtn.click();
-                    log('Auto-selected Deep Research (Fast).');
+            observerTimer = requestAnimationFrame(() => {
+                observerTimer = null;
+
+                // --- 1. 自動選択機能 (RPA的な動作) ---
+
+                // A. Deep Research 自動選択
+                if (autoDeepResearchEnabled) {
+                    const deepBtn = document.querySelector(SELECTORS.DEEP_RESEARCH_BTN);
+                    if (deepBtn && deepBtn.getAttribute('data-auto-clicked') !== 'true') {
+                        deepBtn.setAttribute('data-auto-clicked', 'true');
+                        deepBtn.click();
+                        log('Auto-selected Deep Research (Fast).');
+                    }
                 }
-            }
 
-            // B. 音声解説設定の自動選択
-            if (audioFormat || audioLength) {
-                // 未処理のダイアログを探す
-                const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.AUDIO);
-                const audioDialog = Array.from(dialogs).find(d => {
-                    const text = d.innerText || '';
-                    return text.includes('音声解説をカスタマイズ') || text.includes('Customize Audio Overview');
-                });
+                // B. 音声解説設定の自動選択
+                if (audioFormat || audioLength) {
+                    // 未処理のダイアログを探す
+                    const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.AUDIO);
+                    const audioDialog = Array.from(dialogs).find(d => {
+                        const text = d.innerText || '';
+                        return text.includes('音声解説をカスタマイズ') || text.includes('Customize Audio Overview');
+                    });
 
-                if (audioDialog) {
-                    let formatDone = !audioFormat;
-                    let lengthDone = !audioLength;
+                    if (audioDialog) {
+                        let formatDone = !audioFormat;
+                        let lengthDone = !audioLength;
 
-                    // 形式の選択
-                    if (audioFormat && !formatDone) {
-                        const labels = audioDialog.querySelectorAll('.tile-label');
-                        const targetLabels = AUDIO_FORMAT_MAP[audioFormat] || [audioFormat];
+                        // 形式の選択
+                        if (audioFormat && !formatDone) {
+                            const labels = audioDialog.querySelectorAll('.tile-label');
+                            const targetLabels = AUDIO_FORMAT_MAP[audioFormat] || [audioFormat];
 
-                        for (const label of labels) {
-                            const labelText = label.innerText.trim();
-                            if (targetLabels.includes(labelText)) {
-                                const radioButton = label.closest('mat-radio-button') || label.closest('.mat-mdc-radio-button') || label.closest('.mat-radio-button');
-                                if (radioButton) {
-                                    if (!radioButton.classList.contains('mat-mdc-radio-checked') && radioButton.getAttribute('aria-checked') !== 'true' && !radioButton.classList.contains('mat-radio-checked')) {
-                                        const clickTarget = radioButton.querySelector('.tile-content') || radioButton.querySelector('input') || radioButton;
-                                        clickTarget.click();
-                                        log(`Auto-selected audio format: ${audioFormat}`);
+                            for (const label of labels) {
+                                const labelText = label.innerText.trim();
+                                if (targetLabels.includes(labelText)) {
+                                    const radioButton = label.closest('mat-radio-button') || label.closest('.mat-mdc-radio-button') || label.closest('.mat-radio-button');
+                                    if (radioButton) {
+                                        if (!radioButton.classList.contains('mat-mdc-radio-checked') && radioButton.getAttribute('aria-checked') !== 'true' && !radioButton.classList.contains('mat-radio-checked')) {
+                                            const clickTarget = radioButton.querySelector('.tile-content') || radioButton.querySelector('input') || radioButton;
+                                            clickTarget.click();
+                                            log(`Auto-selected audio format: ${audioFormat}`);
+                                        }
+                                        formatDone = true;
+                                        break;
                                     }
-                                    formatDone = true;
-                                    break;
                                 }
                             }
                         }
-                    }
 
-                    // 長さの選択
-                    if (audioLength && !lengthDone) {
-                        const wrappers = audioDialog.querySelectorAll('.control-wrapper');
+                        // 長さの選択
+                        if (audioLength && !lengthDone) {
+                            const wrappers = audioDialog.querySelectorAll('.control-wrapper');
+                            wrappers.forEach(wrapper => {
+                                const label = wrapper.querySelector('.control-label');
+                                if (!label) return;
+                                const labelText = label.innerText.trim();
+                                if (labelText.includes('長さ') || labelText.includes('Length')) {
+                                    const buttons = wrapper.querySelectorAll('mat-button-toggle button');
+                                    const targetTexts = AUDIO_LENGTH_MAP[audioLength] || [audioLength];
+                                    for (const btn of buttons) {
+                                        const btnText = btn.innerText.trim();
+                                        if (targetTexts.some(txt => btnText.includes(txt))) {
+                                            const toggle = btn.closest('mat-button-toggle');
+                                            if (toggle && !toggle.classList.contains('mat-button-toggle-checked')) {
+                                                btn.click();
+                                                log(`Auto-selected audio length: ${audioLength}`);
+                                            }
+                                            lengthDone = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                            });
+                        }
+
+                        if (formatDone && lengthDone) {
+                            audioDialog.setAttribute('data-auto-formatted', 'true');
+                        }
+                    }
+                }
+
+
+                // C. フラッシュカード形式の自動選択 / Auto-select flashcard format
+                if (flashcardCardCount || flashcardDifficulty) {
+                    const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.FLASHCARD);
+                    const flashDialog = Array.from(dialogs).find(d => {
+                        const text = d.innerText || '';
+                        return text.includes('フラッシュカード') || text.includes('Flashcards');
+                    });
+
+                    if (flashDialog) {
+                        let countDone = !flashcardCardCount;
+                        let diffDone = !flashcardDifficulty;
+
+                        const rows = flashDialog.querySelectorAll('.row .column');
+                        rows.forEach(col => {
+                            const h2 = col.querySelector('h2');
+                            if (!h2) return;
+                            const headerText = h2.innerText.trim();
+
+                            // カードの枚数 / Number of Cards
+                            if (flashcardCardCount && (headerText.includes('カードの枚数') || headerText.includes('Number of Cards'))) {
+                                const buttons = col.querySelectorAll('button');
+                                const targetTexts = FLASHCARD_COUNT_MAP[flashcardCardCount] || [flashcardCardCount];
+                                for (const btn of buttons) {
+                                    const btnText = btn.innerText.trim();
+                                    if (targetTexts.some(txt => btnText.includes(txt))) {
+                                        if (btn.classList.contains('unselected-option-button')) {
+                                            btn.click();
+                                            log(`Auto-selected flashcard count: ${flashcardCardCount}`);
+                                        }
+                                        countDone = true;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            // 難易度レベル / Level of Difficulty
+                            if (flashcardDifficulty && (headerText.includes('難易度レベル') || headerText.includes('Level of Difficulty'))) {
+                                const buttons = col.querySelectorAll('button');
+                                const targetTexts = FLASHCARD_DIFFICULTY_MAP[flashcardDifficulty] || [flashcardDifficulty];
+                                for (const btn of buttons) {
+                                    const btnText = btn.innerText.trim();
+                                    if (targetTexts.some(txt => btnText.includes(txt))) {
+                                        if (btn.classList.contains('unselected-option-button')) {
+                                            btn.click();
+                                            log(`Auto-selected flashcard difficulty: ${flashcardDifficulty}`);
+                                        }
+                                        diffDone = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        });
+
+                        if (countDone && diffDone) {
+                            flashDialog.setAttribute('data-auto-formatted-flash', 'true');
+                        }
+                    }
+                }
+
+                // D. クイズ形式の自動選択 / Auto-select quiz format
+                if (quizQuestionCount || quizDifficulty) {
+                    const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.QUIZ);
+                    const quizDialog = Array.from(dialogs).find(d => {
+                        const text = d.innerText || '';
+                        return text.includes('クイズ') || text.includes('Quiz');
+                    });
+
+                    if (quizDialog) {
+                        let countDone = !quizQuestionCount;
+                        let diffDone = !quizDifficulty;
+
+                        const rows = quizDialog.querySelectorAll('.row .column');
+                        rows.forEach(col => {
+                            const h2 = col.querySelector('h2');
+                            if (!h2) return;
+                            const headerText = h2.innerText.trim();
+
+                            // 質問の数 / Number of Questions
+                            if (quizQuestionCount && (headerText.includes('質問の数') || headerText.includes('Number of Questions'))) {
+                                const buttons = col.querySelectorAll('button');
+                                const targetTexts = FLASHCARD_COUNT_MAP[quizQuestionCount] || [quizQuestionCount];
+                                for (const btn of buttons) {
+                                    const btnText = btn.innerText.trim();
+                                    if (targetTexts.some(txt => btnText.includes(txt))) {
+                                        if (btn.classList.contains('unselected-option-button')) {
+                                            btn.click();
+                                            log(`Auto-selected quiz question count: ${quizQuestionCount}`);
+                                        }
+                                        countDone = true;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            // 難易度レベル / Level of Difficulty
+                            if (quizDifficulty && (headerText.includes('難易度レベル') || headerText.includes('Level of Difficulty'))) {
+                                const buttons = col.querySelectorAll('button');
+                                const targetTexts = FLASHCARD_DIFFICULTY_MAP[quizDifficulty] || [quizDifficulty];
+                                for (const btn of buttons) {
+                                    const btnText = btn.innerText.trim();
+                                    if (targetTexts.some(txt => btnText.includes(txt))) {
+                                        if (btn.classList.contains('unselected-option-button')) {
+                                            btn.click();
+                                            log(`Auto-selected quiz difficulty: ${quizDifficulty}`);
+                                        }
+                                        diffDone = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        });
+
+                        if (countDone && diffDone) {
+                            quizDialog.setAttribute('data-auto-formatted-quiz', 'true');
+                        }
+                    }
+                }
+
+                // E. インフォグラフィック形式の自動選択 / Auto-select infographic format
+                if (infographicLayout || infographicDetailLevel) {
+                    const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.INFOGRAPHIC);
+                    const infoDialog = Array.from(dialogs).find(d => {
+                        const text = d.innerText || '';
+                        return text.includes('インフォグラフィック') || text.includes('Infographic');
+                    });
+
+                    if (infoDialog) {
+                        let layoutDone = !infographicLayout;
+                        let detailDone = !infographicDetailLevel;
+
+                        const wrappers = infoDialog.querySelectorAll('.control-wrapper');
                         wrappers.forEach(wrapper => {
                             const label = wrapper.querySelector('.control-label');
                             if (!label) return;
                             const labelText = label.innerText.trim();
-                            if (labelText.includes('長さ') || labelText.includes('Length')) {
+
+                            // レイアウト / Layout
+                            if (infographicLayout && (labelText.includes('レイアウト') || labelText.includes('Choose orientation'))) {
                                 const buttons = wrapper.querySelectorAll('mat-button-toggle button');
-                                const targetTexts = AUDIO_LENGTH_MAP[audioLength] || [audioLength];
+                                const targetTexts = INFOGRAPHIC_LAYOUT_MAP[infographicLayout] || [infographicLayout];
+                                for (const btn of buttons) {
+                                    // .mat-button-toggle-label-content is inside the button
+                                    const btnText = btn.innerText.trim();
+                                    if (targetTexts.some(txt => btnText.includes(txt))) {
+                                        const toggle = btn.closest('mat-button-toggle');
+                                        if (toggle && !toggle.classList.contains('mat-button-toggle-checked')) {
+                                            btn.click();
+                                            log(`Auto-selected infographic layout: ${infographicLayout}`);
+                                        }
+                                        layoutDone = true;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            // 詳細レベル / Level of detail
+                            if (infographicDetailLevel && (labelText.includes('詳細レベル') || labelText.includes('Level of detail'))) {
+                                const buttons = wrapper.querySelectorAll('mat-button-toggle button');
+                                const targetTexts = INFOGRAPHIC_DETAIL_LEVEL_MAP[infographicDetailLevel] || [infographicDetailLevel];
                                 for (const btn of buttons) {
                                     const btnText = btn.innerText.trim();
                                     if (targetTexts.some(txt => btnText.includes(txt))) {
                                         const toggle = btn.closest('mat-button-toggle');
                                         if (toggle && !toggle.classList.contains('mat-button-toggle-checked')) {
                                             btn.click();
-                                            log(`Auto-selected audio length: ${audioLength}`);
+                                            log(`Auto-selected infographic detail level: ${infographicDetailLevel}`);
+                                        }
+                                        detailDone = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        });
+
+                        if (layoutDone && detailDone) {
+                            infoDialog.setAttribute('data-auto-formatted-infographic', 'true');
+                        }
+                    }
+                }
+
+                // F. スライド資料形式の自動選択 / Auto-select slide deck format
+                if (slideFormat || slideLength) {
+                    const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.SLIDE);
+                    const slideDialog = Array.from(dialogs).find(d => {
+                        const text = (d.innerText || '').toLowerCase();
+                        return text.includes('スライド') || text.includes('deck');
+                    });
+
+                    if (slideDialog) {
+                        let formatDone = !slideFormat;
+                        let lengthDone = !slideLength;
+
+                        const wrappers = slideDialog.querySelectorAll('.control-wrapper');
+                        wrappers.forEach(wrapper => {
+                            const label = wrapper.querySelector('.control-label');
+                            if (!label) return;
+                            const labelText = label.innerText.trim();
+
+                            // 形式 / Format (mat-radio-button handling)
+                            if (slideFormat && (labelText.includes('形式') || labelText.includes('Format'))) {
+                                const radioButtons = wrapper.querySelectorAll('mat-radio-button');
+                                const targetTexts = SLIDE_FORMAT_MAP[slideFormat] || [slideFormat];
+                                for (const radio of radioButtons) {
+                                    const radioText = radio.innerText.trim();
+                                    if (targetTexts.some(txt => radioText.includes(txt))) {
+                                        if (!radio.classList.contains('mat-mdc-radio-checked')) {
+                                            // Try clicking native input, or radio itself
+                                            const input = radio.querySelector('input[type="radio"]');
+                                            if (input) {
+                                                input.click();
+                                            } else {
+                                                radio.click();
+                                            }
+                                            log(`Auto-selected slide format: ${slideFormat}`);
+                                        }
+                                        formatDone = true;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            // 長さ / Length (mat-button-toggle handling)
+                            if (slideLength && (labelText.includes('長さ') || labelText.includes('Length'))) {
+                                const buttons = wrapper.querySelectorAll('mat-button-toggle button');
+                                const targetTexts = SLIDE_LENGTH_MAP[slideLength] || [slideLength];
+                                for (const btn of buttons) {
+                                    const btnText = btn.innerText.trim();
+                                    if (targetTexts.some(txt => btnText.includes(txt))) {
+                                        const toggle = btn.closest('mat-button-toggle');
+                                        if (toggle && !toggle.classList.contains('mat-button-toggle-checked')) {
+                                            btn.click();
+                                            log(`Auto-selected slide length: ${slideLength}`);
                                         }
                                         lengthDone = true;
                                         break;
@@ -504,229 +758,36 @@
                                 }
                             }
                         });
-                    }
 
-                    if (formatDone && lengthDone) {
-                        audioDialog.setAttribute('data-auto-formatted', 'true');
+                        if (formatDone && lengthDone) {
+                            slideDialog.setAttribute('data-auto-formatted-slide', 'true');
+                        }
                     }
                 }
-            }
 
-
-            // C. フラッシュカード形式の自動選択 / Auto-select flashcard format
-            if (flashcardCardCount || flashcardDifficulty) {
-                const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.FLASHCARD);
-                const flashDialog = Array.from(dialogs).find(d => {
-                    const text = d.innerText || '';
-                    return text.includes('フラッシュカード') || text.includes('Flashcards');
-                });
-
-                if (flashDialog) {
-                    let countDone = !flashcardCardCount;
-                    let diffDone = !flashcardDifficulty;
-
-                    const rows = flashDialog.querySelectorAll('.row .column');
-                    rows.forEach(col => {
-                        const h2 = col.querySelector('h2');
-                        if (!h2) return;
-                        const headerText = h2.innerText.trim();
-
-                        // カードの枚数 / Number of Cards
-                        if (flashcardCardCount && (headerText.includes('カードの枚数') || headerText.includes('Number of Cards'))) {
-                            const buttons = col.querySelectorAll('button');
-                            const targetTexts = FLASHCARD_COUNT_MAP[flashcardCardCount] || [flashcardCardCount];
-                            for (const btn of buttons) {
-                                const btnText = btn.innerText.trim();
-                                if (targetTexts.some(txt => btnText.includes(txt))) {
-                                    if (btn.classList.contains('unselected-option-button')) {
-                                        btn.click();
-                                        log(`Auto-selected flashcard count: ${flashcardCardCount}`);
-                                    }
-                                    countDone = true;
-                                    break;
-                                }
-                            }
-                        }
-
-                        // 難易度レベル / Level of Difficulty
-                        if (flashcardDifficulty && (headerText.includes('難易度レベル') || headerText.includes('Level of Difficulty'))) {
-                            const buttons = col.querySelectorAll('button');
-                            const targetTexts = FLASHCARD_DIFFICULTY_MAP[flashcardDifficulty] || [flashcardDifficulty];
-                            for (const btn of buttons) {
-                                const btnText = btn.innerText.trim();
-                                if (targetTexts.some(txt => btnText.includes(txt))) {
-                                    if (btn.classList.contains('unselected-option-button')) {
-                                        btn.click();
-                                        log(`Auto-selected flashcard difficulty: ${flashcardDifficulty}`);
-                                    }
-                                    diffDone = true;
-                                    break;
-                                }
-                            }
-                        }
+                // H. 動画解説の自動選択 / Auto-select video overview settings
+                if (videoFormat || videoStyle) {
+                    const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.VIDEO);
+                    const videoDialog = Array.from(dialogs).find(d => {
+                        const text = d.innerText || '';
+                        return text.includes('動画解説をカスタマイズ') || text.includes('Customize Video Overview');
                     });
 
-                    if (countDone && diffDone) {
-                        flashDialog.setAttribute('data-auto-formatted-flash', 'true');
-                    }
-                }
-            }
+                    if (videoDialog) {
+                        let formatDone = !videoFormat;
+                        let styleDone = !videoStyle;
 
-            // D. クイズ形式の自動選択 / Auto-select quiz format
-            if (quizQuestionCount || quizDifficulty) {
-                const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.QUIZ);
-                const quizDialog = Array.from(dialogs).find(d => {
-                    const text = d.innerText || '';
-                    return text.includes('クイズ') || text.includes('Quiz');
-                });
-
-                if (quizDialog) {
-                    let countDone = !quizQuestionCount;
-                    let diffDone = !quizDifficulty;
-
-                    const rows = quizDialog.querySelectorAll('.row .column');
-                    rows.forEach(col => {
-                        const h2 = col.querySelector('h2');
-                        if (!h2) return;
-                        const headerText = h2.innerText.trim();
-
-                        // 質問の数 / Number of Questions
-                        if (quizQuestionCount && (headerText.includes('質問の数') || headerText.includes('Number of Questions'))) {
-                            const buttons = col.querySelectorAll('button');
-                            const targetTexts = FLASHCARD_COUNT_MAP[quizQuestionCount] || [quizQuestionCount];
-                            for (const btn of buttons) {
-                                const btnText = btn.innerText.trim();
-                                if (targetTexts.some(txt => btnText.includes(txt))) {
-                                    if (btn.classList.contains('unselected-option-button')) {
-                                        btn.click();
-                                        log(`Auto-selected quiz question count: ${quizQuestionCount}`);
-                                    }
-                                    countDone = true;
-                                    break;
-                                }
-                            }
-                        }
-
-                        // 難易度レベル / Level of Difficulty
-                        if (quizDifficulty && (headerText.includes('難易度レベル') || headerText.includes('Level of Difficulty'))) {
-                            const buttons = col.querySelectorAll('button');
-                            const targetTexts = FLASHCARD_DIFFICULTY_MAP[quizDifficulty] || [quizDifficulty];
-                            for (const btn of buttons) {
-                                const btnText = btn.innerText.trim();
-                                if (targetTexts.some(txt => btnText.includes(txt))) {
-                                    if (btn.classList.contains('unselected-option-button')) {
-                                        btn.click();
-                                        log(`Auto-selected quiz difficulty: ${quizDifficulty}`);
-                                    }
-                                    diffDone = true;
-                                    break;
-                                }
-                            }
-                        }
-                    });
-
-                    if (countDone && diffDone) {
-                        quizDialog.setAttribute('data-auto-formatted-quiz', 'true');
-                    }
-                }
-            }
-
-            // E. インフォグラフィック形式の自動選択 / Auto-select infographic format
-            if (infographicLayout || infographicDetailLevel) {
-                const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.INFOGRAPHIC);
-                const infoDialog = Array.from(dialogs).find(d => {
-                    const text = d.innerText || '';
-                    return text.includes('インフォグラフィック') || text.includes('Infographic');
-                });
-
-                if (infoDialog) {
-                    let layoutDone = !infographicLayout;
-                    let detailDone = !infographicDetailLevel;
-
-                    const wrappers = infoDialog.querySelectorAll('.control-wrapper');
-                    wrappers.forEach(wrapper => {
-                        const label = wrapper.querySelector('.control-label');
-                        if (!label) return;
-                        const labelText = label.innerText.trim();
-
-                        // レイアウト / Layout
-                        if (infographicLayout && (labelText.includes('レイアウト') || labelText.includes('Choose orientation'))) {
-                            const buttons = wrapper.querySelectorAll('mat-button-toggle button');
-                            const targetTexts = INFOGRAPHIC_LAYOUT_MAP[infographicLayout] || [infographicLayout];
-                            for (const btn of buttons) {
-                                // .mat-button-toggle-label-content is inside the button
-                                const btnText = btn.innerText.trim();
-                                if (targetTexts.some(txt => btnText.includes(txt))) {
-                                    const toggle = btn.closest('mat-button-toggle');
-                                    if (toggle && !toggle.classList.contains('mat-button-toggle-checked')) {
-                                        btn.click();
-                                        log(`Auto-selected infographic layout: ${infographicLayout}`);
-                                    }
-                                    layoutDone = true;
-                                    break;
-                                }
-                            }
-                        }
-
-                        // 詳細レベル / Level of detail
-                        if (infographicDetailLevel && (labelText.includes('詳細レベル') || labelText.includes('Level of detail'))) {
-                            const buttons = wrapper.querySelectorAll('mat-button-toggle button');
-                            const targetTexts = INFOGRAPHIC_DETAIL_LEVEL_MAP[infographicDetailLevel] || [infographicDetailLevel];
-                            for (const btn of buttons) {
-                                const btnText = btn.innerText.trim();
-                                if (targetTexts.some(txt => btnText.includes(txt))) {
-                                    const toggle = btn.closest('mat-button-toggle');
-                                    if (toggle && !toggle.classList.contains('mat-button-toggle-checked')) {
-                                        btn.click();
-                                        log(`Auto-selected infographic detail level: ${infographicDetailLevel}`);
-                                    }
-                                    detailDone = true;
-                                    break;
-                                }
-                            }
-                        }
-                    });
-
-                    if (layoutDone && detailDone) {
-                        infoDialog.setAttribute('data-auto-formatted-infographic', 'true');
-                    }
-                }
-            }
-
-            // F. スライド資料形式の自動選択 / Auto-select slide deck format
-            if (slideFormat || slideLength) {
-                const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.SLIDE);
-                const slideDialog = Array.from(dialogs).find(d => {
-                    const text = (d.innerText || '').toLowerCase();
-                    return text.includes('スライド') || text.includes('deck');
-                });
-
-                if (slideDialog) {
-                    let formatDone = !slideFormat;
-                    let lengthDone = !slideLength;
-
-                    const wrappers = slideDialog.querySelectorAll('.control-wrapper');
-                    wrappers.forEach(wrapper => {
-                        const label = wrapper.querySelector('.control-label');
-                        if (!label) return;
-                        const labelText = label.innerText.trim();
-
-                        // 形式 / Format (mat-radio-button handling)
-                        if (slideFormat && (labelText.includes('形式') || labelText.includes('Format'))) {
-                            const radioButtons = wrapper.querySelectorAll('mat-radio-button');
-                            const targetTexts = SLIDE_FORMAT_MAP[slideFormat] || [slideFormat];
-                            for (const radio of radioButtons) {
-                                const radioText = radio.innerText.trim();
-                                if (targetTexts.some(txt => radioText.includes(txt))) {
-                                    if (!radio.classList.contains('mat-mdc-radio-checked')) {
-                                        // Try clicking native input, or radio itself
-                                        const input = radio.querySelector('input[type="radio"]');
-                                        if (input) {
-                                            input.click();
-                                        } else {
-                                            radio.click();
-                                        }
-                                        log(`Auto-selected slide format: ${slideFormat}`);
+                        // 形式の選択 (tile-label)
+                        if (videoFormat && !formatDone) {
+                            const targetLabels = VIDEO_FORMAT_MAP[videoFormat] || [videoFormat];
+                            const tileLabels = videoDialog.querySelectorAll('.tile-label');
+                            for (const lbl of tileLabels) {
+                                if (targetLabels.some(t => lbl.innerText.trim().includes(t))) {
+                                    const radio = lbl.closest('mat-radio-button');
+                                    if (radio && !radio.classList.contains('mat-mdc-radio-checked')) {
+                                        const clickTarget = radio.querySelector('.tile-content') || radio.querySelector('input') || radio;
+                                        clickTarget.click();
+                                        log(`Auto-selected video format: ${videoFormat}`);
                                     }
                                     formatDone = true;
                                     break;
@@ -734,345 +795,291 @@
                             }
                         }
 
-                        // 長さ / Length (mat-button-toggle handling)
-                        if (slideLength && (labelText.includes('長さ') || labelText.includes('Length'))) {
-                            const buttons = wrapper.querySelectorAll('mat-button-toggle button');
-                            const targetTexts = SLIDE_LENGTH_MAP[slideLength] || [slideLength];
-                            for (const btn of buttons) {
-                                const btnText = btn.innerText.trim();
-                                if (targetTexts.some(txt => btnText.includes(txt))) {
-                                    const toggle = btn.closest('mat-button-toggle');
-                                    if (toggle && !toggle.classList.contains('mat-button-toggle-checked')) {
-                                        btn.click();
-                                        log(`Auto-selected slide length: ${slideLength}`);
+                        // ビジュアルスタイルの選択 (carousel .mat-body-small)
+                        if (videoStyle && !styleDone) {
+                            const targetLabels = VIDEO_STYLE_MAP[videoStyle] || [videoStyle];
+                            const carouselLabels = videoDialog.querySelectorAll('.carousel-radio-button .mat-body-small');
+                            for (const lbl of carouselLabels) {
+                                if (targetLabels.some(t => lbl.innerText.trim().includes(t))) {
+                                    const radio = lbl.closest('mat-radio-button');
+                                    if (radio && !radio.classList.contains('mat-mdc-radio-checked')) {
+                                        const input = radio.querySelector('input[type="radio"]');
+                                        if (input) input.click(); else radio.click();
+                                        log(`Auto-selected video style: ${videoStyle}`);
                                     }
-                                    lengthDone = true;
+                                    styleDone = true;
                                     break;
                                 }
                             }
                         }
+
+                        if (formatDone && styleDone) {
+                            videoDialog.setAttribute('data-auto-formatted-video', 'true');
+                        }
+                    }
+                }
+
+                // G. チャット形式の自動選択 / Auto-select chat format
+                if (chatGoal || chatLength) {
+                    const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.CHAT);
+                    const chatDialog = Array.from(dialogs).find(d => {
+                        const text = d.innerText || '';
+                        return text.includes('チャットを設定') || text.includes('Configure Chat');
                     });
 
-                    if (formatDone && lengthDone) {
-                        slideDialog.setAttribute('data-auto-formatted-slide', 'true');
-                    }
-                }
-            }
+                    if (chatDialog) {
+                        let goalDone = !chatGoal;
+                        let lengthDone = !chatLength;
 
-            // H. 動画解説の自動選択 / Auto-select video overview settings
-            if (videoFormat || videoStyle) {
-                const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.VIDEO);
-                const videoDialog = Array.from(dialogs).find(d => {
-                    const text = d.innerText || '';
-                    return text.includes('動画解説をカスタマイズ') || text.includes('Customize Video Overview');
-                });
-
-                if (videoDialog) {
-                    let formatDone = !videoFormat;
-                    let styleDone = !videoStyle;
-
-                    // 形式の選択 (tile-label)
-                    if (videoFormat && !formatDone) {
-                        const targetLabels = VIDEO_FORMAT_MAP[videoFormat] || [videoFormat];
-                        const tileLabels = videoDialog.querySelectorAll('.tile-label');
-                        for (const lbl of tileLabels) {
-                            if (targetLabels.some(t => lbl.innerText.trim().includes(t))) {
-                                const radio = lbl.closest('mat-radio-button');
-                                if (radio && !radio.classList.contains('mat-mdc-radio-checked')) {
-                                    const clickTarget = radio.querySelector('.tile-content') || radio.querySelector('input') || radio;
-                                    clickTarget.click();
-                                    log(`Auto-selected video format: ${videoFormat}`);
-                                }
-                                formatDone = true;
-                                break;
-                            }
-                        }
-                    }
-
-                    // ビジュアルスタイルの選択 (carousel .mat-body-small)
-                    if (videoStyle && !styleDone) {
-                        const targetLabels = VIDEO_STYLE_MAP[videoStyle] || [videoStyle];
-                        const carouselLabels = videoDialog.querySelectorAll('.carousel-radio-button .mat-body-small');
-                        for (const lbl of carouselLabels) {
-                            if (targetLabels.some(t => lbl.innerText.trim().includes(t))) {
-                                const radio = lbl.closest('mat-radio-button');
-                                if (radio && !radio.classList.contains('mat-mdc-radio-checked')) {
-                                    const input = radio.querySelector('input[type="radio"]');
-                                    if (input) input.click(); else radio.click();
-                                    log(`Auto-selected video style: ${videoStyle}`);
-                                }
-                                styleDone = true;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (formatDone && styleDone) {
-                        videoDialog.setAttribute('data-auto-formatted-video', 'true');
-                    }
-                }
-            }
-
-            // G. チャット形式の自動選択 / Auto-select chat format
-            if (chatGoal || chatLength) {
-                const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.CHAT);
-                const chatDialog = Array.from(dialogs).find(d => {
-                    const text = d.innerText || '';
-                    return text.includes('チャットを設定') || text.includes('Configure Chat');
-                });
-
-                if (chatDialog) {
-                    let goalDone = !chatGoal;
-                    let lengthDone = !chatLength;
-
-                    // 会話の目的、スタイル、役割の定義 / Define your conversational goal, style, or role
-                    if (chatGoal && !goalDone) {
-                        const wrappers = chatDialog.querySelectorAll('.prompt-section, .style-section');
-                        for (const wrapper of wrappers) {
-                            const title = wrapper.querySelector('.section-title');
-                            if (!title) continue;
-                            const titleText = title.innerText.trim();
-                            if (titleText.includes('目的') || titleText.includes('conversational goal')) {
-                                const buttons = wrapper.querySelectorAll('mat-button-toggle button');
-                                const targetTexts = CHAT_GOAL_MAP[chatGoal] || [chatGoal];
-                                for (const btn of buttons) {
-                                    const btnText = btn.innerText.trim();
-                                    if (targetTexts.some(txt => btnText.includes(txt))) {
-                                        const toggle = btn.closest('mat-button-toggle');
-                                        if (toggle && !toggle.classList.contains('mat-button-toggle-checked')) {
-                                            btn.click();
-                                            log(`Auto-selected chat goal: ${chatGoal}`);
+                        // 会話の目的、スタイル、役割の定義 / Define your conversational goal, style, or role
+                        if (chatGoal && !goalDone) {
+                            const wrappers = chatDialog.querySelectorAll('.prompt-section, .style-section');
+                            for (const wrapper of wrappers) {
+                                const title = wrapper.querySelector('.section-title');
+                                if (!title) continue;
+                                const titleText = title.innerText.trim();
+                                if (titleText.includes('目的') || titleText.includes('conversational goal')) {
+                                    const buttons = wrapper.querySelectorAll('mat-button-toggle button');
+                                    const targetTexts = CHAT_GOAL_MAP[chatGoal] || [chatGoal];
+                                    for (const btn of buttons) {
+                                        const btnText = btn.innerText.trim();
+                                        if (targetTexts.some(txt => btnText.includes(txt))) {
+                                            const toggle = btn.closest('mat-button-toggle');
+                                            if (toggle && !toggle.classList.contains('mat-button-toggle-checked')) {
+                                                btn.click();
+                                                log(`Auto-selected chat goal: ${chatGoal}`);
+                                            }
+                                            goalDone = true;
+                                            break;
                                         }
-                                        goalDone = true;
-                                        break;
                                     }
                                 }
                             }
                         }
-                    }
 
-                    // 回答の長さを選択 / Choose your response length
-                    if (chatLength && !lengthDone) {
-                        const wrappers = chatDialog.querySelectorAll('.prompt-section, .style-section');
-                        for (const wrapper of wrappers) {
-                            const title = wrapper.querySelector('.section-title');
-                            if (!title) continue;
-                            const titleText = title.innerText.trim();
-                            if (titleText.includes('長さ') || titleText.includes('response length')) {
-                                const buttons = wrapper.querySelectorAll('mat-button-toggle button');
-                                const targetTexts = CHAT_LENGTH_MAP[chatLength] || [chatLength];
-                                for (const btn of buttons) {
-                                    const btnText = btn.innerText.trim();
-                                    if (targetTexts.some(txt => btnText.includes(txt))) {
-                                        const toggle = btn.closest('mat-button-toggle');
-                                        if (toggle && !toggle.classList.contains('mat-button-toggle-checked')) {
-                                            btn.click();
-                                            log(`Auto-selected chat length: ${chatLength}`);
+                        // 回答の長さを選択 / Choose your response length
+                        if (chatLength && !lengthDone) {
+                            const wrappers = chatDialog.querySelectorAll('.prompt-section, .style-section');
+                            for (const wrapper of wrappers) {
+                                const title = wrapper.querySelector('.section-title');
+                                if (!title) continue;
+                                const titleText = title.innerText.trim();
+                                if (titleText.includes('長さ') || titleText.includes('response length')) {
+                                    const buttons = wrapper.querySelectorAll('mat-button-toggle button');
+                                    const targetTexts = CHAT_LENGTH_MAP[chatLength] || [chatLength];
+                                    for (const btn of buttons) {
+                                        const btnText = btn.innerText.trim();
+                                        if (targetTexts.some(txt => btnText.includes(txt))) {
+                                            const toggle = btn.closest('mat-button-toggle');
+                                            if (toggle && !toggle.classList.contains('mat-button-toggle-checked')) {
+                                                btn.click();
+                                                log(`Auto-selected chat length: ${chatLength}`);
+                                            }
+                                            lengthDone = true;
+                                            break;
                                         }
-                                        lengthDone = true;
-                                        break;
                                     }
                                 }
                             }
                         }
-                    }
 
-                    if (goalDone && lengthDone) {
-                        chatDialog.setAttribute('data-auto-formatted-chat', 'true');
-                    }
-                }
-            }
-
-
-            // --- 2. お気に入りボタンの注入 ---
-
-            // A. コンテキストに応じた注入 (IDやテキスト内容に基づく厳密な判定)
-            const injectionLabels = document.querySelectorAll(SELECTORS.INJECTION_LABELS);
-
-            injectionLabels.forEach(label => {
-                if (label.querySelector('.cuecard-fav-container')) return;
-
-                const text = (label.innerText || '').trim();
-                let category = null;
-                let subCategory = null;
-
-                // 各カテゴリのターゲットラベルを内容（テキスト）で厳密に照合
-                if (text.includes('作成したいレポートの内容を記入してください') || text.includes('Describe the report you want to create')) {
-                    category = 'report';
-                } else if (text.includes('希望するトピック') || text.includes('What should the topic be?')) {
-                    // ダイアログ全体のタイトル等から クイズ vs フラッシュカード を判別
-                    const dialog = label.closest('mat-dialog-container') || label.closest('configurable-form-dialog') || document.body;
-                    const dialogText = (dialog.innerText || '').toLowerCase();
-                    if (dialogText.includes('クイズ') || dialogText.includes('quiz')) {
-                        category = 'quiz';
-                    } else if (dialogText.includes('フラッシュカード') || dialogText.includes('flashcards')) {
-                        category = 'flashcard';
-                    }
-                } else if (text.includes('インフォグラフィックについて説明してください') || text.includes('Describe the infographic you want to create')) {
-                    // 日本語版は「説明してください」、英語版は「Describe ...」などの差異を考慮
-                    category = 'infographic';
-                } else if (text.includes('スライドについて説明してください') || text.includes('Describe the slide deck you want to create')) {
-                    category = 'slide';
-                } else if ((text.includes('データテーブル') && text.includes('説明')) ||
-                    text.includes('Describe the data table you want to create') ||
-                    label.id === 'userSteeringPrompt-label') {
-                    category = 'datatable';
-                } else if (label.id === 'episodeFocus-label') {
-                    category = 'audio';
-                } else if (label.id === 'videoFocus-label') {
-                    category = 'video';
-                    subCategory = 'focus';
-                } else if (text.includes('カスタム ビジュアル スタイルを説明してください') ||
-                    text.includes('独自のビジュアル スタイルを説明してください') ||
-                    text.includes('独自のビジュアルスタイルを説明してください') ||
-                    text.includes('Describe a custom visual style')) {
-                    category = 'video';
-                    subCategory = 'style';
-                }
-
-                if (category) {
-                    const favButtons = createFavoriteButtons(category, subCategory);
-                    if (favButtons) {
-                        label.style.display = 'inline-flex';
-                        label.style.alignItems = 'center';
-                        label.style.flexWrap = 'wrap';
-                        label.style.gap = '8px';
-                        label.appendChild(favButtons);
-                        log(`Injected ${category} buttons based on strict label match: "${text.substring(0, 15)}..."`);
+                        if (goalDone && lengthDone) {
+                            chatDialog.setAttribute('data-auto-formatted-chat', 'true');
+                        }
                     }
                 }
-            });
 
-            // B. 汎用的なアクションメニュー (.actions-options)
-            const targetParents = document.querySelectorAll(SELECTORS.ACTIONS_OPTIONS);
-            targetParents.forEach(parent => {
-                if (!parent.querySelector('.cuecard-fav-container')) {
-                    const resButtons = createFavoriteButtons('research');
 
-                    if (resButtons) {
-                        // 親のレイアウトを調整（改行許可と左揃え） / Adjust parent layout (allow wrapping and left alignment)
-                        parent.style.display = 'flex';
-                        parent.style.flexWrap = 'wrap';
-                        parent.style.justifyContent = 'flex-start';
-                        parent.style.alignItems = 'flex-start';
-                        parent.style.gap = '4px';
+                // --- 2. お気に入りボタンの注入 ---
 
-                        parent.appendChild(resButtons);
-                        log('Injected research favorite buttons to an .actions-options container.');
+                // A. コンテキストに応じた注入 (IDやテキスト内容に基づく厳密な判定)
+                const injectionLabels = document.querySelectorAll(SELECTORS.INJECTION_LABELS);
+
+                injectionLabels.forEach(label => {
+                    if (label.querySelector('.cuecard-fav-container')) return;
+
+                    const text = (label.innerText || '').trim();
+                    let category = null;
+                    let subCategory = null;
+
+                    // 各カテゴリのターゲットラベルを内容（テキスト）で厳密に照合
+                    if (text.includes('作成したいレポートの内容を記入してください') || text.includes('Describe the report you want to create')) {
+                        category = 'report';
+                    } else if (text.includes('希望するトピック') || text.includes('What should the topic be?')) {
+                        // ダイアログ全体のタイトル等から クイズ vs フラッシュカード を判別
+                        const dialog = label.closest('mat-dialog-container') || label.closest('configurable-form-dialog') || document.body;
+                        const dialogText = (dialog.innerText || '').toLowerCase();
+                        if (dialogText.includes('クイズ') || dialogText.includes('quiz')) {
+                            category = 'quiz';
+                        } else if (dialogText.includes('フラッシュカード') || dialogText.includes('flashcards')) {
+                            category = 'flashcard';
+                        }
+                    } else if (text.includes('インフォグラフィックについて説明してください') || text.includes('Describe the infographic you want to create')) {
+                        // 日本語版は「説明してください」、英語版は「Describe ...」などの差異を考慮
+                        category = 'infographic';
+                    } else if (text.includes('スライドについて説明してください') || text.includes('Describe the slide deck you want to create')) {
+                        category = 'slide';
+                    } else if ((text.includes('データテーブル') && text.includes('説明')) ||
+                        text.includes('Describe the data table you want to create') ||
+                        label.id === 'userSteeringPrompt-label') {
+                        category = 'datatable';
+                    } else if (label.id === 'episodeFocus-label') {
+                        category = 'audio';
+                    } else if (label.id === 'videoFocus-label') {
+                        category = 'video';
+                        subCategory = 'focus';
+                    } else if (text.includes('カスタム ビジュアル スタイルを説明してください') ||
+                        text.includes('独自のビジュアル スタイルを説明してください') ||
+                        text.includes('独自のビジュアルスタイルを説明してください') ||
+                        text.includes('Describe a custom visual style')) {
+                        category = 'video';
+                        subCategory = 'style';
+                    }
+
+                    if (category) {
+                        const favButtons = createFavoriteButtons(category, subCategory);
+                        if (favButtons) {
+                            label.style.display = 'inline-flex';
+                            label.style.alignItems = 'center';
+                            label.style.flexWrap = 'wrap';
+                            label.style.gap = '8px';
+                            label.appendChild(favButtons);
+                            log(`Injected ${category} buttons based on strict label match: "${text.substring(0, 15)}..."`);
+                        }
+                    }
+                });
+
+                // B. 汎用的なアクションメニュー (.actions-options)
+                const targetParents = document.querySelectorAll(SELECTORS.ACTIONS_OPTIONS);
+                targetParents.forEach(parent => {
+                    if (!parent.querySelector('.cuecard-fav-container')) {
+                        const resButtons = createFavoriteButtons('research');
+
+                        if (resButtons) {
+                            // 親のレイアウトを調整（改行許可と左揃え） / Adjust parent layout (allow wrapping and left alignment)
+                            parent.style.display = 'flex';
+                            parent.style.flexWrap = 'wrap';
+                            parent.style.justifyContent = 'flex-start';
+                            parent.style.alignItems = 'flex-start';
+                            parent.style.gap = '4px';
+
+                            parent.appendChild(resButtons);
+                            log('Injected research favorite buttons to an .actions-options container.');
+                        }
+                    }
+                });
+
+                // フォールバック: .actions-options が見つからない場合（念のため） / Fallback: If .actions-options is not found (just in case)
+                if (targetParents.length === 0) {
+                    const triggers = Array.from(document.querySelectorAll('button[aria-haspopup="menu"]'));
+                    const resBtn = triggers.find(b => (b.innerText || '').includes('Research'));
+                    if (resBtn && resBtn.parentElement && !resBtn.parentElement.querySelector('.cuecard-fav-container')) {
+                        const resButtons = createFavoriteButtons('research');
+                        if (resButtons) {
+                            const fallBackParent = resBtn.parentElement;
+                            fallBackParent.style.display = 'flex';
+                            fallBackParent.style.flexWrap = 'wrap';
+                            fallBackParent.style.gap = '4px';
+                            fallBackParent.appendChild(resButtons);
+                        }
                     }
                 }
-            });
 
-            // フォールバック: .actions-options が見つからない場合（念のため） / Fallback: If .actions-options is not found (just in case)
-            if (targetParents.length === 0) {
-                const triggers = Array.from(document.querySelectorAll('button[aria-haspopup="menu"]'));
-                const resBtn = triggers.find(b => (b.innerText || '').includes('Research'));
-                if (resBtn && resBtn.parentElement && !resBtn.parentElement.querySelector('.cuecard-fav-container')) {
-                    const resButtons = createFavoriteButtons('research');
-                    if (resButtons) {
-                        const fallBackParent = resBtn.parentElement;
-                        fallBackParent.style.display = 'flex';
-                        fallBackParent.style.flexWrap = 'wrap';
-                        fallBackParent.style.gap = '4px';
-                        fallBackParent.appendChild(resButtons);
-                    }
-                }
-            }
-
-            // C. メインチャットエリア (omnibar) / Main chat area (omnibar)
-            const omnibar = document.querySelector(SELECTORS.OMNIBAR);
-            if (omnibar && omnibar.parentElement) {
-                if (!omnibar.parentElement.querySelector('.cuecard-fav-container.chat-main-fav')) {
-                    const chatButtons = createFavoriteButtons('chat', 'chat');
-                    if (chatButtons) {
-                        chatButtons.classList.add('chat-main-fav');
-                        // omnibarの上に配置（入力エリアの外に出す） / Place above omnibar (outside the input area)
-                        chatButtons.style.display = 'flex';
-                        chatButtons.style.flexWrap = 'wrap';
-                        chatButtons.style.justifyContent = 'flex-start';
-                        chatButtons.style.gap = '6px';
-                        chatButtons.style.marginBottom = '12px';
-                        chatButtons.style.padding = '0 20px';
-                        chatButtons.style.width = '100%';
-                        chatButtons.style.zIndex = '100'; // 前面に表示 / Ensure it's in front
-
-                        omnibar.parentElement.insertBefore(chatButtons, omnibar);
-                        log('Injected chat favorite buttons before omnibar.');
-                    }
-                }
-            }
-
-            // D. 会話のスタイルダイアログ (Customize Chat) / Conversation Style dialog
-            const styleToggles = document.querySelector(SELECTORS.PROMPT_SECTION_TOGGLES);
-            if (styleToggles && styleToggles.parentElement) {
-                const parent = styleToggles.parentElement;
-
-                // 「カスタム」が選択されているか確認 / Check if "Custom" is selected
-                const checkedToggle = styleToggles.querySelector('.mat-button-toggle-checked');
-                const isCustomSelected = checkedToggle && (
-                    checkedToggle.innerText.includes('Custom') ||
-                    checkedToggle.innerText.includes('カスタム') ||
-                    (checkedToggle.querySelector('button') && checkedToggle.querySelector('button').getAttribute('aria-label') === 'Custom button')
-                );
-
-                let chatButtons = parent.querySelector('.cuecard-fav-container.chat-style-fav');
-
-                if (isCustomSelected) {
-                    if (!chatButtons) {
-                        chatButtons = createFavoriteButtons('chat', 'style');
+                // C. メインチャットエリア (omnibar) / Main chat area (omnibar)
+                const omnibar = document.querySelector(SELECTORS.OMNIBAR);
+                if (omnibar && omnibar.parentElement) {
+                    if (!omnibar.parentElement.querySelector('.cuecard-fav-container.chat-main-fav')) {
+                        const chatButtons = createFavoriteButtons('chat', 'chat');
                         if (chatButtons) {
-                            chatButtons.classList.add('chat-style-fav');
+                            chatButtons.classList.add('chat-main-fav');
+                            // omnibarの上に配置（入力エリアの外に出す） / Place above omnibar (outside the input area)
                             chatButtons.style.display = 'flex';
                             chatButtons.style.flexWrap = 'wrap';
                             chatButtons.style.justifyContent = 'flex-start';
                             chatButtons.style.gap = '6px';
-                            chatButtons.style.marginTop = '12px';
                             chatButtons.style.marginBottom = '12px';
+                            chatButtons.style.padding = '0 20px';
                             chatButtons.style.width = '100%';
-                            styleToggles.parentNode.insertBefore(chatButtons, styleToggles.nextSibling);
-                            log('Injected chat style favorite buttons (active).');
+                            chatButtons.style.zIndex = '100'; // 前面に表示 / Ensure it's in front
+
+                            omnibar.parentElement.insertBefore(chatButtons, omnibar);
+                            log('Injected chat favorite buttons before omnibar.');
+                        }
+                    }
+                }
+
+                // D. 会話のスタイルダイアログ (Customize Chat) / Conversation Style dialog
+                const styleToggles = document.querySelector(SELECTORS.PROMPT_SECTION_TOGGLES);
+                if (styleToggles && styleToggles.parentElement) {
+                    const parent = styleToggles.parentElement;
+
+                    // 「カスタム」が選択されているか確認 / Check if "Custom" is selected
+                    const checkedToggle = styleToggles.querySelector('.mat-button-toggle-checked');
+                    const isCustomSelected = checkedToggle && (
+                        checkedToggle.innerText.includes('Custom') ||
+                        checkedToggle.innerText.includes('カスタム') ||
+                        (checkedToggle.querySelector('button') && checkedToggle.querySelector('button').getAttribute('aria-label') === 'Custom button')
+                    );
+
+                    let chatButtons = parent.querySelector('.cuecard-fav-container.chat-style-fav');
+
+                    if (isCustomSelected) {
+                        if (!chatButtons) {
+                            chatButtons = createFavoriteButtons('chat', 'style');
+                            if (chatButtons) {
+                                chatButtons.classList.add('chat-style-fav');
+                                chatButtons.style.display = 'flex';
+                                chatButtons.style.flexWrap = 'wrap';
+                                chatButtons.style.justifyContent = 'flex-start';
+                                chatButtons.style.gap = '6px';
+                                chatButtons.style.marginTop = '12px';
+                                chatButtons.style.marginBottom = '12px';
+                                chatButtons.style.width = '100%';
+                                styleToggles.parentNode.insertBefore(chatButtons, styleToggles.nextSibling);
+                                log('Injected chat style favorite buttons (active).');
+                            }
+                        } else {
+                            chatButtons.style.display = 'flex';
                         }
                     } else {
-                        chatButtons.style.display = 'flex';
-                    }
-                } else {
-                    if (chatButtons) {
-                        chatButtons.style.display = 'none';
-                    }
-                }
-            }
-
-            if (isProcessing) return;
-
-            // --- 3. メニュー展開（設定有効時） ---
-            if (autoDeepResearchEnabled) {
-                const buttons = document.querySelectorAll('button');
-                for (const btn of buttons) {
-                    const text = (btn.innerText || '').trim();
-                    if (btn.getAttribute('aria-haspopup') === 'menu' &&
-                        text.includes('Research') &&
-                        !text.includes('Deep')) {
-
-                        if (btn.getAttribute('data-auto-opened') !== 'true') {
-                            isProcessing = true;
-                            btn.setAttribute('data-auto-opened', 'true');
-                            btn.click();
-                            log('Auto-opening web research menu...');
-                            setTimeout(() => { isProcessing = false; }, 100);
-                            break;
+                        if (chatButtons) {
+                            chatButtons.style.display = 'none';
                         }
                     }
                 }
-            }
 
-            // クリーンアップ / Cleanup
-            const clicked = document.querySelectorAll('[data-auto-clicked="true"], [data-auto-formatted="true"]');
-            clicked.forEach(el => {
-                if (!document.body.contains(el) || el.offsetParent === null) {
-                    el.removeAttribute('data-auto-clicked');
-                    el.removeAttribute('data-auto-formatted');
+                if (isProcessing) return;
+
+                // --- 3. メニュー展開（設定有効時） ---
+                if (autoDeepResearchEnabled) {
+                    const buttons = document.querySelectorAll('button');
+                    for (const btn of buttons) {
+                        const text = (btn.innerText || '').trim();
+                        if (btn.getAttribute('aria-haspopup') === 'menu' &&
+                            text.includes('Research') &&
+                            !text.includes('Deep')) {
+
+                            if (btn.getAttribute('data-auto-opened') !== 'true') {
+                                isProcessing = true;
+                                btn.setAttribute('data-auto-opened', 'true');
+                                btn.click();
+                                log('Auto-opening web research menu...');
+                                setTimeout(() => { isProcessing = false; }, 100);
+                                break;
+                            }
+                        }
+                    }
                 }
-            });
+
+                // クリーンアップ / Cleanup
+                const clicked = document.querySelectorAll('[data-auto-clicked="true"], [data-auto-formatted="true"]');
+                clicked.forEach(el => {
+                    if (!document.body.contains(el) || el.offsetParent === null) {
+                        el.removeAttribute('data-auto-clicked');
+                        el.removeAttribute('data-auto-formatted');
+                    }
+                });
+            }); // End of requestAnimationFrame
         });
 
         observer.observe(document.body, { childList: true, subtree: true });
