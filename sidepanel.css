@@ -1,4 +1,4 @@
-/* Prompt Manager for NotebookLM: 全体的なスタイリング */
+/* Prompt Manager for NotebookLM: Overall Styling */
 
 body {
     min-width: 280px;
@@ -70,7 +70,7 @@ body {
     cursor: pointer;
 }
 
-/* プロンプトリスト */
+/* Prompt List */
 .cue-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -83,7 +83,7 @@ body {
     border: 1px solid #e2e8f0;
     border-radius: 10px;
     padding: 10px 12px 10px 12px;
-    /* 右側のパディングをさらに狭める場合 */
+    /* Narrow the right padding further */
     padding-right: 4px;
     cursor: pointer;
     transition: all 0.2s;
@@ -103,7 +103,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    /* 垂直方向の中央揃え */
+    /* Vertical center alignment */
     gap: 4px;
 }
 
@@ -118,10 +118,10 @@ body {
     overflow: hidden;
     color: #334155;
     flex: 1;
-    /* タイトルを可能な限り広げる */
+    /* Expand title as much as possible */
 }
 
-/* フォームセクション */
+/* Form Section */
 .admin-section {
     display: flex;
     flex-direction: column;
@@ -196,7 +196,7 @@ textarea {
     background: #64748b;
 }
 
-/* 操作ボタン */
+/* Action Buttons */
 .item-actions {
     display: flex;
     gap: 0px;
@@ -209,7 +209,7 @@ textarea {
     background: transparent;
     border: none;
     font-size: 12px;
-    /* さらに小さめに */
+    /* Even smaller */
     padding: 2px 2px;
     border-radius: 4px;
     cursor: pointer;
@@ -229,7 +229,7 @@ textarea {
     padding: 4px;
     border-radius: 4px;
     font-size: 10px;
-    /* さらに小さめに */
+    /* Even smaller */
     cursor: pointer;
     transition: background 0.2s;
     display: flex;
@@ -243,7 +243,7 @@ textarea {
     padding: 4px;
     border-radius: 4px;
     font-size: 10px;
-    /* さらに小さめに */
+    /* Even smaller */
     cursor: pointer;
     transition: background 0.2s;
     display: flex;
@@ -261,7 +261,7 @@ textarea {
     /* Light red */
 }
 
-/* 検索・タグ */
+/* Search and Tags */
 .common-controls {
     display: flex;
     flex-direction: column;
@@ -379,7 +379,7 @@ textarea {
     color: #ef4444;
 }
 
-/* スイッチ型トグル */
+/* Switch Toggle */
 .switch {
     position: relative;
     display: inline-block;
@@ -431,7 +431,7 @@ input:checked+.slider:before {
     border-radius: 50%;
 }
 
-/* 設定パネル */
+/* Settings Panel */
 .settings-panel {
     background: #f8fafc;
     padding: 10px;
@@ -458,7 +458,7 @@ input:checked+.slider:before {
     background-color: white;
 }
 
-/* カテゴリ・アコーディオン */
+/* Category Accordion */
 .category-section {
     margin-bottom: 6px;
     border: 1px solid #e2e8f0;
@@ -474,7 +474,7 @@ input:checked+.slider:before {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    /* 両端に配置 */
+    /* Align to both ends */
     user-select: none;
     transition: background 0.2s;
 }
@@ -537,7 +537,7 @@ input:checked+.slider:before {
     display: none;
 }
 
-/* 警告・エラー */
+/* Warnings and Errors */
 .char-counter.warning {
     color: #ef4444;
     font-weight: bold;
@@ -556,7 +556,7 @@ input:checked+.slider:before {
     padding-left: 2px;
 }
 
-/* モーダル（カスタム確認ダイアログ） */
+/* Modal (Custom Confirmation Dialog) */
 .modal-overlay {
     display: none;
     position: fixed;

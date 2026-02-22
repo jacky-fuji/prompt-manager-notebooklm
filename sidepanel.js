@@ -1,10 +1,10 @@
 /**
- * Prompt Manager for NotebookLM: サイドパネル管理ロジック / Side Panel Management Logic
+ * Prompt Manager for NotebookLM: Side Panel Management Logic
  */
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    // アプリケーションの状態管理 / Application State Management
+    // Application State Management
     const state = {
         language: 'ja',
         currentInputTags: [],
@@ -16,12 +16,12 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     /**
-     * 静的要素の翻訳適用 / Apply translations to static elements
+     * Apply translations to static elements
      */
     function updateStaticTranslations() {
         const langData = TRANSLATIONS[state.language];
 
-        // テキストの置換 / Replace text
+        // Replace text
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
             if (langData[key]) {
@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // プレースホルダーの置換 / Replace placeholders
+        // Replace placeholders
         document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
             const key = el.getAttribute('data-i18n-placeholder');
             if (langData[key]) {
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loadAndRenderPrompts();
     }
 
-    // バリデーション定数とカテゴリ定義（ここを一括管理の元にする） / Validation constants and category definitions (Centralized management)
+    // Validation constants and category definitions (Centralized management)
     const VALID_CATEGORIES = ['research', 'chat', 'audio', 'video', 'report', 'flashcard', 'quiz', 'infographic', 'slide', 'datatable'];
     const MAX_TITLE_LENGTH = 20;
     const MAX_TAG_LENGTH = 20;
@@ -50,16 +50,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const MAX_TEXT_LENGTH = 10000;
     const MAX_PROMPTS_PER_CATEGORY = 20;
 
-    // コンテナ / Containers
+    // Containers
     const adminSection = document.getElementById('admin-section');
     const promptListContainer = document.getElementById('prompt-list-container');
-    const listContainers = {}; // 動的に紐付け / Dynamically linked
+    const listContainers = {}; // Dynamically linked
 
-    // ボタン / Buttons
+    // Buttons
     const saveBtn = document.getElementById('save-btn');
     const cancelBtn = document.getElementById('cancel-btn');
 
-    // フォーム入力 / Form inputs
+    // Form inputs
     const languageSelect = document.getElementById('language-select');
     const titleInput = document.getElementById('prompt-title');
     const categoryInput = document.getElementById('prompt-category');
@@ -74,31 +74,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const tagsCharCountDisplay = document.getElementById('tags-char-count');
     const adminTitle = document.getElementById('admin-title');
 
-    // 動画サブカテゴリ要素 / Video subcategory elements
+    // Video subcategory elements
     const videoSubcategoryGroup = document.getElementById('video-subcategory-group');
     const videoSubcategoryHidden = document.getElementById('prompt-video-subcategory');
     const videoSubFocusRadio = document.getElementById('video-sub-focus');
     const videoSubStyleRadio = document.getElementById('video-sub-style');
 
-    // チャットサブカテゴリ要素 / Chat subcategory elements
+    // Chat subcategory elements
     const chatSubcategoryGroup = document.getElementById('chat-subcategory-group');
     const chatSubcategoryHidden = document.getElementById('prompt-chat-subcategory');
     const chatSubMainRadio = document.getElementById('chat-sub-main');
     const chatSubStyleRadio = document.getElementById('chat-sub-style');
 
-    // フィルター要素 / Filter elements
+    // Filter elements
     const searchInput = document.getElementById('search-input');
     const tagCloud = document.getElementById('tag-cloud');
 
-    // 設定要素 (動的生成されるためここでの取得は不要) / Settings elements (No need to retrieve here as they are dynamically generated)
+    // Settings elements (No need to retrieve here as they are dynamically generated)
 
-    // カスタムモーダル要素 / Custom modal elements
+    // Custom modal elements
     const confirmModal = document.getElementById('custom-confirm-modal');
     const confirmMessage = document.getElementById('confirm-message');
     const confirmYesBtn = document.getElementById('confirm-yes-btn');
     const confirmNoBtn = document.getElementById('confirm-no-btn');
 
-    // 言語切替イベント / Language switch event
+    // Language switch event
     if (languageSelect) {
         languageSelect.addEventListener('change', (e) => {
             state.language = e.target.value;
@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // カテゴリ切替時のサブカテゴリ表示 / Show/hide subcategory based on category selection
+    // Show/hide subcategory based on category selection
     if (categoryInput) {
         categoryInput.addEventListener('change', (e) => {
             videoSubcategoryGroup.style.display = e.target.value === 'video' ? 'block' : 'none';
@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // サブカテゴリラジオボタンの同期 / Sync subcategory radio buttons
+    // Sync subcategory radio buttons
     const handleSubCategoryChange = (e) => {
         videoSubcategoryHidden.value = e.target.value;
     };
@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (chatSubMainRadio) chatSubMainRadio.addEventListener('change', handleChatSubCategoryChange);
     if (chatSubStyleRadio) chatSubStyleRadio.addEventListener('change', handleChatSubCategoryChange);
 
-    // 動的に追加された要素ので、要素参照を再初期化する必要があるもの / Elements that were dynamically added and need their references re-initialized
+    // Elements that were dynamically added and need their references re-initialized
     const initializeDynamicListeners = () => {
         const autoDeepResearchInputNew = document.getElementById('setting-auto-deep-research');
         const chatGoalInputNew = document.getElementById('setting-chat-goal');
@@ -231,18 +231,18 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     /**
-     * カテゴリセクションの動的生成 / Dynamic generation of category sections
+     * Dynamic generation of category sections
      */
     function initCategorySections() {
         if (!promptListContainer) return;
-        promptListContainer.innerHTML = ''; // クリア / Clear
+        promptListContainer.innerHTML = ''; // Clear
 
         VALID_CATEGORIES.forEach(cat => {
             const section = document.createElement('section');
             section.className = 'category-section';
             section.dataset.category = cat;
 
-            // 各カテゴリ固有の追加設定（Deep Research, Audio Formatなど） / Category-specific settings (Deep Research, Audio Format, etc.)
+            // Category-specific settings (Deep Research, Audio Format, etc.)
             let extraSettingsHtml = '';
             if (cat === 'research') {
                 extraSettingsHtml = `
@@ -432,17 +432,17 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             promptListContainer.appendChild(section);
 
-            // コンテナ参照を保持 / Hold container references
+            // Hold container references
             listContainers[cat] = section.querySelector(`#list-${cat}`);
 
-            // アコーディオン開閉イベント / Accordion open/close event
+            // Accordion open/close event
             const header = section.querySelector('.category-header');
             header.addEventListener('click', (e) => {
-                if (e.target.closest('.btn-add-category')) return; // ＋ボタンのクリックはアコーディオン開閉しない / Click on the + button does not open/close the accordion
+                if (e.target.closest('.btn-add-category')) return; // Click on the + button does not open/close the accordion
                 header.classList.toggle('collapsed');
             });
 
-            // ＋ボタンイベント / + button event
+            // + button event
             const addBtn = section.querySelector('.btn-add-category');
             if (addBtn) {
                 addBtn.addEventListener('click', (e) => {
@@ -450,7 +450,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const category = addBtn.dataset.category;
                     resetForm();
                     categoryInput.value = category;
-                    // サブカテゴリの表示を更新 / Update subcategory visibility
+                    // Update subcategory visibility
                     videoSubcategoryGroup.style.display = category === 'video' ? 'block' : 'none';
                     chatSubcategoryGroup.style.display = category === 'chat' ? 'block' : 'none';
                     adminSection.scrollIntoView({ behavior: 'smooth' });
@@ -458,7 +458,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
 
-            // タブ切替イベント（videoカテゴリのみ） / Tab switch event (video category only)
+            // Tab switch event (video category only)
             if (cat === 'video') {
                 const tabButtons = section.querySelectorAll('.video-tabs .tab-btn');
                 tabButtons.forEach(btn => {
@@ -475,7 +475,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
 
-            // タブ切替イベント（chatカテゴリ） / Tab switch event (chat category)
+            // Tab switch event (chat category)
             if (cat === 'chat') {
                 const tabButtons = section.querySelectorAll('.chat-tabs .tab-btn');
                 tabButtons.forEach(btn => {
@@ -497,16 +497,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-    // フィルタリング状態 / Filtering state
+    // Filtering state
 
-    // 初期プロンプトデータ / Initial prompt data
+    // Initial prompt data
     const initialPrompts = [
         { title: 'Stock Analysis', category: 'research', tags: ['Research', 'Analysis'], text: 'Analyze the growth potential and risk factors of the following stock based on its latest financial results and medium-term business plan in bullet points.', isFavorite: true }
     ];
 
 
     /**
-     * 文字数カウントの更新 / Update character count
+     * Update character count
      */
     function updateCharCount() {
         if (!textInput) return;
@@ -548,15 +548,15 @@ document.addEventListener('DOMContentLoaded', () => {
         titleInput.addEventListener('input', updateTitleCharCount);
     }
 
-    // タグ入力ロジック / Tag input logic
+    // Tag input logic
     if (tagsInputElement) {
-        // コンテナクリックで入力にフォーカス / Focus input on container click
+        // Focus input on container click
         tagsInputContainer.addEventListener('click', () => {
             tagsInputElement.focus();
         });
 
         tagsInputElement.addEventListener('keydown', (e) => {
-            if (e.isComposing) return; // IME変換中は無視 / Ignore during IME composition
+            if (e.isComposing) return; // Ignore during IME composition
 
             if (e.key === 'Enter' || e.key === ',') {
                 e.preventDefault();
@@ -580,23 +580,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 showValidationError(tagsInputContainer, `タグは${MAX_TAG_LENGTH}文字以内で入力してください。`);
                 return;
             }
-            // 重複チェック（オプション） / Duplicate check (optional)
+            // Duplicate check (optional)
             if (!state.currentInputTags.includes(val)) {
                 state.currentInputTags.push(val);
                 renderInputTags();
                 updateTagsCharCount();
             }
             tagsInputElement.value = '';
-            clearValidationErrors(); // エラーがあれば消す / Clear validation errors if any
+            clearValidationErrors(); // Clear validation errors if any
         }
     }
 
     function renderInputTags() {
-        // 既存のチップを削除（input以外） / Remove existing chips (except input)
+        // Remove existing chips (except input)
         const chips = tagsInputContainer.querySelectorAll('.tag-chip-input');
         chips.forEach(c => c.remove());
 
-        // チップを再生成してinputの前に挿入 / Regenerate chips and insert them before input
+        // Regenerate chips and insert them before input
         state.currentInputTags.forEach((tag, index) => {
             const chip = document.createElement('div');
             chip.className = 'tag-chip-input';
@@ -619,12 +619,12 @@ document.addEventListener('DOMContentLoaded', () => {
             tagsInputContainer.insertBefore(chip, tagsInputElement);
         });
 
-        // 隠しフィールド更新 / Update hidden field
+        // Update hidden field
         tagsHiddenInput.value = state.currentInputTags.join(',');
     }
 
     /**
-     * 検索入力イベント / Search input event
+     * Search input event
      */
     if (searchInput) {
         searchInput.addEventListener('input', (e) => {
@@ -634,11 +634,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * プロンプトと設定をストレージから読み込み / Load prompts and settings from storage
+     * Load prompts and settings from storage
      */
     function loadAndRenderPrompts() {
         chrome.storage.local.get(['prompts', 'autoDeepResearch', 'chatGoal', 'chatLength', 'audioFormat', 'audioLength', 'reportFormat', 'videoFormat', 'videoStyle', 'flashcardCardCount', 'flashcardDifficulty', 'quizQuestionCount', 'quizDifficulty', 'infographicLayout', 'infographicDetailLevel', 'slideFormat', 'slideLength', 'language'], (result) => {
-            // 言語設定の反映 / Reflect language setting
+            // Reflect language setting
             if (result.language) {
                 state.language = result.language;
                 if (languageSelect) languageSelect.value = state.language;
@@ -650,20 +650,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
             let prompts = result.prompts;
             if (prompts === undefined) {
-                // 初回インストール時 / Initial install
+                // Initial install
                 prompts = initialPrompts;
                 chrome.storage.local.set({ prompts: prompts });
             } else if (!Array.isArray(prompts)) {
-                // データ異常時のフォールバック / Fallback for data corruption
+                // Fallback for data corruption
                 prompts = [];
             }
 
-            // カテゴリ欠損の補完（移行用） / Complete missing categories (for migration)
+            // Complete missing categories (for migration)
             prompts.forEach(p => {
                 if (!p.category) p.category = 'research';
             });
 
-            // 設定の反映 / Reflect settings
+            // Reflect settings
             const autoDeepResearchInputLocal = document.getElementById('setting-auto-deep-research');
             const audioFormatInputLocal = document.getElementById('setting-audio-format');
             const audioLengthInputLocal = document.getElementById('setting-audio-length');
@@ -747,7 +747,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     /**
-     * タグクラウドの更新 / Update tag cloud
+     * Update tag cloud
      */
     function updateTagCloud(prompts) {
         if (!tagCloud) return;
@@ -783,17 +783,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * カテゴリ別にリストを描画 / Render list by category
+     * Render list by category
      */
     function renderCategorizedList(prompts) {
-        // 各コンテナをクリア / Clear each container
+        // Clear each container
         Object.values(listContainers).forEach(c => {
             if (c) while (c.firstChild) c.removeChild(c.firstChild);
         });
 
-        // フィルタリング / Filtering
+        // Filtering
         let filtered = prompts.filter(p => {
-            // AND検索: 選択されたすべてのタグを持っているか / AND search: Check if it has all selected tags
+            // AND search: Check if it has all selected tags
             const matchesTag = state.selectedTags.size === 0 ||
                 (p.tags && Array.from(state.selectedTags).every(t => p.tags.includes(t)));
             const matchesSearch = !state.searchQuery ||
@@ -803,13 +803,13 @@ document.addEventListener('DOMContentLoaded', () => {
             return matchesTag && matchesSearch;
         });
 
-        // カテゴリごとに描画 / Render per category
+        // Render per category
         const categories = VALID_CATEGORIES;
         categories.forEach(cat => {
             if (!listContainers[cat]) return;
 
             const catPrompts = filtered.filter(p => {
-                // 'research' カテゴリの場合、カテゴリ未設定のものも救済する / If 'research' category, also include prompts with no category
+                // If 'research' category, also include prompts with no category
                 if (cat === 'research') {
                     return p.category === cat || !p.category;
                 }
@@ -826,7 +826,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return p.category === cat;
             });
 
-            // お気に入り優先ソート / Sort favorites first
+            // Sort favorites first
             catPrompts.sort((a, b) => {
                 if (a.isFavorite === b.isFavorite) return 0;
                 return a.isFavorite ? -1 : 1;
@@ -838,11 +838,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 listContainers[cat].appendChild(item);
             });
 
-            // プロンプトがある場合は展開、ない場合は閉じる / Expand if there are prompts, collapse if not
-            // 【修正】原則すべて展開状態にするため、自動開閉ロジックを削除 / [Fix] Logic removed to keep all expanded by default
+            // Expand if there are prompts, collapse if not
+            // [Fix] Logic removed to keep all expanded by default
             const header = document.getElementById(`header-${cat}`);
 
-            // プロンプトがない場合は「なし」を表示 / Display "None" if there are no prompts
+            // Display "None" if there are no prompts
             if (catPrompts.length === 0 && !state.searchQuery && state.selectedTags.size === 0) {
                 const empty = document.createElement('div');
                 empty.style.padding = '8px 12px';
@@ -856,7 +856,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * プロンプト要素の作成 / Create prompt element
+     * Create prompt element
      */
     function createPromptElement(prompt, index) {
         const item = document.createElement('div');
@@ -870,7 +870,7 @@ document.addEventListener('DOMContentLoaded', () => {
         title.innerText = prompt.title;
         header.appendChild(title);
 
-        // 操作ボタン（常時表示） / Action buttons (always visible)
+        // Action buttons (always visible)
         const actions = document.createElement('div');
         actions.className = 'item-actions';
 
@@ -896,7 +896,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         item.appendChild(header);
 
-        // タグ表示 / Tag display
+        // Tag display
         if (prompt.tags && prompt.tags.length > 0) {
             const tagList = document.createElement('div');
             tagList.className = 'cue-tags';
@@ -919,7 +919,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * 編集モード / Edit mode
+     * Edit mode
      */
     function enterEditMode(index, prompt) {
         editIndexInput.value = index;
@@ -933,7 +933,7 @@ document.addEventListener('DOMContentLoaded', () => {
         adminTitle.innerText = TRANSLATIONS[state.language]['admin-edit-title'];
         saveBtn.innerText = TRANSLATIONS[state.language]['btn-update'];
 
-        // サブカテゴリの復元 / Restore subcategory
+        // Restore subcategory
         if (prompt.category === 'video') {
             videoSubcategoryGroup.style.display = 'block';
             chatSubcategoryGroup.style.display = 'none';
@@ -961,16 +961,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * 保存/更新 / Save or Update
+     * Save or Update
      */
     if (saveBtn) {
         saveBtn.onclick = () => {
             const isUpdate = parseInt(editIndexInput.value) >= 0;
             const message = TRANSLATIONS[state.language][isUpdate ? 'confirm-update' : 'confirm-save'];
 
-            // バリデーションチェック（簡易） / Simple validation check
+            // Simple validation check
             if (!titleInput.value.trim() || !textInput.value.trim()) {
-                // エラー表示のため、バリデーションロジックだけ実行させる / Execute only validation logic for error display
+                // Execute only validation logic for error display
                 executeSave();
                 return;
             }
@@ -1034,7 +1034,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             const newPrompt = { title, category, subCategory, tags, text, isFavorite };
 
-            // カテゴリ別の件数上限チェック（新規追加時のみ） / Per-category limit check (only for new additions)
+            // Per-category limit check (only for new additions)
             if (editIndex < 0) {
                 const catCount = prompts.filter(p => {
                     if ((p.category || 'research') !== category) return false;
@@ -1081,7 +1081,7 @@ document.addEventListener('DOMContentLoaded', () => {
         adminTitle.innerText = TRANSLATIONS[state.language]['admin-add-title'];
         saveBtn.innerText = TRANSLATIONS[state.language]['btn-save'];
 
-        // サブカテゴリリセット / Subcategory reset
+        // Subcategory reset
         videoSubcategoryGroup.style.display = 'none';
         videoSubcategoryHidden.value = 'focus';
         videoSubFocusRadio.checked = true;
@@ -1096,7 +1096,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * バリデーションエラーの表示 / Display validation error
+     * Display validation error
      */
     function showValidationError(inputElement, message) {
         inputElement.classList.add('input-error');
@@ -1160,7 +1160,7 @@ document.addEventListener('DOMContentLoaded', () => {
         state.onConfirmAction = null;
     }
 
-    // モーダルの外側をクリックして閉じる / Close modal when clicking outside
+    // Close modal when clicking outside
     window.onclick = (event) => {
         if (event.target === confirmModal) {
             closeModal();
@@ -1179,7 +1179,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (cancelBtn) {
         cancelBtn.onclick = () => {
-            // 入力が空なら確認せずにリセット / Reset without confirmation if input is empty
+            // Reset without confirmation if input is empty
             if (!titleInput.value.trim() && !textInput.value.trim() && parseInt(editIndexInput.value) === -1) {
                 resetForm();
                 return;
@@ -1190,7 +1190,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    // 初期起動 / Initial startup
+    // Initial startup
     initCategorySections();
     loadAndRenderPrompts();
 });

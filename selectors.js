@@ -1,10 +1,10 @@
-// セレクタの集約管理 / Centralized Selector Management
+// Centralized Selector Management for NotebookLM UI elements
 const SELECTORS = {
-    // ボタンの自動クリック関連 / Auto-click buttons
+    // Buttons that the extension can automatically click
     DEEP_RESEARCH_BTN: '.research-option-deep-research',
     MENU_TRIGGERS: 'button[aria-haspopup="menu"]',
 
-    // ダイアログ関連 / Dialogs
+    // Main dialog containers used for formatting options
     DIALOGS: {
         AUDIO: 'mat-dialog-container:not([data-auto-formatted="true"]), configurable-form-dialog:not([data-auto-formatted="true"])',
         FLASHCARD: 'mat-dialog-container:not([data-auto-formatted-flash="true"]), configurable-form-dialog:not([data-auto-formatted-flash="true"])',
@@ -15,7 +15,7 @@ const SELECTORS = {
         CHAT: 'mat-dialog-container:not([data-auto-formatted-chat="true"]), configurable-form-dialog:not([data-auto-formatted-chat="true"])'
     },
 
-    // ダイアログ内部要素 / Dialog internal elements
+    // Internal elements within the dialogs (e.g., buttons, toggles, layout wrappers)
     DIALOG_INTERNALS: {
         TILE_LABEL: '.tile-label',
         CONTROL_WRAPPER: '.control-wrapper',
@@ -29,7 +29,7 @@ const SELECTORS = {
         UNSELECTED_OPTION_BUTTON: '.unselected-option-button'
     },
 
-    // UIコンテキストインジェクション関連 / UI Context Injection
+    // Target elements where the "Add to favorite" / UI injection occurs
     INJECTION_LABELS: '#episodeFocus-label, #videoFocus-label, #userSteeringPrompt-label, .mat-title-medium, .control-label',
     ACTIONS_OPTIONS: '.actions-options',
     OMNIBAR: 'omnibar',

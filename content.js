@@ -1,5 +1,5 @@
 (function () {
-    // 拡張機能のコンテキストチェック / Extension context check
+    // Extension context check
     function isContextValid() {
         return typeof chrome !== 'undefined' && !!chrome.runtime && !!chrome.runtime.id;
     }
@@ -9,7 +9,7 @@
     const DEBUG = false;
     const log = (...args) => { if (DEBUG) console.log('[CueCard]', ...args); };
 
-    // --- 注入失敗の検知と通知 (Failure Detection & Notification) ---
+    // --- Failure Detection & Notification ---
     let notificationShown = false;
     function notifyUIChangeWarning(selectorName) {
         if (notificationShown) return;
@@ -23,7 +23,7 @@
         setTimeout(() => toast.remove(), 5000);
     }
 
-    // 定期的に主要要素の存在を確認する (Check critical elements periodically)
+    // Check critical elements periodically
     let checkCount = 0;
     const criticalCheckInterval = setInterval(() => {
         if (!isContextValid()) {
@@ -31,15 +31,13 @@
             return;
         }
 
-        // オムニバー(メイン入力フィールド)は常に存在するはずの要素
         // Omnibar is expected to be present in normal chat views
         const omnibar = document.querySelector(SELECTORS.OMNIBAR);
         if (omnibar) {
-            clearInterval(criticalCheckInterval); // 見つかったら監視終了 / Stop checking if found
+            clearInterval(criticalCheckInterval); // Stop checking if found
         } else {
             checkCount++;
-            if (checkCount > 10) { // 拡張ロード後約10秒経過しても出ない場合 / If not found after ~10 seconds
-                // deep researchモード等の別画面かもしれないので厳密にはエラーではないが、主要機能のフックができない状態
+            if (checkCount > 10) { // If not found after ~10 seconds
                 // Might be on a different page, but log it and optionally show toast
                 console.warn('[Prompt Manager] Critical selector check timed out for: ' + SELECTORS.OMNIBAR);
                 // notifyUIChangeWarning('OMNIBAR'); // Uncomment if we want to aggressively show toast. Chat UI may legitimately not be open yet.
@@ -70,7 +68,7 @@
     let chatLength = '';
     let favoritePrompts = [];
 
-    // 音声解説形式のマッピング（内部値 -> 表示ラベル） / Audio commentary format mapping (internal value -> display label)
+    // Audio commentary format mapping (internal value -> display label)
     const AUDIO_FORMAT_MAP = {
         '詳細': ['詳細', 'Deep Dive'],
         '概要': ['概要', 'Brief'],
@@ -82,20 +80,19 @@
         '標準': ['デフォルト', 'Default']
     };
 
-    // レポート形式のマッピング / Report format mapping
+    // Report format mapping
     const REPORT_FORMAT_MAP = {
         '独自に作成': ['独自に作成', 'Create Your Own'],
         '概要説明資料': ['概要説明資料', 'Briefing Doc'],
         '学習ガイド': ['学習ガイド', 'Study Guide'],
         'ブログ投稿': ['ブログ投稿', 'Blog Post']
     };
-    // 動画解説形式のマッピング / Video overview format mapping
-    // ラベルはJP/EN共通で英語表記
+    // Video overview format mapping (English labels are used for both JP/EN UI)
     const VIDEO_FORMAT_MAP = {
         'Explainer': ['説明動画', 'Explainer'],
         'Brief': ['概要', 'Brief']
     };
-    // ビジュアルスタイルのマッピング / Visual style mapping (JP labels for Japanese UI, EN for English)
+    // Visual style mapping (JP labels for Japanese UI, EN for English)
     const VIDEO_STYLE_MAP = {
         'Auto-select': ['Auto-select', '自動選択'],
         'Custom': ['Custom', 'カスタム'],
@@ -109,7 +106,7 @@
         'Paper-craft': ['Paper-craft', 'ペーパークラフト']
     };
 
-    // フラッシュカード設定のマッピング / Flashcard setting mapping
+    // Flashcard setting mapping
     const FLASHCARD_COUNT_MAP = {
         '少なめ': ['少なめ', 'Fewer'],
         '標準': ['標準', 'Standard'],
@@ -121,7 +118,7 @@
         '難しい': ['難しい', 'Hard']
     };
 
-    // インフォグラフィック設定のマッピング / Infographic setting mapping
+    // Infographic setting mapping
     const INFOGRAPHIC_LAYOUT_MAP = {
         '横向き': ['横向き', 'Landscape'],
         '縦向き': ['縦向き', 'Portrait'],
@@ -133,7 +130,7 @@
         '詳細': ['詳細', 'Detailed']
     };
 
-    // スライド資料設定のマッピング / Slide setting mapping
+    // Slide deck setting mapping
     const SLIDE_FORMAT_MAP = {
         '詳細': ['詳細なスライド', 'Detailed Deck'],
         'プレゼンター用': ['プレゼンターのスライド', 'Presenter Slides']
@@ -142,7 +139,7 @@
         '短め': ['短め', 'Short'],
         'デフォルト': ['デフォルト', 'Default']
     };
-    // チャット設定のマッピング / Chat setting mapping
+    // Chat setting mapping
     const CHAT_GOAL_MAP = {
         'Default': ['デフォルト', 'Default'],
         'Learning Guide': ['学習ガイド', 'Learning Guide'],
@@ -154,7 +151,7 @@
         'Shorter': ['短め', 'Shorter']
     };
 
-    // 基本スタイルの注入 / Inject basic styles
+    // Inject basic styles
     const style = document.createElement('style');
     style.textContent = `
         .cuecard-fav-btn {
@@ -192,7 +189,7 @@
             gap: 6px;
             margin-top: 12px;
             width: 100%;
-            flex-basis: 100%; /* 強制的に次の行へ送る / Force to the next line */
+            flex-basis: 100%; /* Force flex items to the next line */
             clear: both;
         }
         .cuecard-fav-container.inline {
@@ -208,7 +205,7 @@
     `;
     document.head.appendChild(style);
 
-    // 設定とお気に入りをロードしてキャッシュ / Load and cache settings and favorites
+    // Load and cache settings and favorites from local storage
     function refreshSettings() {
         if (!isContextValid()) return;
         chrome.storage.local.get(['autoDeepResearch', 'prompts', 'audioFormat', 'audioLength', 'reportFormat', 'videoFormat', 'videoStyle', 'chatGoal', 'chatLength', 'flashcardCardCount', 'flashcardDifficulty', 'quizQuestionCount', 'quizDifficulty', 'infographicLayout', 'infographicDetailLevel', 'slideFormat', 'slideLength'], (result) => {
@@ -235,7 +232,7 @@
         });
     }
 
-    // ストレージ変更を監視 / Monitor storage changes
+    // Monitor storage changes to update cached variables
     chrome.storage.onChanged.addListener((changes, area) => {
         if (area === 'local') {
             if (changes.autoDeepResearch) {
@@ -290,7 +287,7 @@
     refreshSettings();
 
     /**
-     * 入力フォーカス管理 / Input focus management
+     * Input focus management
      */
     document.addEventListener('focusin', (e) => {
         const target = e.target;
@@ -300,7 +297,7 @@
     });
 
     /**
-     * テキスト挿入メッセージの受信 / Receive text insertion message
+     * Receive text insertion message from side panel
      */
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         if (sender.id !== chrome.runtime.id) return;
@@ -314,7 +311,7 @@
     function insertText(text, contextElement = null) {
         let target = lastFocusedElement;
 
-        // ボタンの近傍から入力欄を探す / Look for input field near the button
+        // Look for input field near the button
         if (contextElement) {
             const container = contextElement.closest('.control-wrapper') ||
                 contextElement.closest('.dialog-container') ||
@@ -341,26 +338,26 @@
         try {
             if (target.tagName === 'TEXTAREA' || target.tagName === 'INPUT') {
                 target.setRangeText(text, target.selectionStart, target.selectionEnd, 'end');
-                // フレームワークにイベントを通知
+                // Notify framework of event
                 target.dispatchEvent(new Event('input', { bubbles: true }));
             } else if (target.isContentEditable) {
-                // contenteditable要素の場合
+                // For contenteditable elements
                 const selection = window.getSelection();
                 if (selection.rangeCount > 0) {
                     const range = selection.getRangeAt(0);
                     range.deleteContents();
                     range.insertNode(document.createTextNode(text));
-                    // カーソルを末尾に移動
+                    // Move cursor to the end
                     range.collapse(false);
                     selection.removeAllRanges();
                     selection.addRange(range);
                     target.dispatchEvent(new Event('input', { bubbles: true }));
                 }
             } else {
-                // フォールバック
+                // Fallback
                 document.execCommand('insertText', false, text);
             }
-            // lastFocusedElement を更新しておく
+            // Update lastFocusedElement
             lastFocusedElement = target;
         } catch (err) {
             if (DEBUG) console.error('[Prompt Manager] Insertion failed', err);
@@ -368,19 +365,19 @@
     }
 
     /**
-     * お気に入りボタンの生成
-     * @param {string} categoryFilter - カテゴリで絞り込む場合 ('audio', 'research'等)
-     * @param {string} subCategoryFilter - サブカテゴリで絞り込む場合
+     * Generate favorite buttons container
+     * @param {string} categoryFilter - Filter by category (e.g., 'audio', 'research')
+     * @param {string} subCategoryFilter - Filter by subcategory
      */
     function createFavoriteButtons(categoryFilter = null, subCategoryFilter = null) {
         let filtered = favoritePrompts;
         if (categoryFilter) {
             filtered = favoritePrompts.filter(p => {
-                // 特定のカテゴリに合致するか、'research'指定時はカテゴリ未設定のものも救済する
+                // Match category, fallback to 'research' if not set
                 const pCat = p.category || 'research';
                 if (pCat !== categoryFilter) return false;
 
-                // サブカテゴリのチェック
+                // Check subcategory
                 if (subCategoryFilter) {
                     let sub = p.subCategory;
                     if (!sub) {
@@ -398,7 +395,7 @@
 
         const container = document.createElement('div');
         container.className = 'cuecard-fav-container' + (categoryFilter ? ' inline' : '');
-        // コンテキスト埋め込み用にスタイルを微調整
+        // Fine-tune styles for inline context injection
         if (categoryFilter) {
             container.style.marginTop = '4px';
             container.style.marginBottom = '8px';
@@ -412,7 +409,7 @@
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 e.preventDefault();
-                // コンテキスト（ボタン自身）を渡して、近くの入力欄を探させる
+                // Pass context (the button itself) to find nearby input fields
                 insertText(p.text, btn);
             });
             container.appendChild(btn);
@@ -422,7 +419,7 @@
     }
 
     /**
-     * NotebookLM 専用: 各種自動化とUI注入
+     * NotebookLM specific: Various automations and UI injections
      */
     function setupObserver() {
         let isProcessing = false;
@@ -439,9 +436,9 @@
             observerTimer = requestAnimationFrame(() => {
                 observerTimer = null;
 
-                // --- 1. 自動選択機能 (RPA的な動作) ---
+                // --- 1. Auto-selection (RPA-like behavior) ---
 
-                // A. Deep Research 自動選択
+                // A. Deep Research Auto-selection
                 if (autoDeepResearchEnabled) {
                     const deepBtn = document.querySelector(SELECTORS.DEEP_RESEARCH_BTN);
                     if (deepBtn && deepBtn.getAttribute('data-auto-clicked') !== 'true') {
@@ -451,9 +448,9 @@
                     }
                 }
 
-                // B. 音声解説設定の自動選択
+                // B. Audio commentary settings auto-selection
                 if (audioFormat || audioLength) {
-                    // 未処理のダイアログを探す
+                    // Find unprocessed dialogs
                     const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.AUDIO);
                     const audioDialog = Array.from(dialogs).find(d => {
                         const text = d.innerText || '';
@@ -464,7 +461,7 @@
                         let formatDone = !audioFormat;
                         let lengthDone = !audioLength;
 
-                        // 形式の選択
+                        // Format selection
                         if (audioFormat && !formatDone) {
                             const labels = audioDialog.querySelectorAll('.tile-label');
                             const targetLabels = AUDIO_FORMAT_MAP[audioFormat] || [audioFormat];
@@ -486,7 +483,7 @@
                             }
                         }
 
-                        // 長さの選択
+                        // Length selection
                         if (audioLength && !lengthDone) {
                             const wrappers = audioDialog.querySelectorAll('.control-wrapper');
                             wrappers.forEach(wrapper => {
@@ -519,7 +516,7 @@
                 }
 
 
-                // C. フラッシュカード形式の自動選択 / Auto-select flashcard format
+                // C. Auto-select flashcard format
                 if (flashcardCardCount || flashcardDifficulty) {
                     const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.FLASHCARD);
                     const flashDialog = Array.from(dialogs).find(d => {
@@ -537,7 +534,7 @@
                             if (!h2) return;
                             const headerText = h2.innerText.trim();
 
-                            // カードの枚数 / Number of Cards
+                            // Number of Cards
                             if (flashcardCardCount && (headerText.includes('カードの枚数') || headerText.includes('Number of Cards'))) {
                                 const buttons = col.querySelectorAll('button');
                                 const targetTexts = FLASHCARD_COUNT_MAP[flashcardCardCount] || [flashcardCardCount];
@@ -554,7 +551,7 @@
                                 }
                             }
 
-                            // 難易度レベル / Level of Difficulty
+                            // Level of Difficulty
                             if (flashcardDifficulty && (headerText.includes('難易度レベル') || headerText.includes('Level of Difficulty'))) {
                                 const buttons = col.querySelectorAll('button');
                                 const targetTexts = FLASHCARD_DIFFICULTY_MAP[flashcardDifficulty] || [flashcardDifficulty];
@@ -578,7 +575,7 @@
                     }
                 }
 
-                // D. クイズ形式の自動選択 / Auto-select quiz format
+                // D. Auto-select quiz format
                 if (quizQuestionCount || quizDifficulty) {
                     const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.QUIZ);
                     const quizDialog = Array.from(dialogs).find(d => {
@@ -596,7 +593,7 @@
                             if (!h2) return;
                             const headerText = h2.innerText.trim();
 
-                            // 質問の数 / Number of Questions
+                            // Number of Questions
                             if (quizQuestionCount && (headerText.includes('質問の数') || headerText.includes('Number of Questions'))) {
                                 const buttons = col.querySelectorAll('button');
                                 const targetTexts = FLASHCARD_COUNT_MAP[quizQuestionCount] || [quizQuestionCount];
@@ -613,7 +610,7 @@
                                 }
                             }
 
-                            // 難易度レベル / Level of Difficulty
+                            // Level of Difficulty
                             if (quizDifficulty && (headerText.includes('難易度レベル') || headerText.includes('Level of Difficulty'))) {
                                 const buttons = col.querySelectorAll('button');
                                 const targetTexts = FLASHCARD_DIFFICULTY_MAP[quizDifficulty] || [quizDifficulty];
@@ -637,7 +634,7 @@
                     }
                 }
 
-                // E. インフォグラフィック形式の自動選択 / Auto-select infographic format
+                // E. Auto-select infographic format
                 if (infographicLayout || infographicDetailLevel) {
                     const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.INFOGRAPHIC);
                     const infoDialog = Array.from(dialogs).find(d => {
@@ -655,7 +652,7 @@
                             if (!label) return;
                             const labelText = label.innerText.trim();
 
-                            // レイアウト / Layout
+                            // Layout
                             if (infographicLayout && (labelText.includes('レイアウト') || labelText.includes('Choose orientation'))) {
                                 const buttons = wrapper.querySelectorAll('mat-button-toggle button');
                                 const targetTexts = INFOGRAPHIC_LAYOUT_MAP[infographicLayout] || [infographicLayout];
@@ -674,7 +671,7 @@
                                 }
                             }
 
-                            // 詳細レベル / Level of detail
+                            // Level of detail
                             if (infographicDetailLevel && (labelText.includes('詳細レベル') || labelText.includes('Level of detail'))) {
                                 const buttons = wrapper.querySelectorAll('mat-button-toggle button');
                                 const targetTexts = INFOGRAPHIC_DETAIL_LEVEL_MAP[infographicDetailLevel] || [infographicDetailLevel];
@@ -699,7 +696,7 @@
                     }
                 }
 
-                // F. スライド資料形式の自動選択 / Auto-select slide deck format
+                // F. Auto-select slide deck format
                 if (slideFormat || slideLength) {
                     const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.SLIDE);
                     const slideDialog = Array.from(dialogs).find(d => {
@@ -717,7 +714,7 @@
                             if (!label) return;
                             const labelText = label.innerText.trim();
 
-                            // 形式 / Format (mat-radio-button handling)
+                            // Format (mat-radio-button handling)
                             if (slideFormat && (labelText.includes('形式') || labelText.includes('Format'))) {
                                 const radioButtons = wrapper.querySelectorAll('mat-radio-button');
                                 const targetTexts = SLIDE_FORMAT_MAP[slideFormat] || [slideFormat];
@@ -740,7 +737,7 @@
                                 }
                             }
 
-                            // 長さ / Length (mat-button-toggle handling)
+                            // Length (mat-button-toggle handling)
                             if (slideLength && (labelText.includes('長さ') || labelText.includes('Length'))) {
                                 const buttons = wrapper.querySelectorAll('mat-button-toggle button');
                                 const targetTexts = SLIDE_LENGTH_MAP[slideLength] || [slideLength];
@@ -765,7 +762,7 @@
                     }
                 }
 
-                // H. 動画解説の自動選択 / Auto-select video overview settings
+                // H. Auto-select video overview settings
                 if (videoFormat || videoStyle) {
                     const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.VIDEO);
                     const videoDialog = Array.from(dialogs).find(d => {
@@ -777,7 +774,7 @@
                         let formatDone = !videoFormat;
                         let styleDone = !videoStyle;
 
-                        // 形式の選択 (tile-label)
+                        // Format selection (tile-label)
                         if (videoFormat && !formatDone) {
                             const targetLabels = VIDEO_FORMAT_MAP[videoFormat] || [videoFormat];
                             const tileLabels = videoDialog.querySelectorAll('.tile-label');
@@ -795,7 +792,7 @@
                             }
                         }
 
-                        // ビジュアルスタイルの選択 (carousel .mat-body-small)
+                        // Visual style selection (carousel .mat-body-small)
                         if (videoStyle && !styleDone) {
                             const targetLabels = VIDEO_STYLE_MAP[videoStyle] || [videoStyle];
                             const carouselLabels = videoDialog.querySelectorAll('.carousel-radio-button .mat-body-small');
@@ -819,7 +816,7 @@
                     }
                 }
 
-                // G. チャット形式の自動選択 / Auto-select chat format
+                // G. Auto-select chat format
                 if (chatGoal || chatLength) {
                     const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.CHAT);
                     const chatDialog = Array.from(dialogs).find(d => {
@@ -831,7 +828,7 @@
                         let goalDone = !chatGoal;
                         let lengthDone = !chatLength;
 
-                        // 会話の目的、スタイル、役割の定義 / Define your conversational goal, style, or role
+                        // Define your conversational goal, style, or role
                         if (chatGoal && !goalDone) {
                             const wrappers = chatDialog.querySelectorAll('.prompt-section, .style-section');
                             for (const wrapper of wrappers) {
@@ -857,7 +854,7 @@
                             }
                         }
 
-                        // 回答の長さを選択 / Choose your response length
+                        // Choose your response length
                         if (chatLength && !lengthDone) {
                             const wrappers = chatDialog.querySelectorAll('.prompt-section, .style-section');
                             for (const wrapper of wrappers) {
@@ -890,9 +887,9 @@
                 }
 
 
-                // --- 2. お気に入りボタンの注入 ---
+                // --- 2. Inject favorite buttons ---
 
-                // A. コンテキストに応じた注入 (IDやテキスト内容に基づく厳密な判定)
+                // A. Context-based injection (Strict matching based on ID or text content)
                 const injectionLabels = document.querySelectorAll(SELECTORS.INJECTION_LABELS);
 
                 injectionLabels.forEach(label => {
@@ -902,11 +899,11 @@
                     let category = null;
                     let subCategory = null;
 
-                    // 各カテゴリのターゲットラベルを内容（テキスト）で厳密に照合
+                    // Match the target label of each category strictly by content (text)
                     if (text.includes('作成したいレポートの内容を記入してください') || text.includes('Describe the report you want to create')) {
                         category = 'report';
                     } else if (text.includes('希望するトピック') || text.includes('What should the topic be?')) {
-                        // ダイアログ全体のタイトル等から クイズ vs フラッシュカード を判別
+                        // Distinguish between Quiz and Flashcard from the overall dialog title, etc.
                         const dialog = label.closest('mat-dialog-container') || label.closest('configurable-form-dialog') || document.body;
                         const dialogText = (dialog.innerText || '').toLowerCase();
                         if (dialogText.includes('クイズ') || dialogText.includes('quiz')) {
@@ -915,7 +912,7 @@
                             category = 'flashcard';
                         }
                     } else if (text.includes('インフォグラフィックについて説明してください') || text.includes('Describe the infographic you want to create')) {
-                        // 日本語版は「説明してください」、英語版は「Describe ...」などの差異を考慮
+                        // Consider differences like 'Describe...' phrasing in Japanese vs English
                         category = 'infographic';
                     } else if (text.includes('スライドについて説明してください') || text.includes('Describe the slide deck you want to create')) {
                         category = 'slide';
@@ -949,14 +946,14 @@
                     }
                 });
 
-                // B. 汎用的なアクションメニュー (.actions-options)
+                // B. Generic action menu (.actions-options)
                 const targetParents = document.querySelectorAll(SELECTORS.ACTIONS_OPTIONS);
                 targetParents.forEach(parent => {
                     if (!parent.querySelector('.cuecard-fav-container')) {
                         const resButtons = createFavoriteButtons('research');
 
                         if (resButtons) {
-                            // 親のレイアウトを調整（改行許可と左揃え） / Adjust parent layout (allow wrapping and left alignment)
+                            // Adjust parent layout (allow wrapping and left alignment)
                             parent.style.display = 'flex';
                             parent.style.flexWrap = 'wrap';
                             parent.style.justifyContent = 'flex-start';
@@ -969,7 +966,7 @@
                     }
                 });
 
-                // フォールバック: .actions-options が見つからない場合（念のため） / Fallback: If .actions-options is not found (just in case)
+                // Fallback: If .actions-options is not found (just in case)
                 if (targetParents.length === 0) {
                     const triggers = Array.from(document.querySelectorAll('button[aria-haspopup="menu"]'));
                     const resBtn = triggers.find(b => (b.innerText || '').includes('Research'));
@@ -985,14 +982,14 @@
                     }
                 }
 
-                // C. メインチャットエリア (omnibar) / Main chat area (omnibar)
+                // C. Main chat area (omnibar)
                 const omnibar = document.querySelector(SELECTORS.OMNIBAR);
                 if (omnibar && omnibar.parentElement) {
                     if (!omnibar.parentElement.querySelector('.cuecard-fav-container.chat-main-fav')) {
                         const chatButtons = createFavoriteButtons('chat', 'chat');
                         if (chatButtons) {
                             chatButtons.classList.add('chat-main-fav');
-                            // omnibarの上に配置（入力エリアの外に出す） / Place above omnibar (outside the input area)
+                            // Place above omnibar (outside the input area)
                             chatButtons.style.display = 'flex';
                             chatButtons.style.flexWrap = 'wrap';
                             chatButtons.style.justifyContent = 'flex-start';
@@ -1000,7 +997,7 @@
                             chatButtons.style.marginBottom = '12px';
                             chatButtons.style.padding = '0 20px';
                             chatButtons.style.width = '100%';
-                            chatButtons.style.zIndex = '100'; // 前面に表示 / Ensure it's in front
+                            chatButtons.style.zIndex = '100'; // Ensure it's in front
 
                             omnibar.parentElement.insertBefore(chatButtons, omnibar);
                             log('Injected chat favorite buttons before omnibar.');
@@ -1008,12 +1005,12 @@
                     }
                 }
 
-                // D. 会話のスタイルダイアログ (Customize Chat) / Conversation Style dialog
+                // D. Conversation Style dialog (Customize Chat)
                 const styleToggles = document.querySelector(SELECTORS.PROMPT_SECTION_TOGGLES);
                 if (styleToggles && styleToggles.parentElement) {
                     const parent = styleToggles.parentElement;
 
-                    // 「カスタム」が選択されているか確認 / Check if "Custom" is selected
+                    // Check if "Custom" is selected
                     const checkedToggle = styleToggles.querySelector('.mat-button-toggle-checked');
                     const isCustomSelected = checkedToggle && (
                         checkedToggle.innerText.includes('Custom') ||
@@ -1050,7 +1047,7 @@
 
                 if (isProcessing) return;
 
-                // --- 3. メニュー展開（設定有効時） ---
+                // --- 3. Expand menu (if setting is enabled) ---
                 if (autoDeepResearchEnabled) {
                     const buttons = document.querySelectorAll('button');
                     for (const btn of buttons) {
@@ -1071,7 +1068,7 @@
                     }
                 }
 
-                // クリーンアップ / Cleanup
+                // Cleanup
                 const clicked = document.querySelectorAll('[data-auto-clicked="true"], [data-auto-formatted="true"]');
                 clicked.forEach(el => {
                     if (!document.body.contains(el) || el.offsetParent === null) {

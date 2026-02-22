@@ -1,5 +1,5 @@
 /**
- * Prompt Manager for NotebookLM: 翻訳ライブラリ
+ * Prompt Manager for NotebookLM: Translation Library
  */
 const TRANSLATIONS = {
     ja: {
