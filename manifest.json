@@ -16,6 +16,7 @@
         "https://notebooklm.google.com/*"
       ],
       "js": [
+        "selectors.js",
         "content.js"
       ]
     }

@@ -9,6 +9,46 @@
     const DEBUG = false;
     const log = (...args) => { if (DEBUG) console.log('[CueCard]', ...args); };
 
+    // --- 注入失敗の検知と通知 (Failure Detection & Notification) ---
+    let notificationShown = false;
+    function notifyUIChangeWarning(selectorName) {
+        if (notificationShown) return;
+        notificationShown = true;
+        console.warn(`[Prompt Manager] Warning: Could not find critical element (${selectorName}). NotebookLM UI may have updated.`);
+
+        const toast = document.createElement('div');
+        toast.textContent = 'Prompt Manager: UI has changed. Some features may not work.';
+        toast.style.cssText = 'position:fixed;bottom:20px;right:20px;background:#f44336;color:white;padding:12px;border-radius:4px;z-index:9999;font-size:12px;box-shadow:0 2px 5px rgba(0,0,0,0.2);';
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 5000);
+    }
+
+    // 定期的に主要要素の存在を確認する (Check critical elements periodically)
+    let checkCount = 0;
+    const criticalCheckInterval = setInterval(() => {
+        if (!isContextValid()) {
+            clearInterval(criticalCheckInterval);
+            return;
+        }
+
+        // オムニバー(メイン入力フィールド)は常に存在するはずの要素
+        // Omnibar is expected to be present in normal chat views
+        const omnibar = document.querySelector(SELECTORS.OMNIBAR);
+        if (omnibar) {
+            clearInterval(criticalCheckInterval); // 見つかったら監視終了 / Stop checking if found
+        } else {
+            checkCount++;
+            if (checkCount > 10) { // 拡張ロード後約10秒経過しても出ない場合 / If not found after ~10 seconds
+                // deep researchモード等の別画面かもしれないので厳密にはエラーではないが、主要機能のフックができない状態
+                // Might be on a different page, but log it and optionally show toast
+                console.warn('[Prompt Manager] Critical selector check timed out for: ' + SELECTORS.OMNIBAR);
+                // notifyUIChangeWarning('OMNIBAR'); // Uncomment if we want to aggressively show toast. Chat UI may legitimately not be open yet.
+                clearInterval(criticalCheckInterval);
+            }
+        }
+    }, 1000);
+    // ---------------------------------------------------------------
+
     log('Content script loaded');
 
     let lastFocusedElement = null;
@@ -397,7 +437,7 @@
 
             // A. Deep Research 自動選択
             if (autoDeepResearchEnabled) {
-                const deepBtn = document.querySelector('.research-option-deep-research');
+                const deepBtn = document.querySelector(SELECTORS.DEEP_RESEARCH_BTN);
                 if (deepBtn && deepBtn.getAttribute('data-auto-clicked') !== 'true') {
                     deepBtn.setAttribute('data-auto-clicked', 'true');
                     deepBtn.click();
@@ -408,7 +448,7 @@
             // B. 音声解説設定の自動選択
             if (audioFormat || audioLength) {
                 // 未処理のダイアログを探す
-                const dialogs = document.querySelectorAll('mat-dialog-container:not([data-auto-formatted="true"]), configurable-form-dialog:not([data-auto-formatted="true"])');
+                const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.AUDIO);
                 const audioDialog = Array.from(dialogs).find(d => {
                     const text = d.innerText || '';
                     return text.includes('音声解説をカスタマイズ') || text.includes('Customize Audio Overview');
@@ -475,7 +515,7 @@
 
             // C. フラッシュカード形式の自動選択 / Auto-select flashcard format
             if (flashcardCardCount || flashcardDifficulty) {
-                const dialogs = document.querySelectorAll('mat-dialog-container:not([data-auto-formatted-flash="true"]), configurable-form-dialog:not([data-auto-formatted-flash="true"])');
+                const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.FLASHCARD);
                 const flashDialog = Array.from(dialogs).find(d => {
                     const text = d.innerText || '';
                     return text.includes('フラッシュカード') || text.includes('Flashcards');
@@ -534,7 +574,7 @@
 
             // D. クイズ形式の自動選択 / Auto-select quiz format
             if (quizQuestionCount || quizDifficulty) {
-                const dialogs = document.querySelectorAll('mat-dialog-container:not([data-auto-formatted-quiz="true"]), configurable-form-dialog:not([data-auto-formatted-quiz="true"])');
+                const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.QUIZ);
                 const quizDialog = Array.from(dialogs).find(d => {
                     const text = d.innerText || '';
                     return text.includes('クイズ') || text.includes('Quiz');
@@ -593,7 +633,7 @@
 
             // E. インフォグラフィック形式の自動選択 / Auto-select infographic format
             if (infographicLayout || infographicDetailLevel) {
-                const dialogs = document.querySelectorAll('mat-dialog-container:not([data-auto-formatted-infographic="true"]), configurable-form-dialog:not([data-auto-formatted-infographic="true"])');
+                const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.INFOGRAPHIC);
                 const infoDialog = Array.from(dialogs).find(d => {
                     const text = d.innerText || '';
                     return text.includes('インフォグラフィック') || text.includes('Infographic');
@@ -655,7 +695,7 @@
 
             // F. スライド資料形式の自動選択 / Auto-select slide deck format
             if (slideFormat || slideLength) {
-                const dialogs = document.querySelectorAll('mat-dialog-container:not([data-auto-formatted-slide="true"]), configurable-form-dialog:not([data-auto-formatted-slide="true"])');
+                const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.SLIDE);
                 const slideDialog = Array.from(dialogs).find(d => {
                     const text = (d.innerText || '').toLowerCase();
                     return text.includes('スライド') || text.includes('deck');
@@ -721,7 +761,7 @@
 
             // H. 動画解説の自動選択 / Auto-select video overview settings
             if (videoFormat || videoStyle) {
-                const dialogs = document.querySelectorAll('mat-dialog-container:not([data-auto-formatted-video="true"]), configurable-form-dialog:not([data-auto-formatted-video="true"])');
+                const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.VIDEO);
                 const videoDialog = Array.from(dialogs).find(d => {
                     const text = d.innerText || '';
                     return text.includes('動画解説をカスタマイズ') || text.includes('Customize Video Overview');
@@ -775,7 +815,7 @@
 
             // G. チャット形式の自動選択 / Auto-select chat format
             if (chatGoal || chatLength) {
-                const dialogs = document.querySelectorAll('mat-dialog-container:not([data-auto-formatted-chat="true"]), configurable-form-dialog:not([data-auto-formatted-chat="true"])');
+                const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.CHAT);
                 const chatDialog = Array.from(dialogs).find(d => {
                     const text = d.innerText || '';
                     return text.includes('チャットを設定') || text.includes('Configure Chat');
@@ -847,7 +887,7 @@
             // --- 2. お気に入りボタンの注入 ---
 
             // A. コンテキストに応じた注入 (IDやテキスト内容に基づく厳密な判定)
-            const injectionLabels = document.querySelectorAll('#episodeFocus-label, #videoFocus-label, #userSteeringPrompt-label, .mat-title-medium, .control-label');
+            const injectionLabels = document.querySelectorAll(SELECTORS.INJECTION_LABELS);
 
             injectionLabels.forEach(label => {
                 if (label.querySelector('.cuecard-fav-container')) return;
@@ -904,7 +944,7 @@
             });
 
             // B. 汎用的なアクションメニュー (.actions-options)
-            const targetParents = document.querySelectorAll('.actions-options');
+            const targetParents = document.querySelectorAll(SELECTORS.ACTIONS_OPTIONS);
             targetParents.forEach(parent => {
                 if (!parent.querySelector('.cuecard-fav-container')) {
                     const resButtons = createFavoriteButtons('research');
@@ -940,7 +980,7 @@
             }
 
             // C. メインチャットエリア (omnibar) / Main chat area (omnibar)
-            const omnibar = document.querySelector('omnibar');
+            const omnibar = document.querySelector(SELECTORS.OMNIBAR);
             if (omnibar && omnibar.parentElement) {
                 if (!omnibar.parentElement.querySelector('.cuecard-fav-container.chat-main-fav')) {
                     const chatButtons = createFavoriteButtons('chat', 'chat');
@@ -963,7 +1003,7 @@
             }
 
             // D. 会話のスタイルダイアログ (Customize Chat) / Conversation Style dialog
-            const styleToggles = document.querySelector('.prompt-section-toggles');
+            const styleToggles = document.querySelector(SELECTORS.PROMPT_SECTION_TOGGLES);
             if (styleToggles && styleToggles.parentElement) {
                 const parent = styleToggles.parentElement;
 
