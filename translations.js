@@ -109,11 +109,11 @@ const TRANSLATIONS = {
         'reload-page': 'ページを再読み込みしてください。',
 
         // Import / Export
-        'data-management': 'プロンプトのバックアップ / 読み込み',
-        'btn-export': 'バックアップを作成',
-        'btn-import': 'バックアップから読み込む',
-        'import-success': 'バックアップからプロンプトを読み込みました。追加分は「リサーチ・分析」カテゴリに保存されます。',
-        'err-import-invalid': '無効なJSONファイルです。正しいバックアップファイルを選択してください。'
+        'data-management': 'プロンプトのエクスポート/インポート',
+        'btn-export': 'エクスポート',
+        'btn-import': 'インポート',
+        'import-success': 'インポートしました。',
+        'err-import-invalid': '無効なJSONファイルです。'
     },
     en: {
         'app-title': 'Prompt Manager for NotebookLM',
@@ -222,10 +222,10 @@ const TRANSLATIONS = {
         'reload-page': 'Please reload the page.',
 
         // Import / Export
-        'data-management': 'Prompt Backup / Restore',
-        'btn-export': 'Create Backup',
-        'btn-import': 'Restore from Backup',
-        'import-success': 'Prompts successfully loaded from backup. New items have been added to the "Research" category.',
-        'err-import-invalid': 'Invalid JSON file. Please select a correct backup file.'
+        'data-management': 'Prompt Export / Import',
+        'btn-export': 'Export',
+        'btn-import': 'Import',
+        'import-success': 'Imported successfully.',
+        'err-import-invalid': 'Invalid JSON file.'
     }
 };
