@@ -97,6 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Custom modal elements
     const confirmModal = document.getElementById('custom-confirm-modal');
+    const confirmTitle = document.getElementById('confirm-title');
     const confirmMessage = document.getElementById('confirm-message');
     const confirmYesBtn = document.getElementById('confirm-yes-btn');
     const confirmNoBtn = document.getElementById('confirm-no-btn');
