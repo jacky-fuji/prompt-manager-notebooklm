@@ -30,7 +30,7 @@
 - **Favorites** — Star your most-used prompts for quick access via contextual buttons embedded directly within the NotebookLM UI.
 - **Tag system** — Add custom tags to each prompt and filter your library instantly.
 - **Full-text search** — Quickly find any prompt by title, content, or tag.
-- **Bilingual UI** — Supports English 🇺🇸 and Japanese 🇯🇵 with a seamless toggle in the side panel header.
+- **Multilingual UI** — Supports 10 languages: English 🇺🇸, Japanese 🇯🇵, Spanish 🇪🇸, French 🇫🇷, German 🇩🇪, Portuguese 🇧🇷, Italian 🇮🇹, Russian 🇷🇺, Chinese 🇨🇳, and Korean 🇰🇷. Automatic language detection.
 - **Auto-setting recall** — Remembers your preferred NotebookLM settings (e.g., output format, Deep Research toggle) and re-applies them automatically.
 - **Up to 10,000 characters** — Supports long-form prompts for detailed instructions.
 
