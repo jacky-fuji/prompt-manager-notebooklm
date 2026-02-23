@@ -62,7 +62,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnImportTrigger = document.getElementById('btn-import-trigger');
 
     // Form inputs
-    const languageSelect = document.getElementById('language-select');
+    const langTrigger = document.getElementById('custom-lang-trigger');
+    const langOptions = document.getElementById('custom-lang-options');
     const titleInput = document.getElementById('prompt-title');
     const categoryInput = document.getElementById('prompt-category');
     const tagsInputContainer = document.getElementById('tags-input-container');
@@ -103,13 +104,34 @@ document.addEventListener('DOMContentLoaded', () => {
     const confirmNoBtn = document.getElementById('confirm-no-btn');
 
     // Language switch event
-    if (languageSelect) {
-        languageSelect.addEventListener('change', (e) => {
-            state.language = e.target.value;
-            chrome.storage.local.set({ language: state.language }, () => {
-                applyLanguageChange();
+    if (langTrigger && langOptions) {
+        langTrigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            langOptions.classList.toggle('open');
+        });
+
+        langOptions.querySelectorAll('.custom-lang-option').forEach(opt => {
+            opt.addEventListener('click', (e) => {
+                state.language = opt.getAttribute('data-value');
+                langTrigger.innerText = opt.innerText;
+                langOptions.classList.remove('open');
+
+                chrome.storage.local.set({ language: state.language }, () => {
+                    applyLanguageChange();
+                });
             });
         });
+
+        document.addEventListener('click', () => {
+            langOptions.classList.remove('open');
+        });
+    }
+
+    function updateLangTrigger() {
+        if (langOptions && langTrigger) {
+            const opt = langOptions.querySelector(`.custom-lang-option[data-value="${state.language}"]`);
+            if (opt) langTrigger.innerText = opt.innerText;
+        }
     }
 
     // Show/hide subcategory based on category selection
@@ -645,8 +667,13 @@ document.addEventListener('DOMContentLoaded', () => {
             // Reflect language setting
             if (result.language) {
                 state.language = result.language;
-                if (languageSelect) languageSelect.value = state.language;
+            } else {
+                // Phase 2: Auto-Detect Language on first install
+                const uiLang = chrome.i18n.getUILanguage().split('-')[0];
+                state.language = TRANSLATIONS[uiLang] ? uiLang : 'en';
+                chrome.storage.local.set({ language: state.language });
             }
+            if (typeof updateLangTrigger === 'function') updateLangTrigger();
             updateStaticTranslations();
             updateTagsCharCount();
             updateCharCount();
