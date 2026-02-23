@@ -59,15 +59,63 @@ body {
     white-space: nowrap;
 }
 
-.language-select {
-    width: auto;
-    padding: 2px 6px;
+.custom-lang-select {
+    position: relative;
+    user-select: none;
+}
+
+.custom-lang-trigger {
+    padding: 2px 20px 2px 6px;
     font-size: 11px;
     border-radius: 4px;
     border: 1px solid #cbd5e1;
     background-color: white;
     color: #475569;
     cursor: pointer;
+    min-width: 60px;
+    position: relative;
+}
+
+.custom-lang-trigger::after {
+    content: "▼";
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 8px;
+    color: #94a3b8;
+}
+
+.custom-lang-options {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 4px;
+    background-color: white;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: none;
+    z-index: 1000;
+    min-width: 100%;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.custom-lang-options.open {
+    display: block;
+}
+
+.custom-lang-option {
+    padding: 6px 10px;
+    font-size: 11px;
+    color: #475569;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.custom-lang-option:hover {
+    background-color: #f1f5f9;
 }
 
 /* Prompt List */
