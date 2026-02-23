@@ -104,7 +104,7 @@ const TRANSLATIONS = {
         'btn-confirm-no': 'いいえ',
         'btn-confirm-delete': '削除',
         'btn-confirm-back': 'いいえ',
-        'btn-confirm-cancel': '破棄', // New key
+        'btn-confirm-cancel': 'キャンセル', // New key
         'btn-confirm-ok': 'OK',
         'tag-suffix': '個',
         'reload-page': 'ページを再読み込みしてください。',
@@ -218,7 +218,7 @@ const TRANSLATIONS = {
         'btn-confirm-no': 'No',
         'btn-confirm-delete': 'Delete',
         'btn-confirm-back': 'No',
-        'btn-confirm-cancel': 'Discard', // New key
+        'btn-confirm-cancel': 'Cancel', // New key
         'btn-confirm-ok': 'OK',
         'tag-suffix': ' tags',
         'reload-page': 'Please reload the page.',

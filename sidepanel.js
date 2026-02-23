@@ -1163,6 +1163,23 @@ document.addEventListener('DOMContentLoaded', () => {
         state.onConfirmAction = null;
     }
 
+    function showCustomConfirm(title, message, type = 'confirm', callback = null) {
+        confirmTitle.innerText = title;
+        confirmMessage.innerText = message;
+
+        if (type === 'ok') {
+            confirmYesBtn.innerText = TRANSLATIONS[state.language]['btn-confirm-ok'] || 'OK';
+            confirmNoBtn.style.display = 'none';
+        } else {
+            confirmYesBtn.innerText = TRANSLATIONS[state.language]['btn-confirm-yes']; // Changed from btn-confirm-delete to btn-confirm-yes for generic confirm
+            confirmNoBtn.innerText = TRANSLATIONS[state.language]['btn-confirm-no'];
+            confirmNoBtn.style.display = 'block';
+        }
+
+        confirmModal.classList.add('active');
+        state.onConfirmAction = callback;
+    }
+
     // Close modal when clicking outside
     window.onclick = (event) => {
         if (event.target === confirmModal) {
@@ -1257,11 +1274,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         chrome.storage.local.set({ prompts: mergedPrompts }, () => {
                             // Using a generic confirm modal for success/error messages
-                            showConfirmModal(
+                            showCustomConfirm(
+                                TRANSLATIONS[state.language]['app-title'],
                                 TRANSLATIONS[state.language]['import-success'],
-                                TRANSLATIONS[state.language]['btn-confirm-ok'],
-                                null, // No "No" button
-                                () => { } // Empty callback for "OK"
+                                'ok'
                             );
                             loadAndRenderPrompts();
                             importFileInput.value = ''; // Reset input
@@ -1270,11 +1286,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 } catch (error) {
                     console.error("Import Error:", error);
-                    showConfirmModal(
+                    showCustomConfirm(
+                        TRANSLATIONS[state.language]['app-title'],
                         TRANSLATIONS[state.language]['err-import-invalid'],
-                        TRANSLATIONS[state.language]['btn-confirm-ok'],
-                        null, // No "No" button
-                        () => { } // Empty callback for "OK"
+                        'ok'
                     );
                     importFileInput.value = ''; // Reset input
                 }
