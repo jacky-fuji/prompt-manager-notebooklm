@@ -1221,7 +1221,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const exportData = prompts.map(p => ({
                     title: p.title,
                     text: p.text,
-                    tags: p.tags || []
+                    tags: p.tags || [],
+                    category: p.category,
+                    subCategory: p.subCategory,
+                    isFavorite: p.isFavorite
                 }));
 
                 const dataStr = JSON.stringify(exportData, null, 2);
@@ -1259,14 +1262,14 @@ document.addEventListener('DOMContentLoaded', () => {
                         throw new Error("Invalid structure: Not an array");
                     }
 
-                    // Map elements strictly, enforcing 'research' category for all imported prompts
+                    // Map elements, retaining category and favorite status if valid
                     const importedPrompts = parsedData.map(p => ({
                         title: p.title || 'Untitled',
                         text: p.text || '',
                         tags: Array.isArray(p.tags) ? p.tags : [],
-                        category: 'research',
-                        subCategory: undefined,
-                        isFavorite: false
+                        category: VALID_CATEGORIES.includes(p.category) ? p.category : 'research',
+                        subCategory: p.subCategory,
+                        isFavorite: !!p.isFavorite
                     }));
 
                     chrome.storage.local.get(['prompts'], (result) => {
