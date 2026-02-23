@@ -98,14 +98,22 @@ const TRANSLATIONS = {
         'confirm-save': 'プロンプトを保存しますか？',
         'confirm-update': '変更を保存しますか？',
         'confirm-cancel': '編集を取り消しますか？',
-        'confirm-delete-prefix': '',
-        'confirm-delete-suffix': 'のプロンプトを削除しますか？',
+        'confirm-delete-prefix': 'プロンプト「',
+        'confirm-delete-suffix': '」を削除しますか？',
         'btn-confirm-yes': 'はい',
-        'btn-confirm-no': 'キャンセル',
+        'btn-confirm-no': 'いいえ',
         'btn-confirm-delete': '削除',
         'btn-confirm-back': 'いいえ',
+        'btn-confirm-cancel': '破棄', // New key
         'tag-suffix': '個',
-        'reload-page': 'ページを再読み込みしてください。'
+        'reload-page': 'ページを再読み込みしてください。',
+
+        // Import / Export
+        'data-management': 'プロンプトのバックアップ / 読み込み',
+        'btn-export': 'バックアップを作成',
+        'btn-import': 'バックアップから読み込む',
+        'import-success': 'バックアップからプロンプトを読み込みました。追加分は「リサーチ・分析」カテゴリに保存されます。',
+        'err-import-invalid': '無効なJSONファイルです。正しいバックアップファイルを選択してください。'
     },
     en: {
         'app-title': 'Prompt Manager for NotebookLM',
@@ -203,13 +211,21 @@ const TRANSLATIONS = {
         'confirm-save': 'Do you want to save this prompt?',
         'confirm-update': 'Do you want to save changes?',
         'confirm-cancel': 'Discard changes?',
-        'confirm-delete-prefix': 'Delete "',
+        'confirm-delete-prefix': 'Delete prompt "',
         'confirm-delete-suffix': '"?',
         'btn-confirm-yes': 'Yes',
-        'btn-confirm-no': 'Cancel',
+        'btn-confirm-no': 'No',
         'btn-confirm-delete': 'Delete',
         'btn-confirm-back': 'No',
+        'btn-confirm-cancel': 'Discard', // New key
         'tag-suffix': ' tags',
-        'reload-page': 'Please reload the page.'
+        'reload-page': 'Please reload the page.',
+
+        // Import / Export
+        'data-management': 'Prompt Backup / Restore',
+        'btn-export': 'Create Backup',
+        'btn-import': 'Restore from Backup',
+        'import-success': 'Prompts successfully loaded from backup. New items have been added to the "Research" category.',
+        'err-import-invalid': 'Invalid JSON file. Please select a correct backup file.'
     }
 };

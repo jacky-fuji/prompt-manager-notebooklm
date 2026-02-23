@@ -58,6 +58,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Buttons
     const saveBtn = document.getElementById('save-btn');
     const cancelBtn = document.getElementById('cancel-btn');
+    const btnExport = document.getElementById('btn-export');
+    const btnImportTrigger = document.getElementById('btn-import-trigger');
 
     // Form inputs
     const languageSelect = document.getElementById('language-select');
@@ -73,6 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const titleCharCountDisplay = document.getElementById('title-char-count');
     const tagsCharCountDisplay = document.getElementById('tags-char-count');
     const adminTitle = document.getElementById('admin-title');
+    const importFileInput = document.getElementById('import-file-input');
 
     // Video subcategory elements
     const videoSubcategoryGroup = document.getElementById('video-subcategory-group');
@@ -1188,6 +1191,96 @@ document.addEventListener('DOMContentLoaded', () => {
                 resetForm();
             });
         };
+    }
+
+    /* --- Data Management (Export & Import) --- */
+
+    if (btnExport) {
+        btnExport.addEventListener('click', () => {
+            chrome.storage.local.get(['prompts'], (result) => {
+                const prompts = result.prompts || [];
+                // Strip environment-specific data, keep only raw structure
+                const exportData = prompts.map(p => ({
+                    title: p.title,
+                    text: p.text,
+                    tags: p.tags || []
+                }));
+
+                const dataStr = JSON.stringify(exportData, null, 2);
+                const blob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+
+                const a = document.createElement('a');
+                a.href = url;
+                // Generate filename like prompt-manager-backup-20231025.json
+                const dateString = new Date().toISOString().split('T')[0].replace(/-/g, '');
+                a.download = `prompt-manager-backup-${dateString}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            });
+        });
+    }
+
+    if (btnImportTrigger && importFileInput) {
+        btnImportTrigger.addEventListener('click', () => {
+            importFileInput.click();
+        });
+
+        importFileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                try {
+                    const parsedData = JSON.parse(event.target.result);
+
+                    if (!Array.isArray(parsedData)) {
+                        throw new Error("Invalid structure: Not an array");
+                    }
+
+                    // Map elements strictly, enforcing 'research' category for all imported prompts
+                    const importedPrompts = parsedData.map(p => ({
+                        title: p.title || 'Untitled',
+                        text: p.text || '',
+                        tags: Array.isArray(p.tags) ? p.tags : [],
+                        category: 'research',
+                        subCategory: undefined,
+                        isFavorite: false
+                    }));
+
+                    chrome.storage.local.get(['prompts'], (result) => {
+                        const existingPrompts = result.prompts || [];
+                        const mergedPrompts = existingPrompts.concat(importedPrompts);
+
+                        chrome.storage.local.set({ prompts: mergedPrompts }, () => {
+                            // Using a generic confirm modal for success/error messages
+                            showConfirmModal(
+                                TRANSLATIONS[state.language]['import-success'],
+                                TRANSLATIONS[state.language]['btn-confirm-ok'],
+                                null, // No "No" button
+                                () => { } // Empty callback for "OK"
+                            );
+                            loadAndRenderPrompts();
+                            importFileInput.value = ''; // Reset input
+                        });
+                    });
+
+                } catch (error) {
+                    console.error("Import Error:", error);
+                    showConfirmModal(
+                        TRANSLATIONS[state.language]['err-import-invalid'],
+                        TRANSLATIONS[state.language]['btn-confirm-ok'],
+                        null, // No "No" button
+                        () => { } // Empty callback for "OK"
+                    );
+                    importFileInput.value = ''; // Reset input
+                }
+            };
+            reader.readAsText(file);
+        });
     }
 
     // Initial startup

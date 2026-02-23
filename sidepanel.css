@@ -609,10 +609,49 @@ input:checked+.slider:before {
     line-height: 1.5;
 }
 
-.version-display {
+#version-display {
     text-align: right;
-    font-size: 10px;
+    font-size: 11px;
     color: #94a3b8;
-    margin-top: 12px;
-    padding-bottom: 4px;
+    /* Tailwind slate-400 */
+    padding: 4px 12px 12px 12px;
+}
+
+/* --- Data Management Section --- */
+#data-management-section {
+    padding: 16px 12px;
+    border-top: 1px solid #e2e8f0;
+    margin-top: auto;
+    /* Push to bottom if flex */
+}
+
+#data-management-section h3 {
+    margin: 0 0 8px 0;
+    font-size: 11px;
+    font-weight: 500;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.data-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-data {
+    padding: 6px 10px;
+    font-size: 12px;
+    color: #475569;
+    background-color: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex: 1;
+}
+
+.btn-data:hover {
+    background-color: #e2e8f0;
+    color: #0f172a;
 }
