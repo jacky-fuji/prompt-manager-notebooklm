@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Application State Management
     const state = {
-        language: 'ja',
+        language: 'en',
         currentInputTags: [],
         searchQuery: '',
         selectedTags: new Set(),
