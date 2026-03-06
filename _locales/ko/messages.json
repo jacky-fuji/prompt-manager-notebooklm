@@ -1,0 +1,341 @@
+{
+  "appName": {
+    "message": "Prompt Manager for NotebookLM"
+  },
+  "appDesc": {
+    "message": "NotebookLM용 간편 프롬프트 관리 도구"
+  },
+  "appDefaultTitle": {
+    "message": "Prompt Manager 열기"
+  },
+  "app_title": {
+    "message": "Prompt Manager for NotebookLM"
+  },
+  "label_language": {
+    "message": "언어"
+  },
+  "search_placeholder": {
+    "message": "저장된 프롬프트 검색..."
+  },
+  "tag_all": {
+    "message": "전체"
+  },
+  "cat_research": {
+    "message": "조사 및 분석"
+  },
+  "cat_chat": {
+    "message": "채팅"
+  },
+  "cat_audio": {
+    "message": "오디오 개요"
+  },
+  "cat_video": {
+    "message": "비디오 개요"
+  },
+  "cat_report": {
+    "message": "보고서"
+  },
+  "cat_flashcard": {
+    "message": "플래시카드"
+  },
+  "cat_quiz": {
+    "message": "퀴즈"
+  },
+  "cat_infographic": {
+    "message": "인포그래픽"
+  },
+  "cat_slide": {
+    "message": "슬라이드"
+  },
+  "cat_datatable": {
+    "message": "데이터 테이블"
+  },
+  "setting_deep_research": {
+    "message": "기본으로 Deep Research 사용"
+  },
+  "setting_chat_goal": {
+    "message": "목표, 스타일 및 역할"
+  },
+  "opt_chat_goal_default": {
+    "message": "기본값"
+  },
+  "opt_chat_goal_learning": {
+    "message": "학습 가이드"
+  },
+  "opt_chat_goal_custom": {
+    "message": "사용자 지정"
+  },
+  "setting_chat_length": {
+    "message": "응답 길이"
+  },
+  "opt_chat_length_default": {
+    "message": "기본값"
+  },
+  "opt_chat_length_longer": {
+    "message": "길게"
+  },
+  "opt_chat_length_shorter": {
+    "message": "짧게"
+  },
+  "setting_audio_format": {
+    "message": "기본 형식"
+  },
+  "opt_detail": {
+    "message": "상세"
+  },
+  "opt_summary": {
+    "message": "요약"
+  },
+  "opt_critique": {
+    "message": "비평"
+  },
+  "opt_debate": {
+    "message": "토론"
+  },
+  "setting_audio_length": {
+    "message": "길이"
+  },
+  "opt_audio_length_short": {
+    "message": "짧게"
+  },
+  "opt_audio_length_default": {
+    "message": "기본값"
+  },
+  "setting_card_count": {
+    "message": "카드 수"
+  },
+  "setting_question_count": {
+    "message": "질문 수"
+  },
+  "setting_difficulty": {
+    "message": "난이도"
+  },
+  "setting_layout": {
+    "message": "레이아웃"
+  },
+  "setting_detail_level": {
+    "message": "세부 수준"
+  },
+  "opt_fewer": {
+    "message": "적게"
+  },
+  "opt_standard": {
+    "message": "표준"
+  },
+  "opt_more": {
+    "message": "많이"
+  },
+  "opt_easy": {
+    "message": "쉬움"
+  },
+  "opt_medium": {
+    "message": "보통"
+  },
+  "opt_hard": {
+    "message": "어려움"
+  },
+  "opt_landscape": {
+    "message": "가로"
+  },
+  "opt_portrait": {
+    "message": "세로"
+  },
+  "opt_square": {
+    "message": "정사각형"
+  },
+  "opt_concise": {
+    "message": "간결하게"
+  },
+  "opt_detailed": {
+    "message": "상세하게"
+  },
+  "setting_slide_format": {
+    "message": "형식"
+  },
+  "setting_slide_length": {
+    "message": "길이"
+  },
+  "opt_slide_format_detailed": {
+    "message": "상세하게"
+  },
+  "opt_slide_format_presenter": {
+    "message": "발표자용"
+  },
+  "opt_slide_length_short": {
+    "message": "짧게"
+  },
+  "opt_slide_length_default": {
+    "message": "기본값"
+  },
+  "setting_video_format": {
+    "message": "형식"
+  },
+  "opt_video_format_explainer": {
+    "message": "설명"
+  },
+  "opt_video_format_brief": {
+    "message": "요약"
+  },
+  "setting_video_style": {
+    "message": "시각적 스타일"
+  },
+  "opt_video_style_auto": {
+    "message": "자동"
+  },
+  "opt_video_style_custom": {
+    "message": "사용자 지정"
+  },
+  "opt_video_style_classic": {
+    "message": "클래식"
+  },
+  "opt_video_style_whiteboard": {
+    "message": "화이트보드"
+  },
+  "opt_video_style_kawaii": {
+    "message": "카와이"
+  },
+  "opt_video_style_anime": {
+    "message": "애니메이션"
+  },
+  "opt_video_style_watercolor": {
+    "message": "수채화"
+  },
+  "opt_video_style_retro": {
+    "message": "레트로"
+  },
+  "opt_video_style_heritage": {
+    "message": "전통"
+  },
+  "opt_video_style_papercraft": {
+    "message": "종이공예"
+  },
+  "label_video_subcategory": {
+    "message": "대상 영역"
+  },
+  "opt_video_focus": {
+    "message": "AI 호스트 초점"
+  },
+  "opt_video_custom_style": {
+    "message": "사용자 지정 시각적 스타일"
+  },
+  "label_chat_subcategory": {
+    "message": "대상 영역"
+  },
+  "opt_chat_main": {
+    "message": "채팅"
+  },
+  "opt_chat_style": {
+    "message": "대화 스타일"
+  },
+  "no_prompts": {
+    "message": "프롬프트를 찾을 수 없습니다."
+  },
+  "admin_add_title": {
+    "message": "프롬프트 추가"
+  },
+  "admin_edit_title": {
+    "message": "프롬프트 편집"
+  },
+  "label_category": {
+    "message": "카테고리"
+  },
+  "placeholder_title": {
+    "message": "제목 (예: 분석)"
+  },
+  "placeholder_tags": {
+    "message": "태그 (Enter 키를 눌러 추가)"
+  },
+  "placeholder_text": {
+    "message": "프롬프트 내용"
+  },
+  "label_favorite": {
+    "message": "⭐ 즐겨찾기"
+  },
+  "btn_save": {
+    "message": "저장"
+  },
+  "btn_update": {
+    "message": "업데이트"
+  },
+  "btn_cancel": {
+    "message": "취소"
+  },
+  "err_title_empty": {
+    "message": "제목을 입력하세요."
+  },
+  "err_title_long": {
+    "message": "제목은 20자 이하여야 합니다."
+  },
+  "err_text_empty": {
+    "message": "프롬프트 내용을 입력하세요."
+  },
+  "err_text_long": {
+    "message": "프롬프트 내용은 10,000자 이하여야 합니다."
+  },
+  "err_tag_count": {
+    "message": "최대 10개의 태그만 허용됩니다."
+  },
+  "err_tag_length": {
+    "message": "각 태그는 20자 이하여야 합니다."
+  },
+  "err_cat_invalid": {
+    "message": "잘못된 카테고리입니다."
+  },
+  "err_cat_limit": {
+    "message": "이 카테고리에는 최대 20개의 프롬프트만 허용됩니다."
+  },
+  "confirm_save": {
+    "message": "이 프롬프트를 저장하시겠습니까?"
+  },
+  "confirm_update": {
+    "message": "변경 사항을 저장하시겠습니까?"
+  },
+  "confirm_cancel": {
+    "message": "변경 사항을 삭제하시겠습니까?"
+  },
+  "confirm_delete_prefix": {
+    "message": "프롬프트 \""
+  },
+  "confirm_delete_suffix": {
+    "message": "\"을(를) 삭제하시겠습니까?"
+  },
+  "btn_confirm_yes": {
+    "message": "예"
+  },
+  "btn_confirm_no": {
+    "message": "아니요"
+  },
+  "btn_confirm_delete": {
+    "message": "삭제"
+  },
+  "btn_confirm_back": {
+    "message": "아니요"
+  },
+  "btn_confirm_cancel": {
+    "message": "취소"
+  },
+  "btn_confirm_ok": {
+    "message": "확인"
+  },
+  "tag_suffix": {
+    "message": "개의 태그"
+  },
+  "reload_page": {
+    "message": "페이지를 새로 고침하세요."
+  },
+  "data_management": {
+    "message": "프롬프트 내보내기/가져오기"
+  },
+  "btn_export": {
+    "message": "내보내기"
+  },
+  "btn_import": {
+    "message": "가져오기"
+  },
+  "import_success": {
+    "message": "성공적으로 가져왔습니다."
+  },
+  "err_import_invalid": {
+    "message": "잘못된 JSON 파일입니다."
+  }
+}

@@ -1,0 +1,341 @@
+{
+  "appName": {
+    "message": "Prompt Manager for NotebookLM"
+  },
+  "appDesc": {
+    "message": "Easy-to-use prompt manager for NotebookLM"
+  },
+  "appDefaultTitle": {
+    "message": "Open Prompt Manager"
+  },
+  "app_title": {
+    "message": "Prompt Manager for NotebookLM"
+  },
+  "label_language": {
+    "message": "Language"
+  },
+  "search_placeholder": {
+    "message": "Search saved prompts..."
+  },
+  "tag_all": {
+    "message": "All"
+  },
+  "cat_research": {
+    "message": "Research sources"
+  },
+  "cat_chat": {
+    "message": "Chat"
+  },
+  "cat_audio": {
+    "message": "Audio Overview"
+  },
+  "cat_video": {
+    "message": "Video Overview"
+  },
+  "cat_report": {
+    "message": "Reports"
+  },
+  "cat_flashcard": {
+    "message": "Flashcards"
+  },
+  "cat_quiz": {
+    "message": "Quiz"
+  },
+  "cat_infographic": {
+    "message": "Infographic"
+  },
+  "cat_slide": {
+    "message": "Slide Deck"
+  },
+  "cat_datatable": {
+    "message": "Data Table"
+  },
+  "setting_deep_research": {
+    "message": "Default to Deep Research"
+  },
+  "setting_chat_goal": {
+    "message": "Conversational Goal/Style"
+  },
+  "opt_chat_goal_default": {
+    "message": "Default"
+  },
+  "opt_chat_goal_learning": {
+    "message": "Learning Guide"
+  },
+  "opt_chat_goal_custom": {
+    "message": "Custom"
+  },
+  "setting_chat_length": {
+    "message": "Response Length"
+  },
+  "opt_chat_length_default": {
+    "message": "Default"
+  },
+  "opt_chat_length_longer": {
+    "message": "Longer"
+  },
+  "opt_chat_length_shorter": {
+    "message": "Shorter"
+  },
+  "setting_audio_format": {
+    "message": "Default Format"
+  },
+  "opt_detail": {
+    "message": "Deep Dive"
+  },
+  "opt_summary": {
+    "message": "Brief"
+  },
+  "opt_critique": {
+    "message": "Critique"
+  },
+  "opt_debate": {
+    "message": "Debate"
+  },
+  "setting_audio_length": {
+    "message": "Length"
+  },
+  "opt_audio_length_short": {
+    "message": "Short"
+  },
+  "opt_audio_length_default": {
+    "message": "Standard"
+  },
+  "setting_card_count": {
+    "message": "Number of Cards"
+  },
+  "setting_question_count": {
+    "message": "Number of Questions"
+  },
+  "setting_difficulty": {
+    "message": "Level of Difficulty"
+  },
+  "setting_layout": {
+    "message": "Choose orientation"
+  },
+  "setting_detail_level": {
+    "message": "Level of detail"
+  },
+  "opt_fewer": {
+    "message": "Fewer"
+  },
+  "opt_standard": {
+    "message": "Standard"
+  },
+  "opt_more": {
+    "message": "More"
+  },
+  "opt_easy": {
+    "message": "Easy"
+  },
+  "opt_medium": {
+    "message": "Medium"
+  },
+  "opt_hard": {
+    "message": "Hard"
+  },
+  "opt_landscape": {
+    "message": "Landscape"
+  },
+  "opt_portrait": {
+    "message": "Portrait"
+  },
+  "opt_square": {
+    "message": "Square"
+  },
+  "opt_concise": {
+    "message": "Concise"
+  },
+  "opt_detailed": {
+    "message": "Detailed"
+  },
+  "setting_slide_format": {
+    "message": "Format"
+  },
+  "setting_slide_length": {
+    "message": "Length"
+  },
+  "opt_slide_format_detailed": {
+    "message": "Detailed"
+  },
+  "opt_slide_format_presenter": {
+    "message": "Presenter"
+  },
+  "opt_slide_length_short": {
+    "message": "Short"
+  },
+  "opt_slide_length_default": {
+    "message": "Standard"
+  },
+  "setting_video_format": {
+    "message": "Format"
+  },
+  "opt_video_format_explainer": {
+    "message": "Explainer"
+  },
+  "opt_video_format_brief": {
+    "message": "Brief"
+  },
+  "setting_video_style": {
+    "message": "Visual Style"
+  },
+  "opt_video_style_auto": {
+    "message": "Auto-select"
+  },
+  "opt_video_style_custom": {
+    "message": "Custom"
+  },
+  "opt_video_style_classic": {
+    "message": "Classic"
+  },
+  "opt_video_style_whiteboard": {
+    "message": "Whiteboard"
+  },
+  "opt_video_style_kawaii": {
+    "message": "Kawaii"
+  },
+  "opt_video_style_anime": {
+    "message": "Anime"
+  },
+  "opt_video_style_watercolor": {
+    "message": "Watercolor"
+  },
+  "opt_video_style_retro": {
+    "message": "Retro print"
+  },
+  "opt_video_style_heritage": {
+    "message": "Heritage"
+  },
+  "opt_video_style_papercraft": {
+    "message": "Paper-craft"
+  },
+  "label_video_subcategory": {
+    "message": "Target Area"
+  },
+  "opt_video_focus": {
+    "message": "AI host's focus"
+  },
+  "opt_video_custom_style": {
+    "message": "Custom Visual Style"
+  },
+  "label_chat_subcategory": {
+    "message": "Target Area"
+  },
+  "opt_chat_main": {
+    "message": "Chat"
+  },
+  "opt_chat_style": {
+    "message": "Conversation Style"
+  },
+  "no_prompts": {
+    "message": "No prompts available"
+  },
+  "admin_add_title": {
+    "message": "Add Prompt"
+  },
+  "admin_edit_title": {
+    "message": "Edit Prompt"
+  },
+  "label_category": {
+    "message": "Category"
+  },
+  "placeholder_title": {
+    "message": "Title (e.g., Stock Analysis)"
+  },
+  "placeholder_tags": {
+    "message": "Tags (Enter to add)"
+  },
+  "placeholder_text": {
+    "message": "Enter prompt..."
+  },
+  "label_favorite": {
+    "message": "⭐ Add to favorite"
+  },
+  "btn_save": {
+    "message": "Save"
+  },
+  "btn_update": {
+    "message": "Update"
+  },
+  "btn_cancel": {
+    "message": "Cancel"
+  },
+  "err_title_empty": {
+    "message": "Please enter a title."
+  },
+  "err_title_long": {
+    "message": "Title must be 20 characters or less."
+  },
+  "err_text_empty": {
+    "message": "Please enter the prompt."
+  },
+  "err_text_long": {
+    "message": "Prompt content must be 10,000 characters or less."
+  },
+  "err_tag_count": {
+    "message": "Maximum 10 tags allowed."
+  },
+  "err_tag_length": {
+    "message": "Each tag must be 20 characters or less."
+  },
+  "err_cat_invalid": {
+    "message": "Invalid category."
+  },
+  "err_cat_limit": {
+    "message": "Maximum 20 prompts allowed per category."
+  },
+  "confirm_save": {
+    "message": "Do you want to save this prompt?"
+  },
+  "confirm_update": {
+    "message": "Do you want to save changes?"
+  },
+  "confirm_cancel": {
+    "message": "Discard changes?"
+  },
+  "confirm_delete_prefix": {
+    "message": "Delete prompt \""
+  },
+  "confirm_delete_suffix": {
+    "message": "\"?"
+  },
+  "btn_confirm_yes": {
+    "message": "Yes"
+  },
+  "btn_confirm_no": {
+    "message": "No"
+  },
+  "btn_confirm_delete": {
+    "message": "Delete"
+  },
+  "btn_confirm_back": {
+    "message": "No"
+  },
+  "btn_confirm_cancel": {
+    "message": "Cancel"
+  },
+  "btn_confirm_ok": {
+    "message": "OK"
+  },
+  "tag_suffix": {
+    "message": " tags"
+  },
+  "reload_page": {
+    "message": "Please reload the page."
+  },
+  "data_management": {
+    "message": "Prompt Export / Import"
+  },
+  "btn_export": {
+    "message": "Export"
+  },
+  "btn_import": {
+    "message": "Import"
+  },
+  "import_success": {
+    "message": "Imported successfully."
+  },
+  "err_import_invalid": {
+    "message": "Invalid JSON file."
+  }
+}

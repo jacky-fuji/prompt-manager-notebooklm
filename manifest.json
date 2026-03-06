@@ -1,8 +1,9 @@
 {
   "manifest_version": 3,
-  "name": "Prompt Manager for NotebookLM",
-  "version": "1.5.0",
-  "description": "Easy-to-use prompt manager for NotebookLM（NotebookLM専用のプロンプト入力支援ツール ）",
+  "name": "__MSG_appName__",
+  "version": "1.6.0",
+  "description": "__MSG_appDesc__",
+  "default_locale": "ja",
   "permissions": [
     "storage",
     "sidePanel"
@@ -28,7 +29,7 @@
     "default_path": "sidepanel.html"
   },
   "action": {
-    "default_title": "Prompt Manager を開く",
+    "default_title": "__MSG_appDefaultTitle__",
     "default_icon": {
       "16": "icon/icon16.png",
       "48": "icon/icon48.png",
