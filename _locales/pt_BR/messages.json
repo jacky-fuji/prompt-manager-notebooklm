@@ -3,7 +3,7 @@
     "message": "Prompt Manager para NotebookLM"
   },
   "appDesc": {
-    "message": "Gerenciador de prompts fácil de usar para NotebookLM"
+    "message": "Potencialize seu fluxo de trabalho no NotebookLM! Inserção com um clique: Salve seus prompts mais usados e insira-os instantaneamente. Gerenciamento fácil: Mantenha-se organizado com favoritos, tags e uma poderosa função de busca. Predefinições personalizadas: Ajuste sua experiência definindo \"Deep Research\" como padrão ou escolhendo estilos específicos de Visão Geral em Áudio (como o modo \"Discussão\")."
   },
   "appDefaultTitle": {
     "message": "Abrir Prompt Manager"
