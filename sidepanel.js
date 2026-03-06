@@ -680,8 +680,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 state.language = result.language;
             } else {
                 // Phase 2: Auto-Detect Language on first install
-                const uiLang = chrome.i18n.getUILanguage().split('-')[0];
-                state.language = TRANSLATIONS[uiLang] ? uiLang : 'en';
+                const fullUiLang = chrome.i18n.getUILanguage().replace('-', '_');
+                if (TRANSLATIONS[fullUiLang]) {
+                    state.language = fullUiLang;
+                } else {
+                    const shortUiLang = fullUiLang.split('_')[0];
+                    state.language = TRANSLATIONS[shortUiLang] ? shortUiLang : 'en';
+                }
                 chrome.storage.local.set({ language: state.language });
             }
             if (typeof updateLangTrigger === 'function') updateLangTrigger();

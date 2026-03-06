@@ -342,7 +342,7 @@ const TRANSLATIONS = {
         'import-success': 'Importado con éxito.',
         'err-import-invalid': 'Archivo JSON no válido.'
     },
-    zh: {
+    zh_CN: {
         'app-title': 'Prompt Manager for NotebookLM',
         'label-language': '语言',
         'search-placeholder': '搜索已保存的提示词...',
@@ -790,7 +790,7 @@ const TRANSLATIONS = {
         'import-success': 'Erfolgreich importiert.',
         'err-import-invalid': 'Ungültige JSON-Datei.'
     },
-    pt: {
+    pt_BR: {
         'app-title': 'Prompt Manager para NotebookLM',
         'label-language': 'Idioma',
         'search-placeholder': 'Buscar prompts salvos...',
