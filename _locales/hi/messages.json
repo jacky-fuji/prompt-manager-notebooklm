@@ -1,0 +1,341 @@
+{
+  "appName": {
+    "message": "NotebookLM के लिए प्रॉम्प्ट मैनेजर"
+  },
+  "appDesc": {
+    "message": "NotebookLM के लिए उपयोग में आसान प्रॉम्प्ट मैनेजर"
+  },
+  "appDefaultTitle": {
+    "message": "प्रॉम्प्ट मैनेजर खोलें"
+  },
+  "app_title": {
+    "message": "NotebookLM के लिए प्रॉम्प्ट मैनेजर"
+  },
+  "label_language": {
+    "message": "भाषा"
+  },
+  "search_placeholder": {
+    "message": "सहेजे गए प्रॉम्प्ट खोजें..."
+  },
+  "tag_all": {
+    "message": "सभी"
+  },
+  "cat_research": {
+    "message": "अनुसंधान"
+  },
+  "cat_chat": {
+    "message": "चैट"
+  },
+  "cat_audio": {
+    "message": "ऑडियो अवलोकन"
+  },
+  "cat_video": {
+    "message": "वीडियो अवलोकन"
+  },
+  "cat_report": {
+    "message": "रिपोर्ट"
+  },
+  "cat_flashcard": {
+    "message": "फ्लैशकार्ड"
+  },
+  "cat_quiz": {
+    "message": "प्रश्नोत्तरी"
+  },
+  "cat_infographic": {
+    "message": "इन्फोग्राफिक"
+  },
+  "cat_slide": {
+    "message": "प्रस्तुति स्लाइड"
+  },
+  "cat_datatable": {
+    "message": "डेटा टेबल"
+  },
+  "setting_deep_research": {
+    "message": "डीप रिसर्च को डिफॉल्ट करें"
+  },
+  "setting_chat_goal": {
+    "message": "बातचीत का लक्ष्य/शैली"
+  },
+  "opt_chat_goal_default": {
+    "message": "डिफॉल्ट"
+  },
+  "opt_chat_goal_learning": {
+    "message": "लर्निंग गाइड"
+  },
+  "opt_chat_goal_custom": {
+    "message": "कस्टम"
+  },
+  "setting_chat_length": {
+    "message": "उत्तर की लंबाई"
+  },
+  "opt_chat_length_default": {
+    "message": "डिफॉल्ट"
+  },
+  "opt_chat_length_longer": {
+    "message": "लंबा"
+  },
+  "opt_chat_length_shorter": {
+    "message": "छोटा"
+  },
+  "setting_audio_format": {
+    "message": "डिफॉल्ट प्रारूप"
+  },
+  "opt_detail": {
+    "message": "गहरी जानकारी"
+  },
+  "opt_summary": {
+    "message": "संक्षिप्त"
+  },
+  "opt_critique": {
+    "message": "आलोचना"
+  },
+  "opt_debate": {
+    "message": "बहस"
+  },
+  "setting_audio_length": {
+    "message": "लंबाई"
+  },
+  "opt_audio_length_short": {
+    "message": "छोटा"
+  },
+  "opt_audio_length_default": {
+    "message": "मानक"
+  },
+  "setting_card_count": {
+    "message": "कार्डों की संख्या"
+  },
+  "setting_question_count": {
+    "message": "प्रश्नों की संख्या"
+  },
+  "setting_difficulty": {
+    "message": "कठिनाई का स्तर"
+  },
+  "setting_layout": {
+    "message": "अभिविन्यास चुनें"
+  },
+  "setting_detail_level": {
+    "message": "विस्तार का स्तर"
+  },
+  "opt_fewer": {
+    "message": "कम"
+  },
+  "opt_standard": {
+    "message": "मानक"
+  },
+  "opt_more": {
+    "message": "अधिक"
+  },
+  "opt_easy": {
+    "message": "आसान"
+  },
+  "opt_medium": {
+    "message": "मध्यम"
+  },
+  "opt_hard": {
+    "message": "कठिन"
+  },
+  "opt_landscape": {
+    "message": "लैंडस्केप"
+  },
+  "opt_portrait": {
+    "message": "पोर्ट्रेट"
+  },
+  "opt_square": {
+    "message": "स्क्वायर"
+  },
+  "opt_concise": {
+    "message": "संक्षिप्त"
+  },
+  "opt_detailed": {
+    "message": "विस्तृत"
+  },
+  "setting_slide_format": {
+    "message": "प्रारूप"
+  },
+  "setting_slide_length": {
+    "message": "लंबाई"
+  },
+  "opt_slide_format_detailed": {
+    "message": "विस्तृत"
+  },
+  "opt_slide_format_presenter": {
+    "message": "प्रस्तुतकर्ता"
+  },
+  "opt_slide_length_short": {
+    "message": "छोटा"
+  },
+  "opt_slide_length_default": {
+    "message": "मानक"
+  },
+  "setting_video_format": {
+    "message": "प्रारूप"
+  },
+  "opt_video_format_explainer": {
+    "message": "व्याख्यात्मक"
+  },
+  "opt_video_format_brief": {
+    "message": "संक्षिप्त"
+  },
+  "setting_video_style": {
+    "message": "दृश्य शैली"
+  },
+  "opt_video_style_auto": {
+    "message": "ऑटो-सलेक्ट"
+  },
+  "opt_video_style_custom": {
+    "message": "कस्टम"
+  },
+  "opt_video_style_classic": {
+    "message": "क्लासिक"
+  },
+  "opt_video_style_whiteboard": {
+    "message": "वाइटबोर्ड"
+  },
+  "opt_video_style_kawaii": {
+    "message": "कवाई (Kawaii)"
+  },
+  "opt_video_style_anime": {
+    "message": "एनीमे"
+  },
+  "opt_video_style_watercolor": {
+    "message": "वॉटरकलर"
+  },
+  "opt_video_style_retro": {
+    "message": "रेट्रो प्रिंट"
+  },
+  "opt_video_style_heritage": {
+    "message": "विरासत (Heritage)"
+  },
+  "opt_video_style_papercraft": {
+    "message": "पेपर-क्राफ्ट"
+  },
+  "label_video_subcategory": {
+    "message": "लक्ष्य क्षेत्र"
+  },
+  "opt_video_focus": {
+    "message": "AI होस्ट का फोकस"
+  },
+  "opt_video_custom_style": {
+    "message": "कस्टम दृश्य शैली"
+  },
+  "label_chat_subcategory": {
+    "message": "लक्ष्य क्षेत्र"
+  },
+  "opt_chat_main": {
+    "message": "चैट"
+  },
+  "opt_chat_style": {
+    "message": "चैट शैली"
+  },
+  "no_prompts": {
+    "message": "कोई प्रॉम्प्ट उपलब्ध नहीं है"
+  },
+  "admin_add_title": {
+    "message": "प्रॉम्प्ट जोड़ें"
+  },
+  "admin_edit_title": {
+    "message": "प्रॉम्प्ट संपादित करें"
+  },
+  "label_category": {
+    "message": "श्रेणी"
+  },
+  "placeholder_title": {
+    "message": "शीर्षक (जैसे, विश्लेषण)"
+  },
+  "placeholder_tags": {
+    "message": "टैग (एंटर दबाएं)"
+  },
+  "placeholder_text": {
+    "message": "प्रॉम्प्ट सामग्री दर्ज करें..."
+  },
+  "label_favorite": {
+    "message": "⭐ पसंदीदा में जोड़ें"
+  },
+  "btn_save": {
+    "message": "सहेजें"
+  },
+  "btn_update": {
+    "message": "अपडेट करें"
+  },
+  "btn_cancel": {
+    "message": "रद्द करें"
+  },
+  "err_title_empty": {
+    "message": "कृपया शीर्षक दर्ज करें।"
+  },
+  "err_title_long": {
+    "message": "शीर्षक 20 वर्णों से कम होना चाहिए।"
+  },
+  "err_text_empty": {
+    "message": "कृपया प्रॉम्प्ट सामग्री दर्ज करें।"
+  },
+  "err_text_long": {
+    "message": "सामग्री 10,000 वर्णों से कम होनी चाहिए।"
+  },
+  "err_tag_count": {
+    "message": "अधिकतम 10 टैग की अनुमति है।"
+  },
+  "err_tag_length": {
+    "message": "प्रत्येक टैग 20 वर्णों से कम होना चाहिए।"
+  },
+  "err_cat_invalid": {
+    "message": "अमान्य श्रेणी।"
+  },
+  "err_cat_limit": {
+    "message": "प्रत्येक श्रेणी में अधिकतम 20 प्रॉम्प्ट।"
+  },
+  "confirm_save": {
+    "message": "क्या आप इस प्रॉम्प्ट को सहेजना चाहते हैं?"
+  },
+  "confirm_update": {
+    "message": "क्या आप बदलाव सहेजना चाहते हैं?"
+  },
+  "confirm_cancel": {
+    "message": "बदलाव रद्द करें?"
+  },
+  "confirm_delete_prefix": {
+    "message": "प्रॉम्प्ट हटाएं \""
+  },
+  "confirm_delete_suffix": {
+    "message": "\"?"
+  },
+  "btn_confirm_yes": {
+    "message": "हाँ"
+  },
+  "btn_confirm_no": {
+    "message": "नहीं"
+  },
+  "btn_confirm_delete": {
+    "message": "हटाएं"
+  },
+  "btn_confirm_back": {
+    "message": "नहीं"
+  },
+  "btn_confirm_cancel": {
+    "message": "रद्द करें"
+  },
+  "btn_confirm_ok": {
+    "message": "ठीक है"
+  },
+  "tag_suffix": {
+    "message": " टैग"
+  },
+  "reload_page": {
+    "message": "कृपया पेज रिफ्रेश करें।"
+  },
+  "data_management": {
+    "message": "डेटा निर्यात / आयात"
+  },
+  "btn_export": {
+    "message": "निर्यात"
+  },
+  "btn_import": {
+    "message": "आयात"
+  },
+  "import_success": {
+    "message": "सफलतापूर्वक आयात किया गया।"
+  },
+  "err_import_invalid": {
+    "message": "अमान्य JSON फ़ाइल।"
+  }
+}
