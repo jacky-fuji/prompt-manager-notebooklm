@@ -1,0 +1,341 @@
+{
+  "appName": {
+    "message": "Prompt Manager для NotebookLM"
+  },
+  "appDesc": {
+    "message": "Удобный менеджер промптов для NotebookLM"
+  },
+  "appDefaultTitle": {
+    "message": "Открыть Prompt Manager"
+  },
+  "app_title": {
+    "message": "Prompt Manager для NotebookLM"
+  },
+  "label_language": {
+    "message": "Язык"
+  },
+  "search_placeholder": {
+    "message": "Поиск промптов..."
+  },
+  "tag_all": {
+    "message": "Все"
+  },
+  "cat_research": {
+    "message": "Анализ"
+  },
+  "cat_chat": {
+    "message": "Чат"
+  },
+  "cat_audio": {
+    "message": "Аудио обзор"
+  },
+  "cat_video": {
+    "message": "Видео обзор"
+  },
+  "cat_report": {
+    "message": "Отчет"
+  },
+  "cat_flashcard": {
+    "message": "Карточки"
+  },
+  "cat_quiz": {
+    "message": "Викторина"
+  },
+  "cat_infographic": {
+    "message": "Инфографика"
+  },
+  "cat_slide": {
+    "message": "Слайд"
+  },
+  "cat_datatable": {
+    "message": "Таблица данных"
+  },
+  "setting_deep_research": {
+    "message": "Глубокое исследование по умолчанию"
+  },
+  "setting_chat_goal": {
+    "message": "Цель, стиль и роль"
+  },
+  "opt_chat_goal_default": {
+    "message": "По умолчанию"
+  },
+  "opt_chat_goal_learning": {
+    "message": "Учебное руководство"
+  },
+  "opt_chat_goal_custom": {
+    "message": "Пользовательский"
+  },
+  "setting_chat_length": {
+    "message": "Длина ответа"
+  },
+  "opt_chat_length_default": {
+    "message": "По умолчанию"
+  },
+  "opt_chat_length_longer": {
+    "message": "Длиннее"
+  },
+  "opt_chat_length_shorter": {
+    "message": "Короче"
+  },
+  "setting_audio_format": {
+    "message": "Формат"
+  },
+  "opt_detail": {
+    "message": "Деталь"
+  },
+  "opt_summary": {
+    "message": "Резюме"
+  },
+  "opt_critique": {
+    "message": "Критика"
+  },
+  "opt_debate": {
+    "message": "Дебаты"
+  },
+  "setting_audio_length": {
+    "message": "Длина"
+  },
+  "opt_audio_length_short": {
+    "message": "Короткий"
+  },
+  "opt_audio_length_default": {
+    "message": "По умолчанию"
+  },
+  "setting_card_count": {
+    "message": "Количество карточек"
+  },
+  "setting_question_count": {
+    "message": "Количество вопросов"
+  },
+  "setting_difficulty": {
+    "message": "Сложность"
+  },
+  "setting_layout": {
+    "message": "Макет"
+  },
+  "setting_detail_level": {
+    "message": "Уровень детализации"
+  },
+  "opt_fewer": {
+    "message": "Меньше"
+  },
+  "opt_standard": {
+    "message": "Стандартно"
+  },
+  "opt_more": {
+    "message": "Больше"
+  },
+  "opt_easy": {
+    "message": "Легкий"
+  },
+  "opt_medium": {
+    "message": "Средний"
+  },
+  "opt_hard": {
+    "message": "Сложный"
+  },
+  "opt_landscape": {
+    "message": "Альбомная"
+  },
+  "opt_portrait": {
+    "message": "Портретная"
+  },
+  "opt_square": {
+    "message": "Квадрат"
+  },
+  "opt_concise": {
+    "message": "Кратко"
+  },
+  "opt_detailed": {
+    "message": "Подробно"
+  },
+  "setting_slide_format": {
+    "message": "Формат"
+  },
+  "setting_slide_length": {
+    "message": "Длина"
+  },
+  "opt_slide_format_detailed": {
+    "message": "Подробно"
+  },
+  "opt_slide_format_presenter": {
+    "message": "Докладчик"
+  },
+  "opt_slide_length_short": {
+    "message": "Короткий"
+  },
+  "opt_slide_length_default": {
+    "message": "По умолчанию"
+  },
+  "setting_video_format": {
+    "message": "Формат"
+  },
+  "opt_video_format_explainer": {
+    "message": "Объяснение"
+  },
+  "opt_video_format_brief": {
+    "message": "Кратко"
+  },
+  "setting_video_style": {
+    "message": "Стиль"
+  },
+  "opt_video_style_auto": {
+    "message": "Авто"
+  },
+  "opt_video_style_custom": {
+    "message": "Пользовательский"
+  },
+  "opt_video_style_classic": {
+    "message": "Классический"
+  },
+  "opt_video_style_whiteboard": {
+    "message": "Маркерная доска"
+  },
+  "opt_video_style_kawaii": {
+    "message": "Каваи"
+  },
+  "opt_video_style_anime": {
+    "message": "Аниме"
+  },
+  "opt_video_style_watercolor": {
+    "message": "Акварель"
+  },
+  "opt_video_style_retro": {
+    "message": "Ретро"
+  },
+  "opt_video_style_heritage": {
+    "message": "Наследие"
+  },
+  "opt_video_style_papercraft": {
+    "message": "Бумажное моделирование"
+  },
+  "label_video_subcategory": {
+    "message": "Целевая область"
+  },
+  "opt_video_focus": {
+    "message": "Фокус ИИ-ведущего"
+  },
+  "opt_video_custom_style": {
+    "message": "Пользовательский визуальный стиль"
+  },
+  "label_chat_subcategory": {
+    "message": "Целевая область"
+  },
+  "opt_chat_main": {
+    "message": "Чат"
+  },
+  "opt_chat_style": {
+    "message": "Стиль общения"
+  },
+  "no_prompts": {
+    "message": "Промпты не найдены."
+  },
+  "admin_add_title": {
+    "message": "Добавить"
+  },
+  "admin_edit_title": {
+    "message": "Изменить"
+  },
+  "label_category": {
+    "message": "Категория"
+  },
+  "placeholder_title": {
+    "message": "Название"
+  },
+  "placeholder_tags": {
+    "message": "Теги (Enter)"
+  },
+  "placeholder_text": {
+    "message": "Текст промпта"
+  },
+  "label_favorite": {
+    "message": "⭐ Избранное"
+  },
+  "btn_save": {
+    "message": "Сохранить"
+  },
+  "btn_update": {
+    "message": "Обновить"
+  },
+  "btn_cancel": {
+    "message": "Отмена"
+  },
+  "err_title_empty": {
+    "message": "Введите название."
+  },
+  "err_title_long": {
+    "message": "Не более 20 символов."
+  },
+  "err_text_empty": {
+    "message": "Введите текст."
+  },
+  "err_text_long": {
+    "message": "Не более 10 000 символов."
+  },
+  "err_tag_count": {
+    "message": "Не более 10 тегов."
+  },
+  "err_tag_length": {
+    "message": "Не более 20 символов на тег."
+  },
+  "err_cat_invalid": {
+    "message": "Недопустимая категория."
+  },
+  "err_cat_limit": {
+    "message": "Не более 20 промптов в этой категории."
+  },
+  "confirm_save": {
+    "message": "Сохранить этот промпт?"
+  },
+  "confirm_update": {
+    "message": "Сохранить изменения?"
+  },
+  "confirm_cancel": {
+    "message": "Отменить изменения?"
+  },
+  "confirm_delete_prefix": {
+    "message": "Удалить \""
+  },
+  "confirm_delete_suffix": {
+    "message": "\"?"
+  },
+  "btn_confirm_yes": {
+    "message": "Да"
+  },
+  "btn_confirm_no": {
+    "message": "Нет"
+  },
+  "btn_confirm_delete": {
+    "message": "Удалить"
+  },
+  "btn_confirm_back": {
+    "message": "Нет"
+  },
+  "btn_confirm_cancel": {
+    "message": "Отмена"
+  },
+  "btn_confirm_ok": {
+    "message": "ОК"
+  },
+  "tag_suffix": {
+    "message": " тегов"
+  },
+  "reload_page": {
+    "message": "Обновите страницу."
+  },
+  "data_management": {
+    "message": "Экспорт / Импорт"
+  },
+  "btn_export": {
+    "message": "Экспорт"
+  },
+  "btn_import": {
+    "message": "Импорт"
+  },
+  "import_success": {
+    "message": "Успешно."
+  },
+  "err_import_invalid": {
+    "message": "Недопустимый JSON."
+  }
+}

@@ -1,0 +1,341 @@
+{
+  "appName": {
+    "message": "Prompt Manager for NotebookLM"
+  },
+  "appDesc": {
+    "message": "NotebookLM専用のプロンプト入力支援ツール"
+  },
+  "appDefaultTitle": {
+    "message": "Prompt Manager を開く"
+  },
+  "app_title": {
+    "message": "Prompt Manager for NotebookLM"
+  },
+  "label_language": {
+    "message": "言語"
+  },
+  "search_placeholder": {
+    "message": "保存済みのプロンプトを検索..."
+  },
+  "tag_all": {
+    "message": "すべて"
+  },
+  "cat_research": {
+    "message": "ソース検索"
+  },
+  "cat_chat": {
+    "message": "チャット"
+  },
+  "cat_audio": {
+    "message": "音声解説"
+  },
+  "cat_video": {
+    "message": "動画解説"
+  },
+  "cat_report": {
+    "message": "レポート"
+  },
+  "cat_flashcard": {
+    "message": "フラッシュカード"
+  },
+  "cat_quiz": {
+    "message": "クイズ"
+  },
+  "cat_infographic": {
+    "message": "インフォグラフィック"
+  },
+  "cat_slide": {
+    "message": "スライド資料"
+  },
+  "cat_datatable": {
+    "message": "Data Table"
+  },
+  "setting_deep_research": {
+    "message": "Deep Research をデフォルトにする"
+  },
+  "setting_chat_goal": {
+    "message": "会話の目的、スタイル、役割"
+  },
+  "opt_chat_goal_default": {
+    "message": "デフォルト"
+  },
+  "opt_chat_goal_learning": {
+    "message": "学習ガイド"
+  },
+  "opt_chat_goal_custom": {
+    "message": "カスタム"
+  },
+  "setting_chat_length": {
+    "message": "回答の長さ"
+  },
+  "opt_chat_length_default": {
+    "message": "デフォルト"
+  },
+  "opt_chat_length_longer": {
+    "message": "長め"
+  },
+  "opt_chat_length_shorter": {
+    "message": "短め"
+  },
+  "setting_audio_format": {
+    "message": "デフォルト形式"
+  },
+  "opt_detail": {
+    "message": "詳細"
+  },
+  "opt_summary": {
+    "message": "概要"
+  },
+  "opt_critique": {
+    "message": "評論"
+  },
+  "opt_debate": {
+    "message": "議論"
+  },
+  "setting_audio_length": {
+    "message": "長さ"
+  },
+  "opt_audio_length_short": {
+    "message": "短め"
+  },
+  "opt_audio_length_default": {
+    "message": "標準"
+  },
+  "setting_card_count": {
+    "message": "カードの枚数"
+  },
+  "setting_question_count": {
+    "message": "質問の数"
+  },
+  "setting_difficulty": {
+    "message": "難易度レベル"
+  },
+  "setting_layout": {
+    "message": "レイアウト"
+  },
+  "setting_detail_level": {
+    "message": "詳細レベル"
+  },
+  "opt_fewer": {
+    "message": "少なめ"
+  },
+  "opt_standard": {
+    "message": "標準"
+  },
+  "opt_more": {
+    "message": "多め"
+  },
+  "opt_easy": {
+    "message": "簡単"
+  },
+  "opt_medium": {
+    "message": "標準"
+  },
+  "opt_hard": {
+    "message": "難しい"
+  },
+  "opt_landscape": {
+    "message": "横向き"
+  },
+  "opt_portrait": {
+    "message": "縦向き"
+  },
+  "opt_square": {
+    "message": "正方形"
+  },
+  "opt_concise": {
+    "message": "簡潔"
+  },
+  "opt_detailed": {
+    "message": "詳細"
+  },
+  "setting_slide_format": {
+    "message": "形式"
+  },
+  "setting_slide_length": {
+    "message": "長さ"
+  },
+  "opt_slide_format_detailed": {
+    "message": "詳細"
+  },
+  "opt_slide_format_presenter": {
+    "message": "プレゼンター用"
+  },
+  "opt_slide_length_short": {
+    "message": "短め"
+  },
+  "opt_slide_length_default": {
+    "message": "標準"
+  },
+  "setting_video_format": {
+    "message": "形式"
+  },
+  "opt_video_format_explainer": {
+    "message": "説明動画"
+  },
+  "opt_video_format_brief": {
+    "message": "概要"
+  },
+  "setting_video_style": {
+    "message": "ビジュアルスタイル"
+  },
+  "opt_video_style_auto": {
+    "message": "自動選択"
+  },
+  "opt_video_style_custom": {
+    "message": "カスタム"
+  },
+  "opt_video_style_classic": {
+    "message": "クラシック"
+  },
+  "opt_video_style_whiteboard": {
+    "message": "ホワイトボード"
+  },
+  "opt_video_style_kawaii": {
+    "message": "カワイイ"
+  },
+  "opt_video_style_anime": {
+    "message": "アニメ"
+  },
+  "opt_video_style_watercolor": {
+    "message": "水彩画"
+  },
+  "opt_video_style_retro": {
+    "message": "レトロスタイル"
+  },
+  "opt_video_style_heritage": {
+    "message": "遺産"
+  },
+  "opt_video_style_papercraft": {
+    "message": "ペーパークラフト"
+  },
+  "label_video_subcategory": {
+    "message": "対象エリア"
+  },
+  "opt_video_focus": {
+    "message": "AIホストの焦点"
+  },
+  "opt_video_custom_style": {
+    "message": "カスタムビジュアルスタイル"
+  },
+  "label_chat_subcategory": {
+    "message": "対象エリア"
+  },
+  "opt_chat_main": {
+    "message": "チャット"
+  },
+  "opt_chat_style": {
+    "message": "会話のスタイル"
+  },
+  "no_prompts": {
+    "message": "プロンプトがありません"
+  },
+  "admin_add_title": {
+    "message": "プロンプトの追加"
+  },
+  "admin_edit_title": {
+    "message": "プロンプトを編集"
+  },
+  "label_category": {
+    "message": "カテゴリ"
+  },
+  "placeholder_title": {
+    "message": "タイトル（例: 銘柄分析）"
+  },
+  "placeholder_tags": {
+    "message": "タグ (Enterで追加)"
+  },
+  "placeholder_text": {
+    "message": "プロンプト内容"
+  },
+  "label_favorite": {
+    "message": "⭐ お気に入り登録"
+  },
+  "btn_save": {
+    "message": "保存"
+  },
+  "btn_update": {
+    "message": "更新"
+  },
+  "btn_cancel": {
+    "message": "キャンセル"
+  },
+  "err_title_empty": {
+    "message": "タイトルを入力してください。"
+  },
+  "err_title_long": {
+    "message": "タイトルは20文字以内で入力してください。"
+  },
+  "err_text_empty": {
+    "message": "プロンプト内容を入力してください。"
+  },
+  "err_text_long": {
+    "message": "プロンプト内容は10,000文字以内で入力してください。"
+  },
+  "err_tag_count": {
+    "message": "タグは10個までです。"
+  },
+  "err_tag_length": {
+    "message": "タグは20文字以内で入力してください。"
+  },
+  "err_cat_invalid": {
+    "message": "無効なカテゴリです。"
+  },
+  "err_cat_limit": {
+    "message": "このカテゴリには最大20件まで登録できます。"
+  },
+  "confirm_save": {
+    "message": "プロンプトを保存しますか？"
+  },
+  "confirm_update": {
+    "message": "変更を保存しますか？"
+  },
+  "confirm_cancel": {
+    "message": "編集を取り消しますか？"
+  },
+  "confirm_delete_prefix": {
+    "message": "プロンプト「"
+  },
+  "confirm_delete_suffix": {
+    "message": "」を削除しますか？"
+  },
+  "btn_confirm_yes": {
+    "message": "はい"
+  },
+  "btn_confirm_no": {
+    "message": "いいえ"
+  },
+  "btn_confirm_delete": {
+    "message": "削除"
+  },
+  "btn_confirm_back": {
+    "message": "いいえ"
+  },
+  "btn_confirm_cancel": {
+    "message": "キャンセル"
+  },
+  "btn_confirm_ok": {
+    "message": "OK"
+  },
+  "tag_suffix": {
+    "message": "個"
+  },
+  "reload_page": {
+    "message": "ページを再読み込みしてください。"
+  },
+  "data_management": {
+    "message": "プロンプトのエクスポート/インポート"
+  },
+  "btn_export": {
+    "message": "エクスポート"
+  },
+  "btn_import": {
+    "message": "インポート"
+  },
+  "import_success": {
+    "message": "インポートしました。"
+  },
+  "err_import_invalid": {
+    "message": "無効なJSONファイルです。"
+  }
+}

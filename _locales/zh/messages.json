@@ -1,0 +1,341 @@
+{
+  "appName": {
+    "message": "Prompt Manager for NotebookLM"
+  },
+  "appDesc": {
+    "message": "NotebookLM 的易用提示词管理工具"
+  },
+  "appDefaultTitle": {
+    "message": "打开 Prompt Manager"
+  },
+  "app_title": {
+    "message": "Prompt Manager for NotebookLM"
+  },
+  "label_language": {
+    "message": "语言"
+  },
+  "search_placeholder": {
+    "message": "搜索已保存的提示词..."
+  },
+  "tag_all": {
+    "message": "全部"
+  },
+  "cat_research": {
+    "message": "研究与分析"
+  },
+  "cat_chat": {
+    "message": "聊天"
+  },
+  "cat_audio": {
+    "message": "音频概述"
+  },
+  "cat_video": {
+    "message": "视频概述"
+  },
+  "cat_report": {
+    "message": "报告"
+  },
+  "cat_flashcard": {
+    "message": "抽认卡"
+  },
+  "cat_quiz": {
+    "message": "测验"
+  },
+  "cat_infographic": {
+    "message": "信息图"
+  },
+  "cat_slide": {
+    "message": "幻灯片"
+  },
+  "cat_datatable": {
+    "message": "数据表"
+  },
+  "setting_deep_research": {
+    "message": "默认使用深度研究"
+  },
+  "setting_chat_goal": {
+    "message": "目标、风格和角色"
+  },
+  "opt_chat_goal_default": {
+    "message": "默认"
+  },
+  "opt_chat_goal_learning": {
+    "message": "学习指南"
+  },
+  "opt_chat_goal_custom": {
+    "message": "自定义"
+  },
+  "setting_chat_length": {
+    "message": "回复长度"
+  },
+  "opt_chat_length_default": {
+    "message": "默认"
+  },
+  "opt_chat_length_longer": {
+    "message": "较长"
+  },
+  "opt_chat_length_shorter": {
+    "message": "较短"
+  },
+  "setting_audio_format": {
+    "message": "默认格式"
+  },
+  "opt_detail": {
+    "message": "详细"
+  },
+  "opt_summary": {
+    "message": "摘要"
+  },
+  "opt_critique": {
+    "message": "评论"
+  },
+  "opt_debate": {
+    "message": "辩论"
+  },
+  "setting_audio_length": {
+    "message": "长度"
+  },
+  "opt_audio_length_short": {
+    "message": "简短"
+  },
+  "opt_audio_length_default": {
+    "message": "默认"
+  },
+  "setting_card_count": {
+    "message": "卡片数量"
+  },
+  "setting_question_count": {
+    "message": "问题数量"
+  },
+  "setting_difficulty": {
+    "message": "难度级别"
+  },
+  "setting_layout": {
+    "message": "布局"
+  },
+  "setting_detail_level": {
+    "message": "详细程度"
+  },
+  "opt_fewer": {
+    "message": "较少"
+  },
+  "opt_standard": {
+    "message": "标准"
+  },
+  "opt_more": {
+    "message": "较多"
+  },
+  "opt_easy": {
+    "message": "简单"
+  },
+  "opt_medium": {
+    "message": "中等"
+  },
+  "opt_hard": {
+    "message": "困难"
+  },
+  "opt_landscape": {
+    "message": "横向"
+  },
+  "opt_portrait": {
+    "message": "纵向"
+  },
+  "opt_square": {
+    "message": "正方形"
+  },
+  "opt_concise": {
+    "message": "简明"
+  },
+  "opt_detailed": {
+    "message": "详细"
+  },
+  "setting_slide_format": {
+    "message": "格式"
+  },
+  "setting_slide_length": {
+    "message": "长度"
+  },
+  "opt_slide_format_detailed": {
+    "message": "详细"
+  },
+  "opt_slide_format_presenter": {
+    "message": "演讲者"
+  },
+  "opt_slide_length_short": {
+    "message": "简短"
+  },
+  "opt_slide_length_default": {
+    "message": "默认"
+  },
+  "setting_video_format": {
+    "message": "格式"
+  },
+  "opt_video_format_explainer": {
+    "message": "解说"
+  },
+  "opt_video_format_brief": {
+    "message": "简短"
+  },
+  "setting_video_style": {
+    "message": "视觉风格"
+  },
+  "opt_video_style_auto": {
+    "message": "自动"
+  },
+  "opt_video_style_custom": {
+    "message": "自定义"
+  },
+  "opt_video_style_classic": {
+    "message": "经典"
+  },
+  "opt_video_style_whiteboard": {
+    "message": "白板"
+  },
+  "opt_video_style_kawaii": {
+    "message": "可爱"
+  },
+  "opt_video_style_anime": {
+    "message": "动漫"
+  },
+  "opt_video_style_watercolor": {
+    "message": "水彩"
+  },
+  "opt_video_style_retro": {
+    "message": "复古"
+  },
+  "opt_video_style_heritage": {
+    "message": "传统"
+  },
+  "opt_video_style_papercraft": {
+    "message": "纸艺"
+  },
+  "label_video_subcategory": {
+    "message": "目标区域"
+  },
+  "opt_video_focus": {
+    "message": "AI主播焦点"
+  },
+  "opt_video_custom_style": {
+    "message": "自定义视觉风格"
+  },
+  "label_chat_subcategory": {
+    "message": "目标区域"
+  },
+  "opt_chat_main": {
+    "message": "聊天"
+  },
+  "opt_chat_style": {
+    "message": "对话风格"
+  },
+  "no_prompts": {
+    "message": "未找到提示词。"
+  },
+  "admin_add_title": {
+    "message": "添加提示词"
+  },
+  "admin_edit_title": {
+    "message": "编辑提示词"
+  },
+  "label_category": {
+    "message": "类别"
+  },
+  "placeholder_title": {
+    "message": "标题（例如：分析）"
+  },
+  "placeholder_tags": {
+    "message": "标签（按回车键添加）"
+  },
+  "placeholder_text": {
+    "message": "提示词内容"
+  },
+  "label_favorite": {
+    "message": "⭐ 收藏"
+  },
+  "btn_save": {
+    "message": "保存"
+  },
+  "btn_update": {
+    "message": "更新"
+  },
+  "btn_cancel": {
+    "message": "取消"
+  },
+  "err_title_empty": {
+    "message": "请输入标题。"
+  },
+  "err_title_long": {
+    "message": "标题必须在 20 个字符以内。"
+  },
+  "err_text_empty": {
+    "message": "请输入提示词内容。"
+  },
+  "err_text_long": {
+    "message": "提示词内容必须在 10,000 个字符以内。"
+  },
+  "err_tag_count": {
+    "message": "最多允许 10 个标签。"
+  },
+  "err_tag_length": {
+    "message": "每个标签必须在 20 个字符以内。"
+  },
+  "err_cat_invalid": {
+    "message": "无效的类别。"
+  },
+  "err_cat_limit": {
+    "message": "此类别最多允许 20 个提示词。"
+  },
+  "confirm_save": {
+    "message": "保存此提示词？"
+  },
+  "confirm_update": {
+    "message": "保存对此提示词的更改？"
+  },
+  "confirm_cancel": {
+    "message": "放弃更改？"
+  },
+  "confirm_delete_prefix": {
+    "message": "删除提示词 \""
+  },
+  "confirm_delete_suffix": {
+    "message": "\"?"
+  },
+  "btn_confirm_yes": {
+    "message": "是"
+  },
+  "btn_confirm_no": {
+    "message": "否"
+  },
+  "btn_confirm_delete": {
+    "message": "删除"
+  },
+  "btn_confirm_back": {
+    "message": "否"
+  },
+  "btn_confirm_cancel": {
+    "message": "取消"
+  },
+  "btn_confirm_ok": {
+    "message": "确定"
+  },
+  "tag_suffix": {
+    "message": " 个标签"
+  },
+  "reload_page": {
+    "message": "请重新加载页面。"
+  },
+  "data_management": {
+    "message": "提示词导出/导入"
+  },
+  "btn_export": {
+    "message": "导出"
+  },
+  "btn_import": {
+    "message": "导入"
+  },
+  "import_success": {
+    "message": "导入成功。"
+  },
+  "err_import_invalid": {
+    "message": "无效的 JSON 文件。"
+  }
+}
