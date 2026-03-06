@@ -16,6 +16,17 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     /**
+     * Translation helper: prioritizes TRANSLATIONS (user-selected language),
+     * falls back to chrome.i18n.getMessage (browser locale).
+     */
+    function t(key) {
+        const langData = TRANSLATIONS[state.language];
+        if (langData && langData[key] !== undefined) return langData[key];
+        const chromeKey = key.replace(/-/g, '_');
+        return chrome.i18n.getMessage(chromeKey) || key;
+    }
+
+    /**
      * Apply translations to static elements
      */
     function updateStaticTranslations() {
@@ -558,7 +569,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateTagsCharCount() {
         const count = state.currentInputTags.length;
-        const suffix = TRANSLATIONS[state.language]['tag-suffix'];
+        const suffix = t('tag-suffix');
         tagsCharCountDisplay.innerText = `${count} / ${MAX_TAG_COUNT}${suffix}`;
         if (count >= MAX_TAG_COUNT) {
             tagsCharCountDisplay.classList.add('warning');
@@ -790,7 +801,7 @@ document.addEventListener('DOMContentLoaded', () => {
         while (tagCloud.firstChild) tagCloud.removeChild(tagCloud.firstChild);
         const allBtn = document.createElement('button');
         allBtn.className = `tag-chip ${state.selectedTags.size === 0 ? 'active' : ''}`;
-        allBtn.innerText = TRANSLATIONS[state.language]['tag-all'];
+        allBtn.innerText = t('tag-all');
         allBtn.onclick = () => {
             state.selectedTags.clear();
             loadAndRenderPrompts();
@@ -830,7 +841,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const matchesSearch = !state.searchQuery ||
                 p.title.toLowerCase().includes(state.searchQuery) ||
                 p.text.toLowerCase().includes(state.searchQuery) ||
-                (p.tags && p.tags.some(t => t.toLowerCase().includes(state.searchQuery)));
+                (p.tags && p.tags.some(tag => tag.toLowerCase().includes(state.searchQuery)));
             return matchesTag && matchesSearch;
         });
 
@@ -880,7 +891,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 empty.style.fontSize = '12px';
                 empty.style.color = '#94a3b8';
                 empty.style.textAlign = 'left';
-                empty.innerText = TRANSLATIONS[state.language]['no-prompts'];
+                empty.innerText = t('no-prompts');
                 listContainers[cat].appendChild(empty);
             }
         });
@@ -961,8 +972,8 @@ document.addEventListener('DOMContentLoaded', () => {
         renderInputTags();
         favoriteInput.checked = !!prompt.isFavorite;
         textInput.value = prompt.text;
-        adminTitle.innerText = TRANSLATIONS[state.language]['admin-edit-title'];
-        saveBtn.innerText = TRANSLATIONS[state.language]['btn-update'];
+        adminTitle.innerText = t('admin-edit-title');
+        saveBtn.innerText = t('btn-update');
 
         // Restore subcategory
         if (prompt.category === 'video') {
@@ -997,7 +1008,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (saveBtn) {
         saveBtn.onclick = () => {
             const isUpdate = parseInt(editIndexInput.value) >= 0;
-            const message = TRANSLATIONS[state.language][isUpdate ? 'confirm-update' : 'confirm-save'];
+            const message = t(isUpdate ? 'confirm-update' : 'confirm-save');
 
             // Simple validation check
             if (!titleInput.value.trim() || !textInput.value.trim()) {
@@ -1006,7 +1017,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            showConfirmModal(message, TRANSLATIONS[state.language]['btn-confirm-yes'], TRANSLATIONS[state.language]['btn-confirm-no'], () => {
+            showConfirmModal(message, t('btn-confirm-yes'), t('btn-confirm-no'), () => {
                 executeSave();
             });
         };
@@ -1025,31 +1036,31 @@ document.addEventListener('DOMContentLoaded', () => {
         let hasError = false;
 
         if (!title) {
-            showValidationError(titleInput, TRANSLATIONS[state.language]['err-title-empty']);
+            showValidationError(titleInput, t('err-title-empty'));
             hasError = true;
         } else if (title.length > MAX_TITLE_LENGTH) {
-            showValidationError(titleInput, TRANSLATIONS[state.language]['err-title-long']);
+            showValidationError(titleInput, t('err-title-long'));
             hasError = true;
         }
 
         if (!text) {
-            showValidationError(textInput, TRANSLATIONS[state.language]['err-text-empty']);
+            showValidationError(textInput, t('err-text-empty'));
             hasError = true;
         } else if (text.length > MAX_TEXT_LENGTH) {
-            showValidationError(textInput, TRANSLATIONS[state.language]['err-text-long']);
+            showValidationError(textInput, t('err-text-long'));
             hasError = true;
         }
 
         if (!VALID_CATEGORIES.includes(category)) {
-            showValidationError(categoryInput, TRANSLATIONS[state.language]['err-cat-invalid']);
+            showValidationError(categoryInput, t('err-cat-invalid'));
             hasError = true;
         }
 
         if (tags.length > MAX_TAG_COUNT) {
-            showValidationError(tagsInputContainer, TRANSLATIONS[state.language]['err-tag-count']);
+            showValidationError(tagsInputContainer, t('err-tag-count'));
             hasError = true;
-        } else if (tags.some(t => t.length > MAX_TAG_LENGTH)) {
-            showValidationError(tagsInputContainer, TRANSLATIONS[state.language]['err-tag-length']);
+        } else if (tags.some(tag => tag.length > MAX_TAG_LENGTH)) {
+            showValidationError(tagsInputContainer, t('err-tag-length'));
             hasError = true;
         }
 
@@ -1078,7 +1089,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }).length;
 
                 if (catCount >= MAX_PROMPTS_PER_CATEGORY) {
-                    showValidationError(categoryInput, TRANSLATIONS[state.language]['err-cat-limit']);
+                    showValidationError(categoryInput, t('err-cat-limit'));
                     return;
                 }
             }
@@ -1109,8 +1120,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         favoriteInput.checked = false;
         textInput.value = '';
-        adminTitle.innerText = TRANSLATIONS[state.language]['admin-add-title'];
-        saveBtn.innerText = TRANSLATIONS[state.language]['btn-save'];
+        adminTitle.innerText = t('admin-add-title');
+        saveBtn.innerText = t('btn-save');
 
         // Subcategory reset
         videoSubcategoryGroup.style.display = 'none';
@@ -1153,8 +1164,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function deletePrompt(index, title) {
-        const message = `${TRANSLATIONS[state.language]['confirm-delete-prefix']}${title}${TRANSLATIONS[state.language]['confirm-delete-suffix']}`;
-        showConfirmModal(message, TRANSLATIONS[state.language]['btn-confirm-delete'], TRANSLATIONS[state.language]['btn-confirm-no'], () => {
+        const message = `${t('confirm-delete-prefix')}${title}${t('confirm-delete-suffix')}`;
+        showConfirmModal(message, t('btn-confirm-delete'), t('btn-confirm-no'), () => {
             chrome.storage.local.get(['prompts'], (result) => {
                 const prompts = result.prompts || [];
                 prompts.splice(index, 1);
@@ -1196,11 +1207,11 @@ document.addEventListener('DOMContentLoaded', () => {
         confirmMessage.innerText = message;
 
         if (type === 'ok') {
-            confirmYesBtn.innerText = TRANSLATIONS[state.language]['btn-confirm-ok'] || 'OK';
+            confirmYesBtn.innerText = t('btn-confirm-ok') || 'OK';
             confirmNoBtn.style.display = 'none';
         } else {
-            confirmYesBtn.innerText = TRANSLATIONS[state.language]['btn-confirm-yes']; // Changed from btn-confirm-delete to btn-confirm-yes for generic confirm
-            confirmNoBtn.innerText = TRANSLATIONS[state.language]['btn-confirm-no'];
+            confirmYesBtn.innerText = t('btn-confirm-yes'); // Changed from btn-confirm-delete to btn-confirm-yes for generic confirm
+            confirmNoBtn.innerText = t('btn-confirm-no');
             confirmNoBtn.style.display = 'block';
         }
 
@@ -1219,7 +1230,7 @@ document.addEventListener('DOMContentLoaded', () => {
         chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             if (tabs[0]) {
                 chrome.tabs.sendMessage(tabs[0].id, { action: 'insertText', text: text }, (res) => {
-                    if (chrome.runtime.lastError) alert(TRANSLATIONS[state.language]['reload-page']);
+                    if (chrome.runtime.lastError) alert(t('reload-page'));
                 });
             }
         });
@@ -1232,7 +1243,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 resetForm();
                 return;
             }
-            showConfirmModal(TRANSLATIONS[state.language]['confirm-cancel'], TRANSLATIONS[state.language]['btn-confirm-yes'], TRANSLATIONS[state.language]['btn-confirm-no'], () => {
+            showConfirmModal(t('confirm-cancel'), t('btn-confirm-yes'), t('btn-confirm-no'), () => {
                 resetForm();
             });
         };
@@ -1306,8 +1317,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         chrome.storage.local.set({ prompts: mergedPrompts }, () => {
                             // Using a generic confirm modal for success/error messages
                             showCustomConfirm(
-                                TRANSLATIONS[state.language]['app-title'],
-                                TRANSLATIONS[state.language]['import-success'],
+                                t('app-title'),
+                                t('import-success'),
                                 'ok'
                             );
                             loadAndRenderPrompts();
@@ -1318,8 +1329,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 } catch (error) {
                     console.error("Import Error:", error);
                     showCustomConfirm(
-                        TRANSLATIONS[state.language]['app-title'],
-                        TRANSLATIONS[state.language]['err-import-invalid'],
+                        t('app-title'),
+                        t('err-import-invalid'),
                         'ok'
                     );
                     importFileInput.value = ''; // Reset input
