@@ -1,0 +1,341 @@
+{
+  "appName": {
+    "message": "Prompt Manager cho NotebookLM"
+  },
+  "appDesc": {
+    "message": "Trình quản lý prompt dễ sử dụng cho NotebookLM"
+  },
+  "appDefaultTitle": {
+    "message": "Mở Prompt Manager"
+  },
+  "app_title": {
+    "message": "Prompt Manager cho NotebookLM"
+  },
+  "label_language": {
+    "message": "Ngôn ngữ"
+  },
+  "search_placeholder": {
+    "message": "Tìm kiếm prompt đã lưu..."
+  },
+  "tag_all": {
+    "message": "Tất cả"
+  },
+  "cat_research": {
+    "message": "Nghiên cứu"
+  },
+  "cat_chat": {
+    "message": "Trò chuyện"
+  },
+  "cat_audio": {
+    "message": "Tổng quan âm thanh"
+  },
+  "cat_video": {
+    "message": "Tổng quan video"
+  },
+  "cat_report": {
+    "message": "Báo cáo"
+  },
+  "cat_flashcard": {
+    "message": "Thẻ ghi nhớ"
+  },
+  "cat_quiz": {
+    "message": "Câu hỏi trắc nghiệm"
+  },
+  "cat_infographic": {
+    "message": "Infographic"
+  },
+  "cat_slide": {
+    "message": "Bản trình bày"
+  },
+  "cat_datatable": {
+    "message": "Bảng dữ liệu"
+  },
+  "setting_deep_research": {
+    "message": "Mặc định là Deep Research"
+  },
+  "setting_chat_goal": {
+    "message": "Mục tiêu/Phong cách trò chuyện"
+  },
+  "opt_chat_goal_default": {
+    "message": "Mặc định"
+  },
+  "opt_chat_goal_learning": {
+    "message": "Hướng dẫn học tập"
+  },
+  "opt_chat_goal_custom": {
+    "message": "Tùy chỉnh"
+  },
+  "setting_chat_length": {
+    "message": "Độ dài câu trả lời"
+  },
+  "opt_chat_length_default": {
+    "message": "Mặc định"
+  },
+  "opt_chat_length_longer": {
+    "message": "Dài hơn"
+  },
+  "opt_chat_length_shorter": {
+    "message": "Ngắn hơn"
+  },
+  "setting_audio_format": {
+    "message": "Định dạng mặc định"
+  },
+  "opt_detail": {
+    "message": "Tìm hiểu sâu"
+  },
+  "opt_summary": {
+    "message": "Ngắn gọn"
+  },
+  "opt_critique": {
+    "message": "Phê bình"
+  },
+  "opt_debate": {
+    "message": "Tranh luận"
+  },
+  "setting_audio_length": {
+    "message": "Độ dài"
+  },
+  "opt_audio_length_short": {
+    "message": "Ngắn"
+  },
+  "opt_audio_length_default": {
+    "message": "Tiêu chuẩn"
+  },
+  "setting_card_count": {
+    "message": "Số lượng thẻ"
+  },
+  "setting_question_count": {
+    "message": "Số lượng câu hỏi"
+  },
+  "setting_difficulty": {
+    "message": "Mức độ khó"
+  },
+  "setting_layout": {
+    "message": "Chọn hướng"
+  },
+  "setting_detail_level": {
+    "message": "Mức độ chi tiết"
+  },
+  "opt_fewer": {
+    "message": "Ít hơn"
+  },
+  "opt_standard": {
+    "message": "Tiêu chuẩn"
+  },
+  "opt_more": {
+    "message": "Nhiều hơn"
+  },
+  "opt_easy": {
+    "message": "Dễ"
+  },
+  "opt_medium": {
+    "message": "Trung bình"
+  },
+  "opt_hard": {
+    "message": "Khó"
+  },
+  "opt_landscape": {
+    "message": "Ngang"
+  },
+  "opt_portrait": {
+    "message": "Dọc"
+  },
+  "opt_square": {
+    "message": "Vuông"
+  },
+  "opt_concise": {
+    "message": "Súc tích"
+  },
+  "opt_detailed": {
+    "message": "Chi tiết"
+  },
+  "setting_slide_format": {
+    "message": "Định dạng"
+  },
+  "setting_slide_length": {
+    "message": "Độ dài"
+  },
+  "opt_slide_format_detailed": {
+    "message": "Chi tiết"
+  },
+  "opt_slide_format_presenter": {
+    "message": "Người thuyết trình"
+  },
+  "opt_slide_length_short": {
+    "message": "Ngắn"
+  },
+  "opt_slide_length_default": {
+    "message": "Tiêu chuẩn"
+  },
+  "setting_video_format": {
+    "message": "Định dạng"
+  },
+  "opt_video_format_explainer": {
+    "message": "Giải thích"
+  },
+  "opt_video_format_brief": {
+    "message": "Ngắn gọn"
+  },
+  "setting_video_style": {
+    "message": "Phong cách trực quan"
+  },
+  "opt_video_style_auto": {
+    "message": "Tự động chọn"
+  },
+  "opt_video_style_custom": {
+    "message": "Tùy chỉnh"
+  },
+  "opt_video_style_classic": {
+    "message": "Cổ điển"
+  },
+  "opt_video_style_whiteboard": {
+    "message": "Bảng trắng"
+  },
+  "opt_video_style_kawaii": {
+    "message": "Kawaii"
+  },
+  "opt_video_style_anime": {
+    "message": "Anime"
+  },
+  "opt_video_style_watercolor": {
+    "message": "Màu nước"
+  },
+  "opt_video_style_retro": {
+    "message": "In retro"
+  },
+  "opt_video_style_heritage": {
+    "message": "Di sản"
+  },
+  "opt_video_style_papercraft": {
+    "message": "Thủ công giấy"
+  },
+  "label_video_subcategory": {
+    "message": "Khu vực mục tiêu"
+  },
+  "opt_video_focus": {
+    "message": "Trọng tâm của host AI"
+  },
+  "opt_video_custom_style": {
+    "message": "Phong cách trực quan tùy chỉnh"
+  },
+  "label_chat_subcategory": {
+    "message": "Khu vực mục tiêu"
+  },
+  "opt_chat_main": {
+    "message": "Trò chuyện"
+  },
+  "opt_chat_style": {
+    "message": "Phong cách trò chuyện"
+  },
+  "no_prompts": {
+    "message": "Không có prompt nào"
+  },
+  "admin_add_title": {
+    "message": "Thêm prompt"
+  },
+  "admin_edit_title": {
+    "message": "Sửa prompt"
+  },
+  "label_category": {
+    "message": "Danh mục"
+  },
+  "placeholder_title": {
+    "message": "Tiêu đề (v.d. Phân tích)"
+  },
+  "placeholder_tags": {
+    "message": "Tag (Nhấn Enter)"
+  },
+  "placeholder_text": {
+    "message": "Nhập nội dung prompt..."
+  },
+  "label_favorite": {
+    "message": "⭐ Thêm vào yêu thích"
+  },
+  "btn_save": {
+    "message": "Lưu"
+  },
+  "btn_update": {
+    "message": "Cập nhật"
+  },
+  "btn_cancel": {
+    "message": "Hủy"
+  },
+  "err_title_empty": {
+    "message": "Vui lòng nhập tiêu đề."
+  },
+  "err_title_long": {
+    "message": "Tiêu đề không quá 20 ký tự."
+  },
+  "err_text_empty": {
+    "message": "Vui lòng nhập nội dung prompt."
+  },
+  "err_text_long": {
+    "message": "Nội dung không quá 10.000 ký tự."
+  },
+  "err_tag_count": {
+    "message": "Tối đa 10 tag."
+  },
+  "err_tag_length": {
+    "message": "Mỗi tag không quá 20 ký tự."
+  },
+  "err_cat_invalid": {
+    "message": "Danh mục không hợp lệ."
+  },
+  "err_cat_limit": {
+    "message": "Tối đa 20 prompt mỗi danh mục."
+  },
+  "confirm_save": {
+    "message": "Lưu prompt này?"
+  },
+  "confirm_update": {
+    "message": "Lưu thay đổi?"
+  },
+  "confirm_cancel": {
+    "message": "Hủy bỏ thay đổi?"
+  },
+  "confirm_delete_prefix": {
+    "message": "Xóa prompt \""
+  },
+  "confirm_delete_suffix": {
+    "message": "\"?"
+  },
+  "btn_confirm_yes": {
+    "message": "Có"
+  },
+  "btn_confirm_no": {
+    "message": "Không"
+  },
+  "btn_confirm_delete": {
+    "message": "Xóa"
+  },
+  "btn_confirm_back": {
+    "message": "Không"
+  },
+  "btn_confirm_cancel": {
+    "message": "Hủy"
+  },
+  "btn_confirm_ok": {
+    "message": "OK"
+  },
+  "tag_suffix": {
+    "message": " tag"
+  },
+  "reload_page": {
+    "message": "Vui lòng tải lại trang."
+  },
+  "data_management": {
+    "message": "Xuất / Nhập dữ liệu"
+  },
+  "btn_export": {
+    "message": "Xuất"
+  },
+  "btn_import": {
+    "message": "Nhập"
+  },
+  "import_success": {
+    "message": "Nhập dữ liệu thành công."
+  },
+  "err_import_invalid": {
+    "message": "Tệp JSON không hợp lệ."
+  }
+}
