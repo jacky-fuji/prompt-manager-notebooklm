@@ -1,0 +1,341 @@
+{
+  "appName": {
+    "message": "Prompt Manager untuk NotebookLM"
+  },
+  "appDesc": {
+    "message": "Pengelola prompt yang mudah digunakan untuk NotebookLM"
+  },
+  "appDefaultTitle": {
+    "message": "Buka Prompt Manager"
+  },
+  "app_title": {
+    "message": "Prompt Manager untuk NotebookLM"
+  },
+  "label_language": {
+    "message": "Bahasa"
+  },
+  "search_placeholder": {
+    "message": "Cari prompt tersimpan..."
+  },
+  "tag_all": {
+    "message": "Semua"
+  },
+  "cat_research": {
+    "message": "Riset"
+  },
+  "cat_chat": {
+    "message": "Obrolan"
+  },
+  "cat_audio": {
+    "message": "Ringkasan Audio"
+  },
+  "cat_video": {
+    "message": "Ringkasan Video"
+  },
+  "cat_report": {
+    "message": "Laporan"
+  },
+  "cat_flashcard": {
+    "message": "Kartu Belajar"
+  },
+  "cat_quiz": {
+    "message": "Kuis"
+  },
+  "cat_infographic": {
+    "message": "Infografis"
+  },
+  "cat_slide": {
+    "message": "Presentasi"
+  },
+  "cat_datatable": {
+    "message": "Tabel Data"
+  },
+  "setting_deep_research": {
+    "message": "Default ke Deep Research"
+  },
+  "setting_chat_goal": {
+    "message": "Tujuan/Gaya Obrolan"
+  },
+  "opt_chat_goal_default": {
+    "message": "Default"
+  },
+  "opt_chat_goal_learning": {
+    "message": "Panduan Belajar"
+  },
+  "opt_chat_goal_custom": {
+    "message": "Kustom"
+  },
+  "setting_chat_length": {
+    "message": "Panjang Jawaban"
+  },
+  "opt_chat_length_default": {
+    "message": "Default"
+  },
+  "opt_chat_length_longer": {
+    "message": "Lebih panjang"
+  },
+  "opt_chat_length_shorter": {
+    "message": "Lebih pendek"
+  },
+  "setting_audio_format": {
+    "message": "Format Default"
+  },
+  "opt_detail": {
+    "message": "Pembahasan Mendalam"
+  },
+  "opt_summary": {
+    "message": "Singkat"
+  },
+  "opt_critique": {
+    "message": "Kritik"
+  },
+  "opt_debate": {
+    "message": "Debat"
+  },
+  "setting_audio_length": {
+    "message": "Durasi"
+  },
+  "opt_audio_length_short": {
+    "message": "Singkat"
+  },
+  "opt_audio_length_default": {
+    "message": "Standar"
+  },
+  "setting_card_count": {
+    "message": "Jumlah Kartu"
+  },
+  "setting_question_count": {
+    "message": "Jumlah Pertanyaan"
+  },
+  "setting_difficulty": {
+    "message": "Tingkat Kesulitan"
+  },
+  "setting_layout": {
+    "message": "Pilih orientasi"
+  },
+  "setting_detail_level": {
+    "message": "Tingkat detail"
+  },
+  "opt_fewer": {
+    "message": "Lebih sedikit"
+  },
+  "opt_standard": {
+    "message": "Standar"
+  },
+  "opt_more": {
+    "message": "Lebih banyak"
+  },
+  "opt_easy": {
+    "message": "Mudah"
+  },
+  "opt_medium": {
+    "message": "Sedang"
+  },
+  "opt_hard": {
+    "message": "Sulit"
+  },
+  "opt_landscape": {
+    "message": "Lansekap"
+  },
+  "opt_portrait": {
+    "message": "Potret"
+  },
+  "opt_square": {
+    "message": "Kotak"
+  },
+  "opt_concise": {
+    "message": "Ringkas"
+  },
+  "opt_detailed": {
+    "message": "Detail"
+  },
+  "setting_slide_format": {
+    "message": "Format"
+  },
+  "setting_slide_length": {
+    "message": "Panjang"
+  },
+  "opt_slide_format_detailed": {
+    "message": "Detail"
+  },
+  "opt_slide_format_presenter": {
+    "message": "Presenter"
+  },
+  "opt_slide_length_short": {
+    "message": "Singkat"
+  },
+  "opt_slide_length_default": {
+    "message": "Standar"
+  },
+  "setting_video_format": {
+    "message": "Format"
+  },
+  "opt_video_format_explainer": {
+    "message": "Penjelasan"
+  },
+  "opt_video_format_brief": {
+    "message": "Singkat"
+  },
+  "setting_video_style": {
+    "message": "Gaya Visual"
+  },
+  "opt_video_style_auto": {
+    "message": "Pilih otomatis"
+  },
+  "opt_video_style_custom": {
+    "message": "Kustom"
+  },
+  "opt_video_style_classic": {
+    "message": "Klasik"
+  },
+  "opt_video_style_whiteboard": {
+    "message": "Papan Tulis"
+  },
+  "opt_video_style_kawaii": {
+    "message": "Kawaii"
+  },
+  "opt_video_style_anime": {
+    "message": "Anime"
+  },
+  "opt_video_style_watercolor": {
+    "message": "Cat Air"
+  },
+  "opt_video_style_retro": {
+    "message": "Cetak retro"
+  },
+  "opt_video_style_heritage": {
+    "message": "Warisan"
+  },
+  "opt_video_style_papercraft": {
+    "message": "Kerajinan kertas"
+  },
+  "label_video_subcategory": {
+    "message": "Area Target"
+  },
+  "opt_video_focus": {
+    "message": "Fokus host AI"
+  },
+  "opt_video_custom_style": {
+    "message": "Gaya Visual Kustom"
+  },
+  "label_chat_subcategory": {
+    "message": "Area Target"
+  },
+  "opt_chat_main": {
+    "message": "Obrolan"
+  },
+  "opt_chat_style": {
+    "message": "Gaya Obrolan"
+  },
+  "no_prompts": {
+    "message": "Tidak ada prompt"
+  },
+  "admin_add_title": {
+    "message": "Tambah prompt"
+  },
+  "admin_edit_title": {
+    "message": "Edit prompt"
+  },
+  "label_category": {
+    "message": "Kategori"
+  },
+  "placeholder_title": {
+    "message": "Judul (misal: Analisis)"
+  },
+  "placeholder_tags": {
+    "message": "Tag (Tekan Enter)"
+  },
+  "placeholder_text": {
+    "message": "Masukkan konten prompt..."
+  },
+  "label_favorite": {
+    "message": "⭐ Tambahkan ke favorit"
+  },
+  "btn_save": {
+    "message": "Simpan"
+  },
+  "btn_update": {
+    "message": "Perbarui"
+  },
+  "btn_cancel": {
+    "message": "Batal"
+  },
+  "err_title_empty": {
+    "message": "Harap masukkan judul."
+  },
+  "err_title_long": {
+    "message": "Judul maksimal 20 karakter."
+  },
+  "err_text_empty": {
+    "message": "Harap masukkan konten prompt."
+  },
+  "err_text_long": {
+    "message": "Konten maksimal 10.000 karakter."
+  },
+  "err_tag_count": {
+    "message": "Maksimal 10 tag."
+  },
+  "err_tag_length": {
+    "message": "Setiap tag maksimal 20 karakter."
+  },
+  "err_cat_invalid": {
+    "message": "Kategori tidak valid."
+  },
+  "err_cat_limit": {
+    "message": "Maksimal 20 prompt per kategori."
+  },
+  "confirm_save": {
+    "message": "Simpan prompt ini?"
+  },
+  "confirm_update": {
+    "message": "Simpan perubahan?"
+  },
+  "confirm_cancel": {
+    "message": "Batalkan perubahan?"
+  },
+  "confirm_delete_prefix": {
+    "message": "Hapus prompt \""
+  },
+  "confirm_delete_suffix": {
+    "message": "\"?"
+  },
+  "btn_confirm_yes": {
+    "message": "Ya"
+  },
+  "btn_confirm_no": {
+    "message": "Tidak"
+  },
+  "btn_confirm_delete": {
+    "message": "Hapus"
+  },
+  "btn_confirm_back": {
+    "message": "Tidak"
+  },
+  "btn_confirm_cancel": {
+    "message": "Batal"
+  },
+  "btn_confirm_ok": {
+    "message": "OK"
+  },
+  "tag_suffix": {
+    "message": " tag"
+  },
+  "reload_page": {
+    "message": "Harap muat ulang halaman."
+  },
+  "data_management": {
+    "message": "Ekspor / Impor Data"
+  },
+  "btn_export": {
+    "message": "Ekspor"
+  },
+  "btn_import": {
+    "message": "Impor"
+  },
+  "import_success": {
+    "message": "Berhasil diimpor."
+  },
+  "err_import_invalid": {
+    "message": "File JSON tidak valid."
+  }
+}
