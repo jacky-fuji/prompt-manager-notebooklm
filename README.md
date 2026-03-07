@@ -14,6 +14,9 @@
   <a href="LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-green?style=for-the-badge" alt="License: MIT">
   </a>
+  <a href="https://buymeacoffee.com/jackyfuji">
+    <img src="https://img.shields.io/badge/Support-Buy%20Me%20A%20Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black" alt="Support on Buy Me A Coffee">
+  </a>
 </p>
 
 ---

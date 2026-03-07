@@ -658,19 +658,43 @@ input:checked+.slider:before {
 }
 
 #version-display {
-    text-align: right;
     font-size: 11px;
     color: #94a3b8;
-    /* Tailwind slate-400 */
-    padding: 4px 12px 12px 12px;
+}
+
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    border-top: 1px solid #e2e8f0;
+    margin-top: auto;
+}
+
+.bmc-link {
+    font-size: 11px;
+    color: #475569;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background-color: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    transition: all 0.2s;
+}
+
+.bmc-link:hover {
+    background-color: #ffdd00;
+    color: #000000;
+    border-color: #ffdd00;
 }
 
 /* --- Data Management Section --- */
 #data-management-section {
-    padding: 16px 12px;
-    border-top: 1px solid #e2e8f0;
+    padding: 16px 12px 0 12px;
     margin-top: auto;
-    /* Push to bottom if flex */
 }
 
 #data-management-section h3 {

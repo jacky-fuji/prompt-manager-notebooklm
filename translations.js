@@ -113,6 +113,7 @@ const TRANSLATIONS = {
         'data-management': 'プロンプトのエクスポート/インポート',
         'btn-export': 'エクスポート',
         'btn-import': 'インポート',
+        'btn-bmc': '開発を支援する',
         'import-success': 'インポートしました。',
         'err-import-invalid': '無効なJSONファイルです。'
     },
@@ -227,6 +228,7 @@ const TRANSLATIONS = {
         'data-management': 'Prompt Export / Import',
         'btn-export': 'Export',
         'btn-import': 'Import',
+        'btn-bmc': 'Buy me a coffee',
         'import-success': 'Imported successfully.',
         'err-import-invalid': 'Invalid JSON file.'
     },
@@ -339,6 +341,7 @@ const TRANSLATIONS = {
         'data-management': 'Exportar / Importar prompts',
         'btn-export': 'Exportar',
         'btn-import': 'Importar',
+        'btn-bmc': 'Cómprame un café',
         'import-success': 'Importado con éxito.',
         'err-import-invalid': 'Archivo JSON no válido.'
     },
@@ -451,6 +454,7 @@ const TRANSLATIONS = {
         'data-management': '提示词导出/导入',
         'btn-export': '导出',
         'btn-import': '导入',
+        'btn-bmc': '請我喝杯咖啡',
         'import-success': '导入成功。',
         'err-import-invalid': '无效的 JSON 文件。'
     },
@@ -563,6 +567,7 @@ const TRANSLATIONS = {
         'data-management': '프롬프트 내보내기/가져오기',
         'btn-export': '내보내기',
         'btn-import': '가져오기',
+        'btn-bmc': '커피 한 잔 사주기',
         'import-success': '성공적으로 가져왔습니다.',
         'err-import-invalid': '잘못된 JSON 파일입니다.'
     },
@@ -675,6 +680,7 @@ const TRANSLATIONS = {
         'data-management': 'Exporter / Importer',
         'btn-export': 'Exporter',
         'btn-import': 'Importer',
+        'btn-bmc': 'Offrez-moi un café',
         'import-success': 'Importation réussie.',
         'err-import-invalid': 'Fichier JSON invalide.'
     },
@@ -787,6 +793,7 @@ const TRANSLATIONS = {
         'data-management': 'Exportieren / Importieren',
         'btn-export': 'Exportieren',
         'btn-import': 'Importieren',
+        'btn-bmc': 'Kauf mir einen Kaffee',
         'import-success': 'Erfolgreich importiert.',
         'err-import-invalid': 'Ungültige JSON-Datei.'
     },
@@ -899,6 +906,7 @@ const TRANSLATIONS = {
         'data-management': 'Exportar / Importar',
         'btn-export': 'Exportar',
         'btn-import': 'Importar',
+        'btn-bmc': 'Pague-me um café',
         'import-success': 'Importado com sucesso.',
         'err-import-invalid': 'Arquivo JSON inválido.'
     },
@@ -1011,6 +1019,7 @@ const TRANSLATIONS = {
         'data-management': 'Esporta / Importa',
         'btn-export': 'Esporta',
         'btn-import': 'Importa',
+        'btn-bmc': 'Offrimi un caffè',
         'import-success': 'Importato con successo.',
         'err-import-invalid': 'File JSON non valido.'
     },
@@ -1123,6 +1132,7 @@ const TRANSLATIONS = {
         'data-management': 'Экспорт / Импорт',
         'btn-export': 'Экспорт',
         'btn-import': 'Импорт',
+        'btn-bmc': 'Купить мне кофе',
         'import-success': 'Успешно.',
         'err-import-invalid': 'Недопустимый JSON.'
     },
@@ -1235,6 +1245,7 @@ const TRANSLATIONS = {
         'data-management': '提示詞导出/导入',
         'btn-export': '导出',
         'btn-import': '导入',
+        'btn-bmc': '請我喝杯咖啡',
         'import-success': '导入成功。',
         'err-import-invalid': '无效的 JSON 文件।'
     },
@@ -1347,6 +1358,7 @@ const TRANSLATIONS = {
         'data-management': 'Xuất / Nhập dữ liệu',
         'btn-export': 'Xuất',
         'btn-import': 'Nhập',
+        'btn-bmc': 'Mua cho tôi một ly cà phê',
         'import-success': 'Nhập dữ liệu thành công.',
         'err-import-invalid': 'Tệp JSON không hợp lệ.'
     },
@@ -1459,6 +1471,7 @@ const TRANSLATIONS = {
         'data-management': 'Ekspor / Impor Data',
         'btn-export': 'Ekspor',
         'btn-import': 'Impor',
+        'btn-bmc': 'Belikan saya kopi',
         'import-success': 'Berhasil diimpor.',
         'err-import-invalid': 'File JSON tidak valid.'
     },
@@ -1571,6 +1584,7 @@ const TRANSLATIONS = {
         'data-management': 'डेटा निर्यात / आयात',
         'btn-export': 'निर्यात',
         'btn-import': 'आयात',
+        'btn-bmc': 'मेरे लिए एक कॉफी खरीदें',
         'import-success': 'सफलतापूर्वक आयात किया गया।',
         'err-import-invalid': 'अमान्य JSON फ़ाइल।'
     }
