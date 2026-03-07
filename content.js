@@ -132,8 +132,8 @@
 
     // Slide deck setting mapping
     const SLIDE_FORMAT_MAP = {
-        '詳細': ['詳細なスライド', 'Detailed Deck', '详细演示文稿', '詳細', 'विस्तृत'],
-        'プレゼンター用': ['プレゼンターのスライド', 'Presenter Slides', '演示用幻灯片', '演講者', 'प्रस्तुतकर्ता']
+        '詳細': ['詳細なスライド', 'Detailed Deck', '详细演示文稿', '詳細', 'विस्तृत', 'पूरी जानकारी देने वाला डेक'],
+        'プレゼンター用': ['プレゼンターのスライド', 'Presenter Slides', '演示用幻灯片', '演講者', 'प्रस्तुतकर्ता', 'प्रज़ेंटर स्लाइड']
     };
     const SLIDE_LENGTH_MAP = {
         '短め': ['短め', 'Short', '短', '簡短', 'छोटा'],
@@ -141,14 +141,14 @@
     };
     // Chat setting mapping
     const CHAT_GOAL_MAP = {
-        'Default': ['デフォルト', 'Default', '默认', '預設'],
-        'Learning Guide': ['学習ガイド', 'Learning Guide', '学习指南', '學習指南'],
-        'Custom': ['カスタム', 'Custom', '自定义', '自訂']
+        'Default': ['デフォルト', 'Default', '默认', '預設', 'डिफ़ॉल्ट'],
+        'Learning Guide': ['学習ガイド', 'Learning Guide', '学习指南', '學習指南', 'लर्निंग गाइड'],
+        'Custom': ['カスタム', 'Custom', '自定义', '自訂', 'पसंद के हिसाब से']
     };
     const CHAT_LENGTH_MAP = {
-        'Default': ['デフォルト', 'Default', '默认', '預設'],
-        'Longer': ['長め', 'Longer', '较长', '較長'],
-        'Shorter': ['短め', 'Shorter', '较短', '較短']
+        'Default': ['デフォルト', 'Default', '默认', '預設', 'डिफ़ॉल्ट'],
+        'Longer': ['長め', 'Longer', '较长', '較長', 'लंबा'],
+        'Shorter': ['短め', 'Shorter', '较短', '較短', 'छोटा']
     };
 
     // Inject basic styles
@@ -735,7 +735,7 @@
                             const labelText = label.innerText.trim();
 
                             // Format (mat-radio-button handling)
-                            if (slideFormat && (labelText.includes('形式') || labelText.includes('Format') || labelText.includes('格式') || labelText.includes('प्रारूप') || labelText.includes('फ़ॉर्मैट'))) {
+                            if (slideFormat && (labelText.includes('形式') || labelText.includes('Format') || labelText.includes('格式') || labelText.includes('प्रारूप') || labelText.includes('फ़ॉर्मैट') || labelText.includes('फ़ॉर्मैट'))) {
                                 const radioButtons = wrapper.querySelectorAll('mat-radio-button');
                                 const targetTexts = SLIDE_FORMAT_MAP[slideFormat] || [slideFormat];
                                 for (const radio of radioButtons) {
@@ -840,8 +840,12 @@
                 if (chatGoal || chatLength) {
                     const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.CHAT);
                     const chatDialog = Array.from(dialogs).find(d => {
+                        // Language-agnostic icon check
+                        const icon = d.querySelector('mat-icon');
+                        if (icon && icon.textContent.trim() === 'tune') return true;
+
                         const text = d.innerText || '';
-                        return text.includes('チャットを設定') || text.includes('Configure Chat') || text.includes('配置对话') || text.includes('設定對話');
+                        return text.includes('チャットを設定') || text.includes('Configure Chat') || text.includes('配置对话') || text.includes('設定對話') || text.includes('चैट की सेटिंग कॉन्फ़िगर करें');
                     });
 
                     if (chatDialog) {
@@ -855,7 +859,7 @@
                                 const title = wrapper.querySelector('.section-title');
                                 if (!title) continue;
                                 const titleText = title.innerText.trim();
-                                if (titleText.includes('目的') || titleText.includes('conversational goal') || titleText.includes('定义对话目标') || titleText.includes('對話目標')) {
+                                if (titleText.includes('目的') || titleText.includes('conversational goal') || titleText.includes('定义对话目标') || titleText.includes('對話目標') || titleText.includes('बातचीत का लक्ष्य')) {
                                     const buttons = wrapper.querySelectorAll('mat-button-toggle button');
                                     const targetTexts = CHAT_GOAL_MAP[chatGoal] || [chatGoal];
                                     for (const btn of buttons) {
@@ -881,7 +885,7 @@
                                 const title = wrapper.querySelector('.section-title');
                                 if (!title) continue;
                                 const titleText = title.innerText.trim();
-                                if (titleText.includes('長さ') || titleText.includes('response length') || titleText.includes('选择回答长度') || titleText.includes('回答長度')) {
+                                if (titleText.includes('長さ') || titleText.includes('response length') || titleText.includes('选择回答长度') || titleText.includes('回答長度') || titleText.includes('लंबाई')) {
                                     const buttons = wrapper.querySelectorAll('mat-button-toggle button');
                                     const targetTexts = CHAT_LENGTH_MAP[chatLength] || [chatLength];
                                     for (const btn of buttons) {

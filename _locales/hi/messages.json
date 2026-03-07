@@ -147,7 +147,7 @@
     "message": "संक्षिप्त"
   },
   "opt_detailed": {
-    "message": "विस्तृत"
+    "message": "पूरी जानकारी देने वाला डेक"
   },
   "setting_slide_format": {
     "message": "प्रारूप"
@@ -159,7 +159,7 @@
     "message": "विस्तृत"
   },
   "opt_slide_format_presenter": {
-    "message": "प्रस्तुतकर्ता"
+    "message": "प्रज़ेंटर स्लाइड"
   },
   "opt_slide_length_short": {
     "message": "छोटा"
