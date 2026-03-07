@@ -82,10 +82,10 @@
 
     // Report format mapping
     const REPORT_FORMAT_MAP = {
-        '独自に作成': ['独自に作成', 'Create Your Own'],
-        '概要説明資料': ['概要説明資料', 'Briefing Doc'],
-        '学習ガイド': ['学習ガイド', 'Study Guide'],
-        'ブログ投稿': ['ブログ投稿', 'Blog Post']
+        '独自に作成': ['独自に作成', 'Create Your Own', '自制格式'],
+        '概要説明資料': ['概要説明資料', 'Briefing Doc', '简报文档'],
+        '学習ガイド': ['学習ガイド', 'Study Guide', '学习指南'],
+        'ブログ投稿': ['ブログ投稿', 'Blog Post', '博文']
     };
     // Video overview format mapping
     const VIDEO_FORMAT_MAP = {
@@ -108,13 +108,13 @@
 
     // Flashcard setting mapping
     const FLASHCARD_COUNT_MAP = {
-        '少なめ': ['少なめ', 'Fewer', '较少'],
-        '標準': ['標準', 'Standard', '标准'],
-        '多め': ['多め', 'More', '较多']
+        '少なめ': ['少なめ', 'Fewer', '更少'],
+        '標準': ['標準', '标准（默认）', 'Standard'],
+        '多め': ['多め', 'More', '更多']
     };
     const FLASHCARD_DIFFICULTY_MAP = {
         '簡単': ['簡単', 'Easy', '简单'],
-        '標準': ['標準', 'Medium', '中等'],
+        '標準': ['標準', '中等（默认）', 'Medium'],
         '難しい': ['難しい', 'Hard', '困难']
     };
 
@@ -122,18 +122,18 @@
     const INFOGRAPHIC_LAYOUT_MAP = {
         '横向き': ['横向き', 'Landscape', '横向'],
         '縦向き': ['縦向き', 'Portrait', '纵向'],
-        '正方形': ['正方形', 'Square', '正方形']
+        '正方形': ['正方形', 'Square', '方形']
     };
     const INFOGRAPHIC_DETAIL_LEVEL_MAP = {
-        '簡潔': ['簡潔', 'Concise', '简明'],
+        '簡潔': ['簡潔', 'Concise', '简短'],
         '標準': ['標準', 'Standard', '标准'],
         '詳細': ['詳細', 'Detailed', '详细']
     };
 
     // Slide deck setting mapping
     const SLIDE_FORMAT_MAP = {
-        '詳細': ['詳細なスライド', 'Detailed Deck', '详细'],
-        'プレゼンター用': ['プレゼンターのスライド', 'Presenter Slides', '演讲者']
+        '詳細': ['詳細なスライド', 'Detailed Deck', '详细演示文稿'],
+        'プレゼンター用': ['プレゼンターのスライド', 'Presenter Slides', '演示用幻灯片']
     };
     const SLIDE_LENGTH_MAP = {
         '短め': ['短め', 'Short', '短'],
@@ -453,6 +453,7 @@
                     // Find unprocessed dialogs
                     const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.AUDIO);
                     const audioDialog = Array.from(dialogs).find(d => {
+                        if (d.hasAttribute('data-auto-formatted-audio')) return false;
                         const text = d.innerText || '';
                         return text.includes('音声解説をカスタマイズ') || text.includes('Customize Audio Overview') || text.includes('自定义音频概览');
                     });
@@ -510,7 +511,7 @@
                         }
 
                         if (formatDone && lengthDone) {
-                            audioDialog.setAttribute('data-auto-formatted', 'true');
+                            audioDialog.setAttribute('data-auto-formatted-audio', 'true');
                         }
                     }
                 }
@@ -552,7 +553,7 @@
                             }
 
                             // Level of Difficulty
-                            if (quizDifficulty && (headerText.includes('難易度レベル') || headerText.includes('Level of Difficulty') || headerText.includes('难度级别'))) {
+                            if (flashcardDifficulty && (headerText.includes('難易度レベル') || headerText.includes('Level of Difficulty') || headerText.includes('难度等级'))) {
                                 const buttons = col.querySelectorAll('button');
                                 const targetTexts = FLASHCARD_DIFFICULTY_MAP[flashcardDifficulty] || [flashcardDifficulty];
                                 for (const btn of buttons) {
@@ -611,7 +612,7 @@
                             }
 
                             // Level of Difficulty
-                            if (quizDifficulty && (headerText.includes('難易度レベル') || headerText.includes('Level of Difficulty'))) {
+                            if (quizDifficulty && (headerText.includes('難易度レベル') || headerText.includes('Level of Difficulty') || headerText.includes('难度等级'))) {
                                 const buttons = col.querySelectorAll('button');
                                 const targetTexts = FLASHCARD_DIFFICULTY_MAP[quizDifficulty] || [quizDifficulty];
                                 for (const btn of buttons) {
@@ -653,7 +654,7 @@
                             const labelText = label.innerText.trim();
 
                             // Layout
-                            if (infographicLayout && (labelText.includes('レイアウト') || labelText.includes('Choose orientation') || labelText.includes('布局'))) {
+                            if (infographicLayout && (labelText.includes('レイアウト') || labelText.includes('Choose orientation') || labelText.includes('选择屏幕方向'))) {
                                 const buttons = wrapper.querySelectorAll('mat-button-toggle button');
                                 const targetTexts = INFOGRAPHIC_LAYOUT_MAP[infographicLayout] || [infographicLayout];
                                 for (const btn of buttons) {
