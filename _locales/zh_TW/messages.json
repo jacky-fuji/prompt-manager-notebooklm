@@ -27,10 +27,10 @@
     "message": "對話"
   },
   "cat_audio": {
-    "message": "音訊概覽"
+    "message": "語音摘要"
   },
   "cat_video": {
-    "message": "自訂影片概覽"
+    "message": "影片摘要"
   },
   "cat_report": {
     "message": "報告"
@@ -81,7 +81,7 @@
     "message": "格式"
   },
   "opt_detail": {
-    "message": "詳細"
+    "message": "深入探索"
   },
   "opt_summary": {
     "message": "摘要"
@@ -129,7 +129,7 @@
     "message": "簡單"
   },
   "opt_medium": {
-    "message": "中等"
+    "message": "中等 (預設)"
   },
   "opt_hard": {
     "message": "困難"
@@ -171,7 +171,7 @@
     "message": "格式"
   },
   "opt_video_format_explainer": {
-    "message": "解説"
+    "message": "說明影片"
   },
   "opt_video_format_brief": {
     "message": "簡短"
@@ -195,16 +195,16 @@
     "message": "可愛"
   },
   "opt_video_style_anime": {
-    "message": "動漫"
+    "message": "動漫風"
   },
   "opt_video_style_watercolor": {
     "message": "水彩"
   },
   "opt_video_style_retro": {
-    "message": "復古"
+    "message": "復古印刷"
   },
   "opt_video_style_heritage": {
-    "message": "傳統"
+    "message": "古典"
   },
   "opt_video_style_papercraft": {
     "message": "紙藝"
