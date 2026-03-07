@@ -455,7 +455,7 @@
                     const audioDialog = Array.from(dialogs).find(d => {
                         if (d.hasAttribute('data-auto-formatted-audio')) return false;
                         const text = d.innerText || '';
-                        return text.includes('音声解説をカスタマイズ') || text.includes('Customize Audio Overview') || text.includes('自定义音频概览');
+                        return text.includes('音声解説をカスタマイズ') || text.includes('Customize Audio Overview') || text.includes('自定义音频概览') || text.includes('自訂音訊概覽');
                     });
 
                     if (audioDialog) {
@@ -491,7 +491,7 @@
                                 const label = wrapper.querySelector('.control-label');
                                 if (!label) return;
                                 const labelText = label.innerText.trim();
-                                if (labelText.includes('長さ') || labelText.includes('Length') || labelText.includes('时长')) {
+                                if (labelText.includes('長さ') || labelText.includes('Length') || labelText.includes('时长') || labelText.includes('長度')) {
                                     const buttons = wrapper.querySelectorAll('mat-button-toggle button');
                                     const targetTexts = AUDIO_LENGTH_MAP[audioLength] || [audioLength];
                                     for (const btn of buttons) {
@@ -522,7 +522,7 @@
                     const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.FLASHCARD);
                     const flashDialog = Array.from(dialogs).find(d => {
                         const text = d.innerText || '';
-                        return text.includes('フラッシュカード') || text.includes('Flashcards') || text.includes('抽认卡');
+                        return text.includes('フラッシュカード') || text.includes('Flashcards') || text.includes('抽认卡') || text.includes('抽認卡');
                     });
 
                     if (flashDialog) {
@@ -536,7 +536,7 @@
                             const headerText = h2.innerText.trim();
 
                             // Number of Cards
-                            if (flashcardCardCount && (headerText.includes('カードの枚数') || headerText.includes('Number of Cards') || headerText.includes('卡片数量'))) {
+                            if (flashcardCardCount && (headerText.includes('カードの枚数') || headerText.includes('Number of Cards') || headerText.includes('卡片数量') || headerText.includes('卡片數量'))) {
                                 const buttons = col.querySelectorAll('button');
                                 const targetTexts = FLASHCARD_COUNT_MAP[flashcardCardCount] || [flashcardCardCount];
                                 for (const btn of buttons) {
@@ -581,7 +581,7 @@
                     const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.QUIZ);
                     const quizDialog = Array.from(dialogs).find(d => {
                         const text = d.innerText || '';
-                        return text.includes('クイズ') || text.includes('Quiz') || text.includes('测验');
+                        return text.includes('クイズ') || text.includes('Quiz') || text.includes('测验') || text.includes('測驗');
                     });
 
                     if (quizDialog) {
@@ -595,7 +595,7 @@
                             const headerText = h2.innerText.trim();
 
                             // Number of Questions
-                            if (quizQuestionCount && (headerText.includes('質問の数') || headerText.includes('Number of Questions') || headerText.includes('问题数量'))) {
+                            if (quizQuestionCount && (headerText.includes('質問の数') || headerText.includes('Number of Questions') || headerText.includes('问题数量') || headerText.includes('問題數量'))) {
                                 const buttons = col.querySelectorAll('button');
                                 const targetTexts = FLASHCARD_COUNT_MAP[quizQuestionCount] || [quizQuestionCount];
                                 for (const btn of buttons) {
@@ -640,7 +640,7 @@
                     const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.INFOGRAPHIC);
                     const infoDialog = Array.from(dialogs).find(d => {
                         const text = d.innerText || '';
-                        return text.includes('インフォグラフィック') || text.includes('Infographic') || text.includes('信息图');
+                        return text.includes('インフォグラフィック') || text.includes('Infographic') || text.includes('信息图') || text.includes('訊息圖');
                     });
 
                     if (infoDialog) {
@@ -702,7 +702,7 @@
                     const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.SLIDE);
                     const slideDialog = Array.from(dialogs).find(d => {
                         const text = (d.innerText || '').toLowerCase();
-                        return text.includes('スライド') || text.includes('deck') || text.includes('幻灯片');
+                        return text.includes('スライド') || text.includes('deck') || text.includes('幻灯片') || text.includes('投影片');
                     });
 
                     if (slideDialog) {
@@ -768,7 +768,7 @@
                     const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.VIDEO);
                     const videoDialog = Array.from(dialogs).find(d => {
                         const text = d.innerText || '';
-                        return text.includes('動画解説をカスタマイズ') || text.includes('Customize Video Overview') || text.includes('自定义视频概览');
+                        return text.includes('動画解説をカスタマイズ') || text.includes('Customize Video Overview') || text.includes('自定义视频概览') || text.includes('自訂影片概覽');
                     });
 
                     if (videoDialog) {
@@ -822,7 +822,7 @@
                     const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.CHAT);
                     const chatDialog = Array.from(dialogs).find(d => {
                         const text = d.innerText || '';
-                        return text.includes('チャットを設定') || text.includes('Configure Chat') || text.includes('配置对话');
+                        return text.includes('チャットを設定') || text.includes('Configure Chat') || text.includes('配置对话') || text.includes('設定對話');
                     });
 
                     if (chatDialog) {
@@ -836,7 +836,7 @@
                                 const title = wrapper.querySelector('.section-title');
                                 if (!title) continue;
                                 const titleText = title.innerText.trim();
-                                if (titleText.includes('目的') || titleText.includes('conversational goal') || titleText.includes('定义对话目标')) {
+                                if (titleText.includes('目的') || titleText.includes('conversational goal') || titleText.includes('定义对话目标') || titleText.includes('對話目標')) {
                                     const buttons = wrapper.querySelectorAll('mat-button-toggle button');
                                     const targetTexts = CHAT_GOAL_MAP[chatGoal] || [chatGoal];
                                     for (const btn of buttons) {
@@ -862,7 +862,7 @@
                                 const title = wrapper.querySelector('.section-title');
                                 if (!title) continue;
                                 const titleText = title.innerText.trim();
-                                if (titleText.includes('長さ') || titleText.includes('response length') || titleText.includes('选择回答长度')) {
+                                if (titleText.includes('長さ') || titleText.includes('response length') || titleText.includes('选择回答长度') || titleText.includes('回答長度')) {
                                     const buttons = wrapper.querySelectorAll('mat-button-toggle button');
                                     const targetTexts = CHAT_LENGTH_MAP[chatLength] || [chatLength];
                                     for (const btn of buttons) {
@@ -901,21 +901,21 @@
                     let subCategory = null;
 
                     // Match the target label of each category strictly by content (text)
-                    if (text.includes('作成したいレポートの内容を記入してください') || text.includes('Describe the report you want to create')) {
+                    if (text.includes('作成したいレポートの内容を記入してください') || text.includes('Describe the report you want to create') || text.includes('請說明您要建立的報告內容')) {
                         category = 'report';
                     } else if (text.includes('希望するトピック') || text.includes('What should the topic be?')) {
                         // Distinguish between Quiz and Flashcard from the overall dialog title, etc.
                         const dialog = label.closest('mat-dialog-container') || label.closest('configurable-form-dialog') || document.body;
                         const dialogText = (dialog.innerText || '').toLowerCase();
-                        if (dialogText.includes('クイズ') || dialogText.includes('quiz')) {
+                        if (dialogText.includes('クイズ') || dialogText.includes('quiz') || dialogText.includes('測驗')) {
                             category = 'quiz';
-                        } else if (dialogText.includes('フラッシュカード') || dialogText.includes('flashcards')) {
+                        } else if (dialogText.includes('フラッシュカード') || dialogText.includes('flashcards') || dialogText.includes('抽認卡')) {
                             category = 'flashcard';
                         }
-                    } else if (text.includes('インフォグラフィックについて説明してください') || text.includes('Describe the infographic you want to create')) {
+                    } else if (text.includes('インフォグラフィックについて説明してください') || text.includes('Describe the infographic you want to create') || text.includes('請描述您要建立的訊息圖')) {
                         // Consider differences like 'Describe...' phrasing in Japanese vs English
                         category = 'infographic';
-                    } else if (text.includes('スライドについて説明してください') || text.includes('Describe the slide deck you want to create')) {
+                    } else if (text.includes('スライドについて説明してください') || text.includes('Describe the slide deck you want to create') || text.includes('請描述您要建立的投影片')) {
                         category = 'slide';
                     } else if ((text.includes('データテーブル') && text.includes('説明')) ||
                         text.includes('Describe the data table you want to create') ||
@@ -929,7 +929,8 @@
                     } else if (text.includes('カスタム ビジュアル スタイルを説明してください') ||
                         text.includes('独自のビジュアル スタイルを説明してください') ||
                         text.includes('独自のビジュアルスタイルを説明してください') ||
-                        text.includes('Describe a custom visual style')) {
+                        text.includes('Describe a custom visual style') ||
+                        text.includes('請描述自訂視覺風格')) {
                         category = 'video';
                         subCategory = 'style';
                     }
