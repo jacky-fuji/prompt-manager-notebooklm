@@ -87,23 +87,23 @@
         '学習ガイド': ['学習ガイド', 'Study Guide'],
         'ブログ投稿': ['ブログ投稿', 'Blog Post']
     };
-    // Video overview format mapping (English labels are used for both JP/EN UI)
+    // Video overview format mapping
     const VIDEO_FORMAT_MAP = {
-        'Explainer': ['説明動画', 'Explainer'],
-        'Brief': ['概要', 'Brief']
+        'Explainer': ['説明動画', 'Explainer', '说明视频'],
+        'Brief': ['概要', 'Brief', '摘要']
     };
-    // Visual style mapping (JP labels for Japanese UI, EN for English)
+    // Visual style mapping (JP / EN / zh_CN labels)
     const VIDEO_STYLE_MAP = {
-        'Auto-select': ['Auto-select', '自動選択'],
-        'Custom': ['Custom', 'カスタム'],
-        'Classic': ['Classic', 'クラシック'],
-        'Whiteboard': ['Whiteboard', 'ホワイトボード'],
-        'Kawaii': ['Kawaii', 'カワイイ'],
-        'Anime': ['Anime', 'アニメ'],
-        'Watercolor': ['Watercolor', '水彩画'],
-        'Retro print': ['Retro print', 'レトロスタイル'],
-        'Heritage': ['Heritage', '遺産'],
-        'Paper-craft': ['Paper-craft', 'ペーパークラフト']
+        'Auto-select': ['Auto-select', '自動選択', '自动选择'],
+        'Custom': ['Custom', 'カスタム', '自定义'],
+        'Classic': ['Classic', 'クラシック', '经典'],
+        'Whiteboard': ['Whiteboard', 'ホワイトボード', '白板'],
+        'Kawaii': ['Kawaii', 'カワイイ', '可爱'],
+        'Anime': ['Anime', 'アニメ', '动漫'],
+        'Watercolor': ['Watercolor', '水彩画', '水彩'],
+        'Retro print': ['Retro print', 'レトロスタイル', '复古印刷版'],
+        'Heritage': ['Heritage', '遺産', '传统'],
+        'Paper-craft': ['Paper-craft', 'ペーパークラフト', '纸艺']
     };
 
     // Flashcard setting mapping
@@ -767,7 +767,7 @@
                     const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.VIDEO);
                     const videoDialog = Array.from(dialogs).find(d => {
                         const text = d.innerText || '';
-                        return text.includes('動画解説をカスタマイズ') || text.includes('Customize Video Overview');
+                        return text.includes('動画解説をカスタマイズ') || text.includes('Customize Video Overview') || text.includes('自定义视频概览');
                     });
 
                     if (videoDialog) {
