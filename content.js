@@ -70,14 +70,14 @@
 
     // Audio commentary format mapping (internal value -> display label)
     const AUDIO_FORMAT_MAP = {
-        '詳細': ['詳細', 'Deep Dive', '深入探究', '深入探索'],
-        '概要': ['概要', 'Brief', '摘要'],
+        '詳細': ['詳細', '詳細', 'Deep Dive', '深入探究', '深入探索'],
+        '概要': ['概要', 'Brief', '摘要', '概覽'],
         '評論': ['評論', 'Critique', '评论', '評論'],
-        '議論': ['議論', 'Debate', '辩论', '辩論']
+        '議論': ['議論', 'Debate', '辩论', '辯論']
     };
     const AUDIO_LENGTH_MAP = {
-        '短め': ['短め', 'Short', '短'],
-        '標準': ['デフォルト', 'Default', '默认', '預設']
+        '短め': ['短め', 'Short', '短', '簡短'],
+        '標準': ['デフォルト', 'Default', '默认', '預設', '標準']
     };
 
     // Report format mapping
@@ -89,66 +89,66 @@
     };
     // Video overview format mapping
     const VIDEO_FORMAT_MAP = {
-        'Explainer': ['説明動画', 'Explainer', '说明视频', '説明影片'],
-        'Brief': ['概要', 'Brief', '摘要']
+        'Explainer': ['説明動画', 'Explainer', '说明视频', '說明影片', '解説'],
+        'Brief': ['概要', 'Brief', '摘要', '簡短']
     };
     // Visual style mapping (JP / EN / zh_CN labels)
     const VIDEO_STYLE_MAP = {
-        'Auto-select': ['Auto-select', '自動選択', '自动选择', '自動選取'],
+        'Auto-select': ['Auto-select', '自動選択', '自动选择', '自動選取', '自動'],
         'Custom': ['Custom', 'カスタム', '自定义', '自訂'],
         'Classic': ['Classic', 'クラシック', '经典', '經典'],
         'Whiteboard': ['Whiteboard', 'ホワイトボード', '白板'],
         'Kawaii': ['Kawaii', 'カワイイ', '可爱', '可愛'],
-        'Anime': ['Anime', 'アニメ', '动漫', '動漫風'],
+        'Anime': ['Anime', 'アニメ', '动漫', '動漫'],
         'Watercolor': ['Watercolor', '水彩画', '水彩'],
-        'Retro print': ['Retro print', 'レトロスタイル', '复古印刷版', '復古印刷'],
-        'Heritage': ['Heritage', '遺産', '传统', '古典'],
-        'Paper-craft': ['Paper-craft', 'ペーパークラフト', '纸艺', '積木']
+        'Retro print': ['Retro print', 'レトロスタイル', '复古印刷版', '復古印刷', '復古'],
+        'Heritage': ['Heritage', '遺産', '传统', '傳統', '古典'],
+        'Paper-craft': ['Paper-craft', 'ペーパークラフト', '纸艺', '紙藝', '積木']
     };
 
     // Flashcard setting mapping
     const FLASHCARD_COUNT_MAP = {
         '少なめ': ['少なめ', 'Fewer', '更少', '較少'],
-        '標準': ['標準', '标准（默认）', '標準 (預設)', 'Standard'],
+        '標準': ['標準', '标准', '標準', 'Standard'],
         '多め': ['多め', 'More', '更多', '較多']
     };
     const FLASHCARD_DIFFICULTY_MAP = {
-        '簡単': ['簡単', 'Easy', '简单'],
-        '標準': ['標準', '中等（默认）', '中等 (預設)', 'Medium'],
+        '簡単': ['簡単', 'Easy', '简单', '簡單'],
+        '標準': ['標準', '中等', '中等', 'Medium'],
         '難しい': ['難しい', 'Hard', '困难', '困難']
     };
 
     // Infographic setting mapping
     const INFOGRAPHIC_LAYOUT_MAP = {
         '横向き': ['横向き', 'Landscape', '横向', '橫向'],
-        '縦向き': ['縦向き', 'Portrait', '纵向', '直向'],
-        '正方形': ['正方形', 'Square', '方形']
+        '縦向き': ['縦向き', 'Portrait', '纵向', '縱向'],
+        '正方形': ['正方形', 'Square', '方形', '正方形']
     };
     const INFOGRAPHIC_DETAIL_LEVEL_MAP = {
-        '簡潔': ['簡潔', 'Concise', '简短', '精簡'],
+        '簡潔': ['簡潔', 'Concise', '简短', '簡明'],
         '標準': ['標準', 'Standard', '标准', '標準'],
-        '詳細': ['詳細', 'Detailed', '详细']
+        '詳細': ['詳細', 'Detailed', '详细', '詳細']
     };
 
     // Slide deck setting mapping
     const SLIDE_FORMAT_MAP = {
-        '詳細': ['詳細なスライド', 'Detailed Deck', '详细演示文稿', '詳細簡報'],
-        'プレゼンター用': ['プレゼンターのスライド', 'Presenter Slides', '演示用幻灯片', '簡報投影片']
+        '詳細': ['詳細なスライド', 'Detailed Deck', '详细演示文稿', '詳細'],
+        'プレゼンター用': ['プレゼンターのスライド', 'Presenter Slides', '演示用幻灯片', '演講者']
     };
     const SLIDE_LENGTH_MAP = {
-        '短め': ['短め', 'Short', '短'],
-        'デフォルト': ['デフォルト', 'Default', '默认']
+        '短め': ['短め', 'Short', '短', '簡短'],
+        'デフォルト': ['デフォルト', 'Default', '默认', '預設']
     };
     // Chat setting mapping
     const CHAT_GOAL_MAP = {
-        'Default': ['デフォルト', 'Default', '默认'],
-        'Learning Guide': ['学習ガイド', 'Learning Guide', '学习指南'],
-        'Custom': ['カスタム', 'Custom', '自定义']
+        'Default': ['デフォルト', 'Default', '默认', '預設'],
+        'Learning Guide': ['学習ガイド', 'Learning Guide', '学习指南', '學習指南'],
+        'Custom': ['カスタム', 'Custom', '自定义', '自訂']
     };
     const CHAT_LENGTH_MAP = {
-        'Default': ['デフォルト', 'Default', '默认'],
-        'Longer': ['長め', 'Longer', '较长'],
-        'Shorter': ['短め', 'Shorter', '较短']
+        'Default': ['デフォルト', 'Default', '默认', '預設'],
+        'Longer': ['長め', 'Longer', '较长', '較長'],
+        'Shorter': ['短め', 'Shorter', '较短', '較短']
     };
 
     // Inject basic styles
