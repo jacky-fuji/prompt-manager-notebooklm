@@ -821,7 +821,7 @@
                     const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.CHAT);
                     const chatDialog = Array.from(dialogs).find(d => {
                         const text = d.innerText || '';
-                        return text.includes('チャットを設定') || text.includes('Configure Chat');
+                        return text.includes('チャットを設定') || text.includes('Configure Chat') || text.includes('配置对话');
                     });
 
                     if (chatDialog) {
@@ -835,7 +835,7 @@
                                 const title = wrapper.querySelector('.section-title');
                                 if (!title) continue;
                                 const titleText = title.innerText.trim();
-                                if (titleText.includes('目的') || titleText.includes('conversational goal')) {
+                                if (titleText.includes('目的') || titleText.includes('conversational goal') || titleText.includes('定义对话目标')) {
                                     const buttons = wrapper.querySelectorAll('mat-button-toggle button');
                                     const targetTexts = CHAT_GOAL_MAP[chatGoal] || [chatGoal];
                                     for (const btn of buttons) {
@@ -861,7 +861,7 @@
                                 const title = wrapper.querySelector('.section-title');
                                 if (!title) continue;
                                 const titleText = title.innerText.trim();
-                                if (titleText.includes('長さ') || titleText.includes('response length')) {
+                                if (titleText.includes('長さ') || titleText.includes('response length') || titleText.includes('选择回答长度')) {
                                     const buttons = wrapper.querySelectorAll('mat-button-toggle button');
                                     const targetTexts = CHAT_LENGTH_MAP[chatLength] || [chatLength];
                                     for (const btn of buttons) {
