@@ -70,70 +70,70 @@
 
     // Audio commentary format mapping (internal value -> display label)
     const AUDIO_FORMAT_MAP = {
-        '詳細': ['詳細', 'Deep Dive', '深入探究'],
+        '詳細': ['詳細', 'Deep Dive', '深入探究', '深入探索'],
         '概要': ['概要', 'Brief', '摘要'],
-        '評論': ['評論', 'Critique', '评论'],
-        '議論': ['議論', 'Debate', '辩论']
+        '評論': ['評論', 'Critique', '评论', '評論'],
+        '議論': ['議論', 'Debate', '辩论', '辩論']
     };
     const AUDIO_LENGTH_MAP = {
         '短め': ['短め', 'Short', '短'],
-        '標準': ['デフォルト', 'Default', '默认']
+        '標準': ['デフォルト', 'Default', '默认', '預設']
     };
 
     // Report format mapping
     const REPORT_FORMAT_MAP = {
-        '独自に作成': ['独自に作成', 'Create Your Own', '自制格式'],
-        '概要説明資料': ['概要説明資料', 'Briefing Doc', '简报文档'],
-        '学習ガイド': ['学習ガイド', 'Study Guide', '学习指南'],
-        'ブログ投稿': ['ブログ投稿', 'Blog Post', '博文']
+        '独自に作成': ['独自に作成', 'Create Your Own', '自制格式', '自訂報告'],
+        '概要説明資料': ['概要説明資料', 'Briefing Doc', '简报文档', '簡介文件'],
+        '学習ガイド': ['学習ガイド', 'Study Guide', '学习指南', '研讀指南'],
+        'ブログ投稿': ['ブログ投稿', 'Blog Post', '博文', '網誌文章']
     };
     // Video overview format mapping
     const VIDEO_FORMAT_MAP = {
-        'Explainer': ['説明動画', 'Explainer', '说明视频'],
+        'Explainer': ['説明動画', 'Explainer', '说明视频', '説明影片'],
         'Brief': ['概要', 'Brief', '摘要']
     };
     // Visual style mapping (JP / EN / zh_CN labels)
     const VIDEO_STYLE_MAP = {
-        'Auto-select': ['Auto-select', '自動選択', '自动选择'],
-        'Custom': ['Custom', 'カスタム', '自定义'],
-        'Classic': ['Classic', 'クラシック', '经典'],
+        'Auto-select': ['Auto-select', '自動選択', '自动选择', '自動選取'],
+        'Custom': ['Custom', 'カスタム', '自定义', '自訂'],
+        'Classic': ['Classic', 'クラシック', '经典', '經典'],
         'Whiteboard': ['Whiteboard', 'ホワイトボード', '白板'],
-        'Kawaii': ['Kawaii', 'カワイイ', '可爱'],
-        'Anime': ['Anime', 'アニメ', '动漫'],
+        'Kawaii': ['Kawaii', 'カワイイ', '可爱', '可愛'],
+        'Anime': ['Anime', 'アニメ', '动漫', '動漫風'],
         'Watercolor': ['Watercolor', '水彩画', '水彩'],
-        'Retro print': ['Retro print', 'レトロスタイル', '复古印刷版'],
-        'Heritage': ['Heritage', '遺産', '传统'],
-        'Paper-craft': ['Paper-craft', 'ペーパークラフト', '纸艺']
+        'Retro print': ['Retro print', 'レトロスタイル', '复古印刷版', '復古印刷'],
+        'Heritage': ['Heritage', '遺産', '传统', '古典'],
+        'Paper-craft': ['Paper-craft', 'ペーパークラフト', '纸艺', '積木']
     };
 
     // Flashcard setting mapping
     const FLASHCARD_COUNT_MAP = {
-        '少なめ': ['少なめ', 'Fewer', '更少'],
-        '標準': ['標準', '标准（默认）', 'Standard'],
-        '多め': ['多め', 'More', '更多']
+        '少なめ': ['少なめ', 'Fewer', '更少', '較少'],
+        '標準': ['標準', '标准（默认）', '標準 (預設)', 'Standard'],
+        '多め': ['多め', 'More', '更多', '較多']
     };
     const FLASHCARD_DIFFICULTY_MAP = {
         '簡単': ['簡単', 'Easy', '简单'],
-        '標準': ['標準', '中等（默认）', 'Medium'],
-        '難しい': ['難しい', 'Hard', '困难']
+        '標準': ['標準', '中等（默认）', '中等 (預設)', 'Medium'],
+        '難しい': ['難しい', 'Hard', '困难', '困難']
     };
 
     // Infographic setting mapping
     const INFOGRAPHIC_LAYOUT_MAP = {
-        '横向き': ['横向き', 'Landscape', '横向'],
-        '縦向き': ['縦向き', 'Portrait', '纵向'],
+        '横向き': ['横向き', 'Landscape', '横向', '橫向'],
+        '縦向き': ['縦向き', 'Portrait', '纵向', '直向'],
         '正方形': ['正方形', 'Square', '方形']
     };
     const INFOGRAPHIC_DETAIL_LEVEL_MAP = {
-        '簡潔': ['簡潔', 'Concise', '简短'],
-        '標準': ['標準', 'Standard', '标准'],
+        '簡潔': ['簡潔', 'Concise', '简短', '精簡'],
+        '標準': ['標準', 'Standard', '标准', '標準'],
         '詳細': ['詳細', 'Detailed', '详细']
     };
 
     // Slide deck setting mapping
     const SLIDE_FORMAT_MAP = {
-        '詳細': ['詳細なスライド', 'Detailed Deck', '详细演示文稿'],
-        'プレゼンター用': ['プレゼンターのスライド', 'Presenter Slides', '演示用幻灯片']
+        '詳細': ['詳細なスライド', 'Detailed Deck', '详细演示文稿', '詳細簡報'],
+        'プレゼンター用': ['プレゼンターのスライド', 'Presenter Slides', '演示用幻灯片', '簡報投影片']
     };
     const SLIDE_LENGTH_MAP = {
         '短め': ['短め', 'Short', '短'],
@@ -553,7 +553,7 @@
                             }
 
                             // Level of Difficulty
-                            if (flashcardDifficulty && (headerText.includes('難易度レベル') || headerText.includes('Level of Difficulty') || headerText.includes('难度等级'))) {
+                            if (flashcardDifficulty && (headerText.includes('難易度レベル') || headerText.includes('Level of Difficulty') || headerText.includes('难度等级') || headerText.includes('難易度'))) {
                                 const buttons = col.querySelectorAll('button');
                                 const targetTexts = FLASHCARD_DIFFICULTY_MAP[flashcardDifficulty] || [flashcardDifficulty];
                                 for (const btn of buttons) {
@@ -612,7 +612,7 @@
                             }
 
                             // Level of Difficulty
-                            if (quizDifficulty && (headerText.includes('難易度レベル') || headerText.includes('Level of Difficulty') || headerText.includes('难度等级'))) {
+                            if (quizDifficulty && (headerText.includes('難易度レベル') || headerText.includes('Level of Difficulty') || headerText.includes('难度等级') || headerText.includes('難易度'))) {
                                 const buttons = col.querySelectorAll('button');
                                 const targetTexts = FLASHCARD_DIFFICULTY_MAP[quizDifficulty] || [quizDifficulty];
                                 for (const btn of buttons) {
@@ -654,7 +654,7 @@
                             const labelText = label.innerText.trim();
 
                             // Layout
-                            if (infographicLayout && (labelText.includes('レイアウト') || labelText.includes('Choose orientation') || labelText.includes('选择屏幕方向'))) {
+                            if (infographicLayout && (labelText.includes('レイアウト') || labelText.includes('Choose orientation') || labelText.includes('选择屏幕方向') || labelText.includes('選擇方向'))) {
                                 const buttons = wrapper.querySelectorAll('mat-button-toggle button');
                                 const targetTexts = INFOGRAPHIC_LAYOUT_MAP[infographicLayout] || [infographicLayout];
                                 for (const btn of buttons) {
