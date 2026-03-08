@@ -6,7 +6,7 @@
     "message": "NotebookLM 的易用提示詞管理工具"
   },
   "appDefaultTitle": {
-    "message": "開啟 Prompt Manager"
+    "message": "打开 Prompt Manager"
   },
   "app_title": {
     "message": "Prompt Manager for NotebookLM"
@@ -21,211 +21,211 @@
     "message": "全部"
   },
   "cat_research": {
-    "message": "來源"
+    "message": "研究与分析"
   },
   "cat_chat": {
-    "message": "對話"
+    "message": "聊天"
   },
   "cat_audio": {
-    "message": "語音摘要"
+    "message": "音频概述"
   },
   "cat_video": {
-    "message": "影片摘要"
+    "message": "视频概述"
   },
   "cat_report": {
-    "message": "報告"
+    "message": "报告"
   },
   "cat_flashcard": {
-    "message": "抽認卡"
+    "message": "抽认卡"
   },
   "cat_quiz": {
-    "message": "測驗"
+    "message": "测验"
   },
   "cat_infographic": {
-    "message": "訊息圖"
+    "message": "訊息图"
   },
   "cat_slide": {
-    "message": "投影片"
+    "message": "幻灯片"
   },
   "cat_datatable": {
-    "message": "資料表"
+    "message": "数据表"
   },
   "setting_deep_research": {
-    "message": "預設使用深度研究"
+    "message": "默认使用深度研究"
   },
   "setting_chat_goal": {
-    "message": "定義對話目標、風格或角色"
+    "message": "目标、风格和角色"
   },
   "opt_chat_goal_default": {
-    "message": "預設"
+    "message": "默认"
   },
   "opt_chat_goal_learning": {
-    "message": "學習指南"
+    "message": "学习指南"
   },
   "opt_chat_goal_custom": {
-    "message": "自訂"
+    "message": "自定义"
   },
   "setting_chat_length": {
-    "message": "選擇回答長度"
+    "message": "回复长度"
   },
   "opt_chat_length_default": {
-    "message": "預設"
+    "message": "默认"
   },
   "opt_chat_length_longer": {
-    "message": "較長"
+    "message": "较长"
   },
   "opt_chat_length_shorter": {
-    "message": "較短"
+    "message": "较短"
   },
   "setting_audio_format": {
-    "message": "格式"
+    "message": "默认格式"
   },
   "opt_detail": {
-    "message": "深入探索"
+    "message": "详细"
   },
   "opt_summary": {
     "message": "摘要"
   },
   "opt_critique": {
-    "message": "評論"
+    "message": "评论"
   },
   "opt_debate": {
-    "message": "辯論"
+    "message": "辩论"
   },
   "setting_audio_length": {
-    "message": "長度"
+    "message": "长度"
   },
   "opt_audio_length_short": {
-    "message": "簡短"
+    "message": "简短"
   },
   "opt_audio_length_default": {
-    "message": "預設"
+    "message": "默认"
   },
   "setting_card_count": {
-    "message": "卡片數量"
+    "message": "卡片数量"
   },
   "setting_question_count": {
-    "message": "問題數量"
+    "message": "问题数量"
   },
   "setting_difficulty": {
-    "message": "難易度"
+    "message": "难度级别"
   },
   "setting_layout": {
     "message": "布局"
   },
   "setting_detail_level": {
-    "message": "詳細程度"
+    "message": "详细程度"
   },
   "opt_fewer": {
-    "message": "較少"
+    "message": "较少"
   },
   "opt_standard": {
-    "message": "標準"
+    "message": "标准"
   },
   "opt_more": {
-    "message": "較多"
+    "message": "较多"
   },
   "opt_easy": {
-    "message": "簡單"
+    "message": "简单"
   },
   "opt_medium": {
-    "message": "中等 (預設)"
+    "message": "中等"
   },
   "opt_hard": {
-    "message": "困難"
+    "message": "困难"
   },
   "opt_landscape": {
-    "message": "橫向"
+    "message": "横向"
   },
   "opt_portrait": {
-    "message": "縱向"
+    "message": "纵向"
   },
   "opt_square": {
     "message": "正方形"
   },
   "opt_concise": {
-    "message": "簡明"
+    "message": "简明"
   },
   "opt_detailed": {
-    "message": "詳細"
+    "message": "详细"
   },
   "setting_slide_format": {
     "message": "格式"
   },
   "setting_slide_length": {
-    "message": "長度"
+    "message": "长度"
   },
   "opt_slide_format_detailed": {
-    "message": "詳細"
+    "message": "详细"
   },
   "opt_slide_format_presenter": {
-    "message": "演講者"
+    "message": "演讲者"
   },
   "opt_slide_length_short": {
-    "message": "簡短"
+    "message": "简短"
   },
   "opt_slide_length_default": {
-    "message": "預設"
+    "message": "默认"
   },
   "setting_video_format": {
     "message": "格式"
   },
   "opt_video_format_explainer": {
-    "message": "說明影片"
+    "message": "解说"
   },
   "opt_video_format_brief": {
-    "message": "簡短"
+    "message": "简短"
   },
   "setting_video_style": {
-    "message": "選擇視覺風格"
+    "message": "视觉风格"
   },
   "opt_video_style_auto": {
-    "message": "自動"
+    "message": "自动"
   },
   "opt_video_style_custom": {
-    "message": "自訂"
+    "message": "自定义"
   },
   "opt_video_style_classic": {
-    "message": "經典"
+    "message": "经典"
   },
   "opt_video_style_whiteboard": {
     "message": "白板"
   },
   "opt_video_style_kawaii": {
-    "message": "可愛"
+    "message": "可爱"
   },
   "opt_video_style_anime": {
-    "message": "動漫風"
+    "message": "动漫"
   },
   "opt_video_style_watercolor": {
     "message": "水彩"
   },
   "opt_video_style_retro": {
-    "message": "復古印刷"
+    "message": "复古"
   },
   "opt_video_style_heritage": {
-    "message": "古典"
+    "message": "传统"
   },
   "opt_video_style_papercraft": {
-    "message": "紙藝"
+    "message": "纸艺"
   },
   "label_video_subcategory": {
-    "message": "目標區域"
+    "message": "目标区域"
   },
   "opt_video_focus": {
-    "message": "AI主播焦點"
+    "message": "AI主播焦点"
   },
   "opt_video_custom_style": {
-    "message": "自訂視覺風格"
+    "message": "自定义视觉风格"
   },
   "label_chat_subcategory": {
-    "message": "目標區域"
+    "message": "目标区域"
   },
   "opt_chat_main": {
-    "message": "對話"
+    "message": "聊天"
   },
   "opt_chat_style": {
-    "message": "對話風格"
+    "message": "对话风格"
   },
   "no_prompts": {
     "message": "未找到提示詞。"
@@ -234,19 +234,19 @@
     "message": "添加提示詞"
   },
   "admin_edit_title": {
-    "message": "編輯提示詞"
+    "message": "编辑提示詞"
   },
   "label_category": {
-    "message": "類別"
+    "message": "类别"
   },
   "placeholder_title": {
-    "message": "標題（例如：分析）"
+    "message": "标题（例如：分析）"
   },
   "placeholder_tags": {
-    "message": "標籤（按 Enter 鍵添加）"
+    "message": "标签（按回车键添加）"
   },
   "placeholder_text": {
-    "message": "提示詞內容"
+    "message": "提示詞内容"
   },
   "label_favorite": {
     "message": "⭐ 收藏"
@@ -261,40 +261,40 @@
     "message": "取消"
   },
   "err_title_empty": {
-    "message": "請輸入標題。"
+    "message": "请输入标题。"
   },
   "err_title_long": {
-    "message": "標題必須在 20 個字元以內。"
+    "message": "标题必须在 20 个字符以内。"
   },
   "err_text_empty": {
-    "message": "請輸入提示詞內容。"
+    "message": "请输入提示詞内容。"
   },
   "err_text_long": {
-    "message": "提示詞內容必須在 10,000 個字元以內。"
+    "message": "提示詞内容必须在 10,000 个字符以内。"
   },
   "err_tag_count": {
-    "message": "最多允許 10 個標籤。"
+    "message": "最多允许 10 个标签。"
   },
   "err_tag_length": {
-    "message": "每個標籤必須在 20 個字元以內。"
+    "message": "每个标签必须在 20 个字符以内。"
   },
   "err_cat_invalid": {
-    "message": "無效的類別。"
+    "message": "无效的类别。"
   },
   "err_cat_limit": {
-    "message": "此類別最多允許 20 個提示詞。"
+    "message": "此类别最多允许 20 个提示詞。"
   },
   "confirm_save": {
     "message": "儲存此提示詞？"
   },
   "confirm_update": {
-    "message": "儲存對此提示詞的更改？"
+    "message": "儲存对此提示詞的更改？"
   },
   "confirm_cancel": {
-    "message": "放棄更改？"
+    "message": "放弃更改？"
   },
   "confirm_delete_prefix": {
-    "message": "刪除提示詞 \""
+    "message": "删除提示詞 \""
   },
   "confirm_delete_suffix": {
     "message": "\"?"
@@ -306,7 +306,7 @@
     "message": "否"
   },
   "btn_confirm_delete": {
-    "message": "刪除"
+    "message": "删除"
   },
   "btn_confirm_back": {
     "message": "否"
@@ -315,27 +315,27 @@
     "message": "取消"
   },
   "btn_confirm_ok": {
-    "message": "確定"
+    "message": "确定"
   },
   "tag_suffix": {
-    "message": " 個標籤"
+    "message": " 个标签"
   },
   "reload_page": {
-    "message": "請重新載入頁面。"
+    "message": "请重新載入页面。"
   },
   "data_management": {
-    "message": "提示詞匯出/匯入"
+    "message": "提示詞导出/导入"
   },
   "btn_export": {
-    "message": "匯出"
+    "message": "导出"
   },
   "btn_import": {
-    "message": "匯入"
+    "message": "导入"
   },
   "import_success": {
-    "message": "匯入成功。"
+    "message": "导入成功。"
   },
   "err_import_invalid": {
-    "message": "無效的 JSON 檔案。"
+    "message": "无效的 JSON 文件。"
   }
 }

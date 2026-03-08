@@ -70,85 +70,85 @@
 
     // Audio commentary format mapping (internal value -> display label)
     const AUDIO_FORMAT_MAP = {
-        '詳細': ['詳細', '詳細', 'Deep Dive', '深入探究', '深入探索', 'ज़्यादा जानकारी पाएं'],
-        '概要': ['概要', 'Brief', '摘要', '概覽', 'खास जानकारी'],
-        '評論': ['評論', 'Critique', '评论', '評論', 'समीक्षा'],
-        '議論': ['議論', 'Debate', '辩论', '辯論', 'चर्चा']
+        '詳細': ['詳細', 'Deep Dive', 'Detaillierte Analyse'],
+        '概要': ['概要', 'Brief', 'Zusammenfassung'],
+        '評論': ['評論', 'Critique', 'Kritische Bewertung'],
+        '議論': ['議論', 'Debate', 'Diskussion']
     };
     const AUDIO_LENGTH_MAP = {
-        '短め': ['短め', 'Short', '短', '簡短', 'छोटा'],
-        '標準': ['デフォルト', 'Default', '默认', '預設', '標準', 'डिफ़ॉल्ट']
+        '短め': ['短め', 'Short', 'Kurz'],
+        '標準': ['デフォルト', 'Default', 'Standard']
     };
 
     // Report format mapping
     const REPORT_FORMAT_MAP = {
-        '独自に作成': ['独自に作成', 'Create Your Own', '自制格式', '自訂報告'],
-        '概要説明資料': ['概要説明資料', 'Briefing Doc', '简报文档', '簡介文件'],
-        '学習ガイド': ['学習ガイド', 'Study Guide', '学习指南', '研讀指南'],
-        'ブログ投稿': ['ブログ投稿', 'Blog Post', '博文', '網誌文章']
+        '独自に作成': ['独自に作成', 'Create Your Own'],
+        '概要説明資料': ['概要説明資料', 'Briefing Doc'],
+        '学習ガイド': ['学習ガイド', 'Study Guide'],
+        'ブログ投稿': ['ブログ投稿', 'Blog Post']
     };
-    // Video overview format mapping
+    // Video overview format mapping (English labels are used for both JP/EN UI)
     const VIDEO_FORMAT_MAP = {
-        'Explainer': ['説明動画', 'Explainer', '说明视频', '說明影片', '解説', 'ज़्यादा जानकारी देने वाला वीडियो'],
-        'Brief': ['概要', 'Brief', '摘要', '簡短', 'खास जानकारी']
+        'Explainer': ['説明動画', 'Explainer', 'Erklärvideo'],
+        'Brief': ['概要', 'Brief', 'Zusammenfassung']
     };
-    // Visual style mapping (JP / EN / zh_CN labels)
+    // Visual style mapping (JP labels for Japanese UI, EN for English)
     const VIDEO_STYLE_MAP = {
-        'Auto-select': ['Auto-select', '自動選択', '自动选择', '自動選取', '自動', 'अपने-आप चुनने की सुविधा'],
-        'Custom': ['Custom', 'カスタム', '自定义', '自訂', 'पसंद के मुताबिक बनाएं'],
-        'Classic': ['Classic', 'クラシック', '经典', '經典', 'क्लासिक'],
-        'Whiteboard': ['Whiteboard', 'ホワイトボード', '白板', 'व्हाइटबोर्ड'],
-        'Kawaii': ['Kawaii', 'カワイイ', '可爱', '可愛', 'कावाई'],
-        'Anime': ['Anime', 'アニメ', '动漫', '動漫', 'ऐनिमे'],
-        'Watercolor': ['Watercolor', '水彩画', '水彩', 'वॉटरकलर'],
-        'Retro print': ['Retro print', 'レトロスタイル', '复古印刷版', '復古印刷', '復古', 'रेट्रो प्रिंट'],
-        'Heritage': ['Heritage', '遺産', '传统', '傳統', '古典', 'हेरिटेज'],
-        'Paper-craft': ['Paper-craft', 'ペーパークラフト', '纸艺', '紙藝', '積木']
+        'Auto-select': ['Auto-select', '自動選択', 'Automatische Auswahl'],
+        'Custom': ['Custom', 'カスタム', 'Benutzerdefiniert'],
+        'Classic': ['Classic', 'クラシック', 'Klassisch'],
+        'Whiteboard': ['Whiteboard', 'ホワイトボード', 'Whiteboard'],
+        'Kawaii': ['Kawaii', 'カワイイ', 'Kawaii'],
+        'Anime': ['Anime', 'アニメ', 'Anime'],
+        'Watercolor': ['Watercolor', '水彩画', 'Wasserfarben'],
+        'Retro print': ['Retro print', 'レトロスタイル', 'Retro-Druck'],
+        'Heritage': ['Heritage', '遺産', 'Traditionell'],
+        'Paper-craft': ['Paper-craft', 'ペーパークラフト', 'Papierkunst']
     };
 
     // Flashcard setting mapping
     const FLASHCARD_COUNT_MAP = {
-        '少なめ': ['少なめ', 'Fewer', '更少', '較少', 'कम'],
-        '標準': ['標準', '标准', '標準', 'Standard', 'मानक', 'स्टैंडर्ड (डिफ़ॉल्ट)'],
-        '多め': ['多め', 'More', '更多', '較多', 'ज़्यादा']
+        '少なめ': ['少なめ', 'Fewer', 'Weniger'],
+        '標準': ['標準', 'Standard', 'Standardeinstellung'],
+        '多め': ['多め', 'More', 'Mehr']
     };
     const FLASHCARD_DIFFICULTY_MAP = {
-        '簡単': ['簡単', 'Easy', '简单', '簡單', 'आसान'],
-        '標準': ['標準', '中等', '中等 (預設)', 'Medium', 'सामान्य (डिफ़ॉल्ट)'],
-        '難しい': ['難しい', 'Hard', '困难', '困難', 'मुश्किल']
+        '簡単': ['簡単', 'Easy', 'Einfach'],
+        '標準': ['標準', 'Medium', 'Mittel'],
+        '難しい': ['難しい', 'Hard', 'Schwierig']
     };
 
     // Infographic setting mapping
     const INFOGRAPHIC_LAYOUT_MAP = {
-        '横向き': ['横向き', 'Landscape', '横向', '橫向', 'लैंडस्केप'],
-        '縦向き': ['縦向き', 'Portrait', '纵向', '縱向', 'पोर्ट्रेट'],
-        '正方形': ['正方形', 'Square', '方形', '正方形', 'स्क्वायर']
+        '横向き': ['横向き', 'Landscape', 'Querformat'],
+        '縦向き': ['縦向き', 'Portrait', 'Hochformat'],
+        '正方形': ['正方形', 'Square', 'Quadrat']
     };
     const INFOGRAPHIC_DETAIL_LEVEL_MAP = {
-        '簡潔': ['簡潔', 'Concise', '简短', '簡明', 'संक्षिप्त'],
-        '標準': ['標準', 'Standard', '标准', '標準', 'मानक'],
-        '詳細': ['詳細', 'Detailed', '详细', '詳細', 'विस्तृत']
+        '簡潔': ['簡潔', 'Concise', 'Kurzgefasst'],
+        '標準': ['標準', 'Standard'],
+        '詳細': ['詳細', 'Detailed', 'Detailliert']
     };
 
     // Slide deck setting mapping
     const SLIDE_FORMAT_MAP = {
-        '詳細': ['詳細なスライド', 'Detailed Deck', '详细演示文稿', '詳細', 'विस्तृत', 'पूरी जानकारी देने वाला डेक'],
-        'プレゼンター用': ['プレゼンターのスライド', 'Presenter Slides', '演示用幻灯片', '演講者', 'प्रस्तुतकर्ता', 'प्रज़ेंटर स्लाइड']
+        '詳細': ['詳細なスライド', 'Detailed Deck', 'Detaillierte Präsentation'],
+        'プレゼンター用': ['プレゼンターのスライド', 'Presenter Slides', 'Folien für Vortragende']
     };
     const SLIDE_LENGTH_MAP = {
-        '短め': ['短め', 'Short', '短', '簡短', 'छोटा'],
-        'デフォルト': ['デフォルト', 'Default', '默认', '預設', 'मानक', 'डिफ़ॉल्ट']
+        '短め': ['短め', 'Short', 'Kurz'],
+        'デフォルト': ['デフォルト', 'Default', 'Standard']
     };
     // Chat setting mapping
     const CHAT_GOAL_MAP = {
-        'Default': ['デフォルト', 'Default', '默认', '預設', 'डिफ़ॉल्ट'],
-        'Learning Guide': ['学習ガイド', 'Learning Guide', '学习指南', '學習指南', 'लर्निंग गाइड'],
-        'Custom': ['カスタム', 'Custom', '自定义', '自訂', 'पसंद के हिसाब से']
+        'Default': ['デフォルト', 'Default', 'Standard'],
+        'Learning Guide': ['学習ガイド', 'Learning Guide', 'Lernhilfe'],
+        'Custom': ['カスタム', 'Custom', 'Benutzerdefiniert']
     };
     const CHAT_LENGTH_MAP = {
-        'Default': ['デフォルト', 'Default', '默认', '預設', 'डिफ़ॉल्ट'],
-        'Longer': ['長め', 'Longer', '较长', '較長', 'लंबा'],
-        'Shorter': ['短め', 'Shorter', '较短', '較短', 'छोटा']
+        'Default': ['デフォルト', 'Default', 'Standard'],
+        'Longer': ['長め', 'Longer', 'Länger'],
+        'Shorter': ['短め', 'Shorter', 'Kürzer']
     };
 
     // Inject basic styles
@@ -453,13 +453,8 @@
                     // Find unprocessed dialogs
                     const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.AUDIO);
                     const audioDialog = Array.from(dialogs).find(d => {
-                        if (d.hasAttribute('data-auto-formatted-audio')) return false;
-                        // Language-agnostic icon check
-                        const icon = d.querySelector('mat-icon');
-                        if (icon && icon.textContent.trim() === 'audio_magic_eraser') return true;
-
                         const text = d.innerText || '';
-                        return text.includes('音声解説をカスタマイズ') || text.includes('Customize Audio Overview') || text.includes('自定义音频概览') || text.includes('自訂音訊概覽') || text.includes('ऑडियो');
+                        return text.includes('音声解説をカスタマイズ') || text.includes('Customize Audio Overview') || text.includes('Audio-Zusammenfassung anpassen');
                     });
 
                     if (audioDialog) {
@@ -495,7 +490,7 @@
                                 const label = wrapper.querySelector('.control-label');
                                 if (!label) return;
                                 const labelText = label.innerText.trim();
-                                if (labelText.includes('長さ') || labelText.includes('Length') || labelText.includes('时长') || labelText.includes('長度') || labelText.includes('लंबाई')) {
+                                if (labelText.includes('長さ') || labelText.includes('Length') || labelText.includes('Länge')) {
                                     const buttons = wrapper.querySelectorAll('mat-button-toggle button');
                                     const targetTexts = AUDIO_LENGTH_MAP[audioLength] || [audioLength];
                                     for (const btn of buttons) {
@@ -515,7 +510,7 @@
                         }
 
                         if (formatDone && lengthDone) {
-                            audioDialog.setAttribute('data-auto-formatted-audio', 'true');
+                            audioDialog.setAttribute('data-auto-formatted', 'true');
                         }
                     }
                 }
@@ -525,12 +520,8 @@
                 if (flashcardCardCount || flashcardDifficulty) {
                     const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.FLASHCARD);
                     const flashDialog = Array.from(dialogs).find(d => {
-                        // Language-agnostic icon check
-                        const icon = d.querySelector('mat-icon');
-                        if (icon && icon.textContent.trim() === 'cards_star') return true;
-
                         const text = d.innerText || '';
-                        return text.includes('フラッシュカード') || text.includes('Flashcards') || text.includes('抽认卡') || text.includes('抽認卡') || text.includes('फ़्लैशकार्ड');
+                        return text.includes('フラッシュカード') || text.includes('Flashcards') || text.includes('Lernkarten anpassen');
                     });
 
                     if (flashDialog) {
@@ -544,7 +535,7 @@
                             const headerText = h2.innerText.trim();
 
                             // Number of Cards
-                            if (flashcardCardCount && (headerText.includes('カードの枚数') || headerText.includes('Number of Cards') || headerText.includes('卡片数量') || headerText.includes('卡片數量') || headerText.includes('कार्ड'))) {
+                            if (flashcardCardCount && (headerText.includes('カードの枚数') || headerText.includes('Number of Cards') || headerText.includes('Anzahl der Karten'))) {
                                 const buttons = col.querySelectorAll('button');
                                 const targetTexts = FLASHCARD_COUNT_MAP[flashcardCardCount] || [flashcardCardCount];
                                 for (const btn of buttons) {
@@ -561,7 +552,7 @@
                             }
 
                             // Level of Difficulty
-                            if (flashcardDifficulty && (headerText.includes('難易度レベル') || headerText.includes('Level of Difficulty') || headerText.includes('难度等级') || headerText.includes('難易度') || headerText.includes('कठिनाई'))) {
+                            if (flashcardDifficulty && (headerText.includes('難易度レベル') || headerText.includes('Level of Difficulty') || headerText.includes('Schwierigkeitsgrad'))) {
                                 const buttons = col.querySelectorAll('button');
                                 const targetTexts = FLASHCARD_DIFFICULTY_MAP[flashcardDifficulty] || [flashcardDifficulty];
                                 for (const btn of buttons) {
@@ -588,11 +579,8 @@
                 if (quizQuestionCount || quizDifficulty) {
                     const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.QUIZ);
                     const quizDialog = Array.from(dialogs).find(d => {
-                        const icon = d.querySelector('mat-icon');
-                        if (icon && icon.textContent.trim() === 'quiz') return true;
-
                         const text = d.innerText || '';
-                        return text.includes('クイズ') || text.includes('Quiz') || text.includes('测验') || text.includes('測驗') || text.includes('क्विज़');
+                        return text.includes('クイズ') || text.includes('Quiz');
                     });
 
                     if (quizDialog) {
@@ -606,7 +594,7 @@
                             const headerText = h2.innerText.trim();
 
                             // Number of Questions
-                            if (quizQuestionCount && (headerText.includes('質問の数') || headerText.includes('Number of Questions') || headerText.includes('问题数量') || headerText.includes('問題數量') || headerText.includes('सवालों की संख्या'))) {
+                            if (quizQuestionCount && (headerText.includes('質問の数') || headerText.includes('Number of Questions') || headerText.includes('Anzahl der Fragen'))) {
                                 const buttons = col.querySelectorAll('button');
                                 const targetTexts = FLASHCARD_COUNT_MAP[quizQuestionCount] || [quizQuestionCount];
                                 for (const btn of buttons) {
@@ -623,7 +611,7 @@
                             }
 
                             // Level of Difficulty
-                            if (quizDifficulty && (headerText.includes('難易度レベル') || headerText.includes('Level of Difficulty') || headerText.includes('难度等级') || headerText.includes('難易度') || headerText.includes('कठिनाई का लेवल'))) {
+                            if (quizDifficulty && (headerText.includes('難易度レベル') || headerText.includes('Level of Difficulty') || headerText.includes('Schwierigkeitsgrad'))) {
                                 const buttons = col.querySelectorAll('button');
                                 const targetTexts = FLASHCARD_DIFFICULTY_MAP[quizDifficulty] || [quizDifficulty];
                                 for (const btn of buttons) {
@@ -650,12 +638,8 @@
                 if (infographicLayout || infographicDetailLevel) {
                     const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.INFOGRAPHIC);
                     const infoDialog = Array.from(dialogs).find(d => {
-                        // Language-agnostic icon check
-                        const icon = d.querySelector('mat-icon');
-                        if (icon && icon.textContent.trim() === 'stacked_bar_chart') return true;
-
                         const text = d.innerText || '';
-                        return text.includes('インフォグラフィック') || text.includes('Infographic') || text.includes('信息图') || text.includes('訊息圖') || text.includes('इन्फ़ोग्राफ़िक');
+                        return text.includes('インフォグラフィック') || text.includes('Infographic') || text.includes('Infografik');
                     });
 
                     if (infoDialog) {
@@ -669,7 +653,7 @@
                             const labelText = label.innerText.trim();
 
                             // Layout
-                            if (infographicLayout && (labelText.includes('レイアウト') || labelText.includes('Choose orientation') || labelText.includes('选择屏幕方向') || labelText.includes('選擇方向') || labelText.includes('दिशा') || labelText.includes('अभिविन्यास'))) {
+                            if (infographicLayout && (labelText.includes('レイアウト') || labelText.includes('Choose orientation') || labelText.includes('Ausrichtung auswählen') || labelText.includes('Layout'))) {
                                 const buttons = wrapper.querySelectorAll('mat-button-toggle button');
                                 const targetTexts = INFOGRAPHIC_LAYOUT_MAP[infographicLayout] || [infographicLayout];
                                 for (const btn of buttons) {
@@ -688,7 +672,7 @@
                             }
 
                             // Level of detail
-                            if (infographicDetailLevel && (labelText.includes('詳細レベル') || labelText.includes('Level of detail') || labelText.includes('详细程度') || labelText.includes('विस्तार') || labelText.includes('स्तर'))) {
+                            if (infographicDetailLevel && (labelText.includes('詳細レベル') || labelText.includes('Level of detail') || labelText.includes('Detaillierungsgrad'))) {
                                 const buttons = wrapper.querySelectorAll('mat-button-toggle button');
                                 const targetTexts = INFOGRAPHIC_DETAIL_LEVEL_MAP[infographicDetailLevel] || [infographicDetailLevel];
                                 for (const btn of buttons) {
@@ -716,12 +700,8 @@
                 if (slideFormat || slideLength) {
                     const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.SLIDE);
                     const slideDialog = Array.from(dialogs).find(d => {
-                        // Language-agnostic icon check
-                        const icon = d.querySelector('mat-icon');
-                        if (icon && icon.textContent.trim() === 'tablet') return true;
-
                         const text = (d.innerText || '').toLowerCase();
-                        return text.includes('スライド') || text.includes('deck') || text.includes('幻灯片') || text.includes('投影片') || text.includes('स्लाइड');
+                        return text.includes('スライド') || text.includes('deck') || text.includes('folie') || text.includes('präsentation');
                     });
 
                     if (slideDialog) {
@@ -735,7 +715,7 @@
                             const labelText = label.innerText.trim();
 
                             // Format (mat-radio-button handling)
-                            if (slideFormat && (labelText.includes('形式') || labelText.includes('Format') || labelText.includes('格式') || labelText.includes('प्रारूप') || labelText.includes('फ़ॉर्मैट') || labelText.includes('फ़ॉर्मैट'))) {
+                            if (slideFormat && (labelText.includes('形式') || labelText.includes('Format'))) {
                                 const radioButtons = wrapper.querySelectorAll('mat-radio-button');
                                 const targetTexts = SLIDE_FORMAT_MAP[slideFormat] || [slideFormat];
                                 for (const radio of radioButtons) {
@@ -758,7 +738,7 @@
                             }
 
                             // Length (mat-button-toggle handling)
-                            if (slideLength && (labelText.includes('長さ') || labelText.includes('Length') || labelText.includes('时长') || labelText.includes('लंबाई'))) {
+                            if (slideLength && (labelText.includes('長さ') || labelText.includes('Length') || labelText.includes('Länge'))) {
                                 const buttons = wrapper.querySelectorAll('mat-button-toggle button');
                                 const targetTexts = SLIDE_LENGTH_MAP[slideLength] || [slideLength];
                                 for (const btn of buttons) {
@@ -787,7 +767,7 @@
                     const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.VIDEO);
                     const videoDialog = Array.from(dialogs).find(d => {
                         const text = d.innerText || '';
-                        return text.includes('動画解説をカスタマイズ') || text.includes('Customize Video Overview') || text.includes('自定义视频概览') || text.includes('自訂影片概覽') || text.includes('वीडियो');
+                        return text.includes('動画解説をカスタマイズ') || text.includes('Customize Video Overview') || text.includes('Video-Übersicht anpassen');
                     });
 
                     if (videoDialog) {
@@ -801,7 +781,7 @@
                             for (const lbl of tileLabels) {
                                 if (targetLabels.some(t => lbl.innerText.trim().includes(t))) {
                                     const radio = lbl.closest('mat-radio-button');
-                                    if (radio && !radio.classList.contains('mat-mdc-radio-checked')) {
+                                    if (radio && !radio.classList.contains('mat-mdc-radio-checked') && radio.getAttribute('aria-checked') !== 'true' && !radio.classList.contains('mat-radio-checked')) {
                                         const clickTarget = radio.querySelector('.tile-content') || radio.querySelector('input') || radio;
                                         clickTarget.click();
                                         log(`Auto-selected video format: ${videoFormat}`);
@@ -819,7 +799,7 @@
                             for (const lbl of carouselLabels) {
                                 if (targetLabels.some(t => lbl.innerText.trim().includes(t))) {
                                     const radio = lbl.closest('mat-radio-button');
-                                    if (radio && !radio.classList.contains('mat-mdc-radio-checked')) {
+                                    if (radio && !radio.classList.contains('mat-mdc-radio-checked') && radio.getAttribute('aria-checked') !== 'true' && !radio.classList.contains('mat-radio-checked')) {
                                         const input = radio.querySelector('input[type="radio"]');
                                         if (input) input.click(); else radio.click();
                                         log(`Auto-selected video style: ${videoStyle}`);
@@ -828,6 +808,11 @@
                                     break;
                                 }
                             }
+                        }
+
+                        // If formats are fundamentally missing from NotebookLM video UI, prevent infinite looping
+                        if (!formatDone && videoDialog.querySelectorAll('.tile-label').length === 0) {
+                            formatDone = true;
                         }
 
                         if (formatDone && styleDone) {
@@ -840,12 +825,8 @@
                 if (chatGoal || chatLength) {
                     const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.CHAT);
                     const chatDialog = Array.from(dialogs).find(d => {
-                        // Language-agnostic icon check
-                        const icon = d.querySelector('mat-icon');
-                        if (icon && icon.textContent.trim() === 'tune') return true;
-
                         const text = d.innerText || '';
-                        return text.includes('チャットを設定') || text.includes('Configure Chat') || text.includes('配置对话') || text.includes('設定對話') || text.includes('चैट की सेटिंग कॉन्फ़िगर करें');
+                        return text.includes('チャットを設定') || text.includes('Configure Chat') || text.includes('Chat konfigurieren');
                     });
 
                     if (chatDialog) {
@@ -859,7 +840,7 @@
                                 const title = wrapper.querySelector('.section-title');
                                 if (!title) continue;
                                 const titleText = title.innerText.trim();
-                                if (titleText.includes('目的') || titleText.includes('conversational goal') || titleText.includes('定义对话目标') || titleText.includes('對話目標') || titleText.includes('बातचीत का लक्ष्य')) {
+                                if (titleText.includes('目的') || titleText.includes('conversational goal') || titleText.includes('ziel') || titleText.includes('festlegen')) {
                                     const buttons = wrapper.querySelectorAll('mat-button-toggle button');
                                     const targetTexts = CHAT_GOAL_MAP[chatGoal] || [chatGoal];
                                     for (const btn of buttons) {
@@ -885,7 +866,7 @@
                                 const title = wrapper.querySelector('.section-title');
                                 if (!title) continue;
                                 const titleText = title.innerText.trim();
-                                if (titleText.includes('長さ') || titleText.includes('response length') || titleText.includes('选择回答长度') || titleText.includes('回答長度') || titleText.includes('लंबाई')) {
+                                if (titleText.includes('長さ') || titleText.includes('response length') || titleText.includes('antwortlänge') || titleText.includes('länge')) {
                                     const buttons = wrapper.querySelectorAll('mat-button-toggle button');
                                     const targetTexts = CHAT_LENGTH_MAP[chatLength] || [chatLength];
                                     for (const btn of buttons) {
@@ -924,24 +905,25 @@
                     let subCategory = null;
 
                     // Match the target label of each category strictly by content (text)
-                    if (text.includes('作成したいレポートの内容を記入してください') || text.includes('Describe the report you want to create') || text.includes('請說明您要建立的報告內容')) {
+                    if (text.includes('作成したいレポートの内容を記入してください') || text.includes('Describe the report you want to create') || text.includes('Beschreiben Sie den Bericht, der erstellt werden soll')) {
                         category = 'report';
-                    } else if (text.includes('希望するトピック') || text.includes('What should the topic be?')) {
-                        // Distinguish between Quiz and Flashcard from the overall dialog title, etc.
+                    } else if (text.includes('希望するトピック') || text.includes('What should the topic be?') || text.includes('Was soll das Thema sein?')) {
+                        // Distinguish between Quiz and Flashcard from the overall dialog title, etc.z
                         const dialog = label.closest('mat-dialog-container') || label.closest('configurable-form-dialog') || document.body;
                         const dialogText = (dialog.innerText || '').toLowerCase();
-                        if (dialogText.includes('クイズ') || dialogText.includes('quiz') || dialogText.includes('測驗')) {
+                        if (dialogText.includes('クイズ') || dialogText.includes('quiz')) {
                             category = 'quiz';
-                        } else if (dialogText.includes('フラッシュカード') || dialogText.includes('flashcards') || dialogText.includes('抽認卡')) {
+                        } else if (dialogText.includes('フラッシュカード') || dialogText.includes('flashcards') || dialogText.includes('lernkarten') || dialogText.includes('Karteikarten')) {
                             category = 'flashcard';
                         }
-                    } else if (text.includes('インフォグラフィックについて説明してください') || text.includes('Describe the infographic you want to create') || text.includes('請描述您要建立的訊息圖')) {
+                    } else if (text.includes('インフォグラフィックについて説明してください') || text.includes('Describe the infographic you want to create') || text.includes('Beschreiben Sie die Infografik, die Sie erstellen möchten')) {
                         // Consider differences like 'Describe...' phrasing in Japanese vs English
                         category = 'infographic';
-                    } else if (text.includes('スライドについて説明してください') || text.includes('Describe the slide deck you want to create') || text.includes('請描述您要建立的投影片')) {
+                    } else if (text.includes('スライドについて説明してください') || text.includes('Describe the slide deck you want to create') || text.includes('Beschreiben Sie die Präsentation, die Sie erstellen möchten')) {
                         category = 'slide';
                     } else if ((text.includes('データテーブル') && text.includes('説明')) ||
                         text.includes('Describe the data table you want to create') ||
+                        text.includes('Datentabelle beschreiben, die erstellt werden soll') ||
                         label.id === 'userSteeringPrompt-label') {
                         category = 'datatable';
                     } else if (label.id === 'episodeFocus-label') {
@@ -953,7 +935,7 @@
                         text.includes('独自のビジュアル スタイルを説明してください') ||
                         text.includes('独自のビジュアルスタイルを説明してください') ||
                         text.includes('Describe a custom visual style') ||
-                        text.includes('請描述自訂視覺風格')) {
+                        text.includes('Beschreiben Sie einen benutzerdefinierten visuellen Stil')) {
                         category = 'video';
                         subCategory = 'style';
                     }
@@ -1040,6 +1022,7 @@
                     const isCustomSelected = checkedToggle && (
                         checkedToggle.innerText.includes('Custom') ||
                         checkedToggle.innerText.includes('カスタム') ||
+                        checkedToggle.innerText.includes('Benutzerdefiniert') ||
                         (checkedToggle.querySelector('button') && checkedToggle.querySelector('button').getAttribute('aria-label') === 'Custom button')
                     );
 

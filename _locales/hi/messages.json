@@ -27,10 +27,10 @@
     "message": "चैट"
   },
   "cat_audio": {
-    "message": "ऑडियो बातचीत"
+    "message": "ऑडियो अवलोकन"
   },
   "cat_video": {
-    "message": "वीडियो की खास जानकारी"
+    "message": "वीडियो अवलोकन"
   },
   "cat_report": {
     "message": "रिपोर्ट"
@@ -81,16 +81,16 @@
     "message": "डिफॉल्ट प्रारूप"
   },
   "opt_detail": {
-    "message": "ज़्यादा जानकारी पाएं"
+    "message": "गहरी जानकारी"
   },
   "opt_summary": {
-    "message": "खास जानकारी"
+    "message": "संक्षिप्त"
   },
   "opt_critique": {
-    "message": "समीक्षा"
+    "message": "आलोचना"
   },
   "opt_debate": {
-    "message": "चर्चा"
+    "message": "बहस"
   },
   "setting_audio_length": {
     "message": "लंबाई"
@@ -123,16 +123,16 @@
     "message": "मानक"
   },
   "opt_more": {
-    "message": "ज़्यादा"
+    "message": "अधिक"
   },
   "opt_easy": {
     "message": "आसान"
   },
   "opt_medium": {
-    "message": "सामान्य (डिफ़ॉल्ट)"
+    "message": "मध्यम"
   },
   "opt_hard": {
-    "message": "मुश्किल"
+    "message": "कठिन"
   },
   "opt_landscape": {
     "message": "लैंडस्केप"
@@ -147,7 +147,7 @@
     "message": "संक्षिप्त"
   },
   "opt_detailed": {
-    "message": "पूरी जानकारी देने वाला डेक"
+    "message": "विस्तृत"
   },
   "setting_slide_format": {
     "message": "प्रारूप"
@@ -159,7 +159,7 @@
     "message": "विस्तृत"
   },
   "opt_slide_format_presenter": {
-    "message": "प्रज़ेंटर स्लाइड"
+    "message": "प्रस्तुतकर्ता"
   },
   "opt_slide_length_short": {
     "message": "छोटा"
@@ -171,16 +171,16 @@
     "message": "प्रारूप"
   },
   "opt_video_format_explainer": {
-    "message": "ज़्यादा जानकारी देने वाला वीडियो"
+    "message": "व्याख्यात्मक"
   },
   "opt_video_format_brief": {
-    "message": "खास जानकारी"
+    "message": "संक्षिप्त"
   },
   "setting_video_style": {
     "message": "दृश्य शैली"
   },
   "opt_video_style_auto": {
-    "message": "अपने-आप चुनने की सुविधा"
+    "message": "ऑटो-सलेक्ट"
   },
   "opt_video_style_custom": {
     "message": "कस्टम"
@@ -195,7 +195,7 @@
     "message": "कवाई (Kawaii)"
   },
   "opt_video_style_anime": {
-    "message": "ऐनिमे"
+    "message": "एनीमे"
   },
   "opt_video_style_watercolor": {
     "message": "वॉटरकलर"

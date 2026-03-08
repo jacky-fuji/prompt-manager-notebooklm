@@ -21,16 +21,16 @@
     "message": "全部"
   },
   "cat_research": {
-    "message": "来源"
+    "message": "研究与分析"
   },
   "cat_chat": {
-    "message": "对话"
+    "message": "聊天"
   },
   "cat_audio": {
     "message": "音频概述"
   },
   "cat_video": {
-    "message": "自定义视频概览"
+    "message": "视频概述"
   },
   "cat_report": {
     "message": "报告"
@@ -54,7 +54,7 @@
     "message": "默认使用深度研究"
   },
   "setting_chat_goal": {
-    "message": "定义对话目标、风格或角色"
+    "message": "目标、风格和角色"
   },
   "opt_chat_goal_default": {
     "message": "默认"
@@ -66,7 +66,7 @@
     "message": "自定义"
   },
   "setting_chat_length": {
-    "message": "选择回答长度"
+    "message": "回复长度"
   },
   "opt_chat_length_default": {
     "message": "默认"
@@ -78,7 +78,7 @@
     "message": "较短"
   },
   "setting_audio_format": {
-    "message": "格式"
+    "message": "默认格式"
   },
   "opt_detail": {
     "message": "详细"
@@ -93,7 +93,7 @@
     "message": "辩论"
   },
   "setting_audio_length": {
-    "message": "时长"
+    "message": "长度"
   },
   "opt_audio_length_short": {
     "message": "简短"
@@ -153,7 +153,7 @@
     "message": "格式"
   },
   "setting_slide_length": {
-    "message": "时长"
+    "message": "长度"
   },
   "opt_slide_format_detailed": {
     "message": "详细"
@@ -177,7 +177,7 @@
     "message": "简短"
   },
   "setting_video_style": {
-    "message": "选择视觉风格"
+    "message": "视觉风格"
   },
   "opt_video_style_auto": {
     "message": "自动"
@@ -222,7 +222,7 @@
     "message": "目标区域"
   },
   "opt_chat_main": {
-    "message": "对话"
+    "message": "聊天"
   },
   "opt_chat_style": {
     "message": "对话风格"
