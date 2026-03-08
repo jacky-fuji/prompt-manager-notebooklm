@@ -82,28 +82,17 @@
 
 ## 🗂️ Supported Categories
 
-| Category | Description |
-|---|---|
-| Research Sources | Prompts for the Source search / Deep Research flow |
-| Chat | Prompts for the main chat input |
-| Chat → Conversation Style | Custom style prompts for the Customize Chat dialog |
-| Audio Overview | Prompts for Audio Commentary customization |
-| Video Overview | Prompts for Video Overview (focus & custom visual style) |
-| Reports | Prompts for generating structured reports |
-| Flashcards | Prompts for flashcard generation |
-| Quiz | Prompts for quiz generation |
-| Infographic | Prompts for infographic creation |
-| Slide Deck | Prompts for slide deck generation |
-| Data Table | Prompts for data table creation |
+Research Sources · Chat (+ Conversation Style) · Audio Overview · Video Overview · Reports · Flashcards · Quiz · Infographic · Slide Deck · Data Table
+
+For the full category specification and auto-setting details, see [SPEC.md](SPEC.md).
 
 ---
 
 ## 🧰 Tech Stack
 
-- **Manifest V3** Chrome Extension
-- Vanilla JavaScript, HTML, CSS (no frameworks)
-- Chrome Storage API (`chrome.storage.local`)
-- Chrome Side Panel API
+Manifest V3 Chrome Extension — Vanilla JavaScript, HTML, CSS (no frameworks) — Chrome Storage API & Side Panel API.
+
+For architecture details, see [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ---
 
@@ -132,6 +121,17 @@ This project is licensed under the [MIT License](LICENSE).
 Your privacy is important to us. All prompt data and settings are stored locally on your device using `chrome.storage.local`. No data is collected or transmitted to external servers.
 
 For full details, please see our [Privacy Policy (PRIVACY.md)](PRIVACY.md).
+
+---
+
+## 📚 Documentation
+
+| Document | Description |
+|---|---|
+| [SPEC.md](SPEC.md) | Functional specification (features, data model, categories, i18n) |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | Architecture and design (file map, data flow, components) |
+| [PRIVACY.md](PRIVACY.md) | Privacy policy |
+| [LICENSE](LICENSE) | MIT License |
 
 ---
 

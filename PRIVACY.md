@@ -28,3 +28,12 @@ The Extension only interacts with NotebookLM when you explicitly use its feature
 ### 4. Third-Party Services
 
 The Extension does not use any third-party analytics or tracking pixels.
+
+---
+
+### Related Documents
+
+- [README.md](README.md) — Project overview
+- [SPEC.md](SPEC.md) — Functional specification
+- [ARCHITECTURE.md](ARCHITECTURE.md) — Architecture and design
+- [LICENSE](LICENSE) — MIT License
