@@ -64,7 +64,7 @@ The extension can remember and automatically re-apply NotebookLM dialog settings
 | **Video Overview** | Format (Explainer / Brief), Visual style (Auto-select / Custom / Classic / Whiteboard / Kawaii / Anime / Watercolor / Retro print / Heritage / Paper-craft) |
 | **Flashcards** | Card count (Fewer / Standard / More), Difficulty (Easy / Medium / Hard) |
 | **Quiz** | Question count (Fewer / Standard / More), Difficulty (Easy / Medium / Hard) |
-| **Infographic** | Layout (Landscape / Portrait / Square), Detail level (Concise / Standard / Detailed) |
+| **Infographic** | Layout (Landscape / Portrait / Square), Detail level (Concise / Standard / Detailed), Visual style (Auto-select / Sketch / Kawaii / Professional / Scientific / Anime / Clay / Editorial / Instructional / Bento Grid / Bricks) |
 | **Slide Deck** | Format (Detailed Deck / Presenter Slides), Length (Short / Default) |
 
 ### 2.5 Search & Filtering

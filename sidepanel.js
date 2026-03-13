@@ -182,6 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const quizDifficultyInputNew = document.getElementById('setting-quiz-difficulty');
         const infographicLayoutInputNew = document.getElementById('setting-infographic-layout');
         const infographicDetailLevelInputNew = document.getElementById('setting-infographic-detail-level');
+        const infographicStyleInputNew = document.getElementById('setting-infographic-style');
         const slideFormatInputNew = document.getElementById('setting-slide-format');
         const slideLengthInputNew = document.getElementById('setting-slide-length');
 
@@ -253,6 +254,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (infographicDetailLevelInputNew) {
             infographicDetailLevelInputNew.addEventListener('change', (e) => {
                 chrome.storage.local.set({ infographicDetailLevel: e.target.value });
+            });
+        }
+        if (infographicStyleInputNew) {
+            infographicStyleInputNew.addEventListener('change', (e) => {
+                chrome.storage.local.set({ infographicStyle: e.target.value });
             });
         }
         if (slideFormatInputNew) {
@@ -431,6 +437,22 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <option value="簡潔" data-i18n="opt-concise">簡潔</option>
                                 <option value="標準" data-i18n="opt-standard">標準</option>
                                 <option value="詳細" data-i18n="opt-detailed">詳細</option>
+                            </select>
+                        </div>
+                        <div class="setting-item" style="margin-top: 4px;">
+                            <span class="setting-label" data-i18n="setting-infographic-style">ビジュアルスタイル</span>
+                            <select id="setting-infographic-style" class="setting-select">
+                                <option value="Auto-select" data-i18n="opt-infographic-style-auto">自動選択</option>
+                                <option value="Sketch Note" data-i18n="opt-infographic-style-sketch">スケッチ</option>
+                                <option value="Kawaii" data-i18n="opt-infographic-style-kawaii">カワイイ</option>
+                                <option value="Professional" data-i18n="opt-infographic-style-professional">プロフェッショナル</option>
+                                <option value="Scientific" data-i18n="opt-infographic-style-scientific">科学</option>
+                                <option value="Anime" data-i18n="opt-infographic-style-anime">アニメ</option>
+                                <option value="Clay" data-i18n="opt-infographic-style-clay">クレイ</option>
+                                <option value="Editorial" data-i18n="opt-infographic-style-editorial">エディトリアル</option>
+                                <option value="Instructional" data-i18n="opt-infographic-style-instructional">説明的</option>
+                                <option value="Bento Grid" data-i18n="opt-infographic-style-bento">弁当箱</option>
+                                <option value="Bricks" data-i18n="opt-infographic-style-bricks">ブロック</option>
                             </select>
                         </div>
                     </div>`;
@@ -674,7 +696,7 @@ document.addEventListener('DOMContentLoaded', () => {
      * Load prompts and settings from storage
      */
     function loadAndRenderPrompts() {
-        chrome.storage.local.get(['prompts', 'autoDeepResearch', 'chatGoal', 'chatLength', 'audioFormat', 'audioLength', 'reportFormat', 'videoFormat', 'videoStyle', 'flashcardCardCount', 'flashcardDifficulty', 'quizQuestionCount', 'quizDifficulty', 'infographicLayout', 'infographicDetailLevel', 'slideFormat', 'slideLength', 'language'], (result) => {
+        chrome.storage.local.get(['prompts', 'autoDeepResearch', 'chatGoal', 'chatLength', 'audioFormat', 'audioLength', 'reportFormat', 'videoFormat', 'videoStyle', 'flashcardCardCount', 'flashcardDifficulty', 'quizQuestionCount', 'quizDifficulty', 'infographicLayout', 'infographicDetailLevel', 'infographicStyle', 'slideFormat', 'slideLength', 'language'], (result) => {
             // Reflect language setting
             if (result.language) {
                 state.language = result.language;
@@ -775,6 +797,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             if (infographicDetailLevelInputLocal) {
                 infographicDetailLevelInputLocal.value = result.infographicDetailLevel || '標準';
+            }
+            const infographicStyleInputLocal = document.getElementById('setting-infographic-style');
+            if (infographicStyleInputLocal) {
+                infographicStyleInputLocal.value = result.infographicStyle || 'Auto-select';
             }
 
             const slideFormatInputLocal = document.getElementById('setting-slide-format');

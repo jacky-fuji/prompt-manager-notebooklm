@@ -203,9 +203,38 @@ User changes a setting in the side panel dropdown
 
 ---
 
+---
+
 ## 6. Related Documents
 
 - [README.md](README.md) — Project overview, installation, and usage
 - [SPEC.md](SPEC.md) — Functional specification
 - [PRIVACY.md](PRIVACY.md) — Privacy policy
 - [LICENSE](LICENSE) — MIT License
+
+---
+
+## 7. Development Guidelines & SOP
+
+### 7.1 Lifecycle of a New Setting
+
+When adding a new auto-setting (e.g., "Infographic Visual Style"), the following **5-step checklist** must be followed to avoid synchronization bugs:
+
+1.  **Side Panel UI (`sidepanel.html/js`)**:
+    - Add the `<select>` or `<input>` to `sidepanel.html`.
+    - Add a `change` event listener in `sidepanel.js` to save the value to `chrome.storage.local`.
+2.  **Content Script Initialization (`content.js` - `refreshSettings`)**:
+    - [ ] Add the key to the `chrome.storage.local.get` array.
+    - [ ] **CRITICAL**: Assign the result to a local variable (e.g., `infographicStyle = result.infographicStyle || 'Default'`).
+3.  **Content Script Awareness (`content.js` - `chrome.storage.onChanged`)**:
+    - [ ] Add a listener block to update the local variable when the user changes it in the side panel.
+4.  **Label Mapping (`content.js` / `translations.js`)**:
+    - Create a mapping object (e.g., `INFOGRAPHIC_STYLE_MAP`) to handle multi-language label matching.
+5.  **Automation Logic (`content.js` - `setupObserver`)**:
+    - Implement the clicking logic.
+
+### 7.2 Robust Automation Patterns
+
+- **Prefer Carousel Direct Selection**: For carousel-based radios (common in NotebookLM), use `SELECTORS.DIALOG_INTERNALS.CAROUSEL_LABEL` and iterate through all labels. This is more robust than looking for a section title (e.g., "Visual Style"), as section titles are prone to localization differences (e.g., presence/absence of spaces).
+- **Throttle with `requestAnimationFrame`**: All DOM interactions should be inside the throttled observer loop to handle rapid UI changes.
+- **Mark as Processed**: Always set a `data-auto-formatted-*` attribute on the dialog container once all settings are applied to prevent infinite loops and reduce CPU overhead.

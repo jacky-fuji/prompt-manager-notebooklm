@@ -58,6 +58,7 @@
     let quizDifficulty = '';
     let infographicLayout = '';
     let infographicDetailLevel = '';
+    let infographicStyle = '';
     let slideFormat = '';
     let slideLength = '';
     let audioLength = '';
@@ -128,6 +129,19 @@
         '簡潔': ['簡潔', 'Concise', 'Kurzgefasst'],
         '標準': ['標準', 'Standard'],
         '詳細': ['詳細', 'Detailed', 'Detailliert']
+    };
+    const INFOGRAPHIC_STYLE_MAP = {
+        'Auto-select': ['Auto-select', '自動選択'],
+        'Sketch Note': ['Sketch Note', 'スケッチ'],
+        'Kawaii': ['Kawaii', 'カワイイ'],
+        'Professional': ['Professional', 'プロフェッショナル'],
+        'Scientific': ['Scientific', '科学'],
+        'Anime': ['Anime', 'アニメ'],
+        'Clay': ['Clay', 'クレイ'],
+        'Editorial': ['Editorial', 'エディトリアル'],
+        'Instructional': ['Instructional', '説明的'],
+        'Bento Grid': ['Bento Grid', '弁当箱'],
+        'Bricks': ['Bricks', 'ブロック']
     };
 
     // Slide deck setting mapping
@@ -208,7 +222,7 @@
     // Load and cache settings and favorites from local storage
     function refreshSettings() {
         if (!isContextValid()) return;
-        chrome.storage.local.get(['autoDeepResearch', 'prompts', 'audioFormat', 'audioLength', 'reportFormat', 'videoFormat', 'videoStyle', 'chatGoal', 'chatLength', 'flashcardCardCount', 'flashcardDifficulty', 'quizQuestionCount', 'quizDifficulty', 'infographicLayout', 'infographicDetailLevel', 'slideFormat', 'slideLength'], (result) => {
+        chrome.storage.local.get(['autoDeepResearch', 'prompts', 'audioFormat', 'audioLength', 'reportFormat', 'videoFormat', 'videoStyle', 'chatGoal', 'chatLength', 'flashcardCardCount', 'flashcardDifficulty', 'quizQuestionCount', 'quizDifficulty', 'infographicLayout', 'infographicDetailLevel', 'infographicStyle', 'slideFormat', 'slideLength'], (result) => {
             if (chrome.runtime.lastError) return;
             autoDeepResearchEnabled = !!result.autoDeepResearch;
             audioFormat = result.audioFormat || '詳細';
@@ -224,6 +238,7 @@
             quizDifficulty = result.quizDifficulty || '標準';
             infographicLayout = result.infographicLayout || '横向き';
             infographicDetailLevel = result.infographicDetailLevel || '標準';
+            infographicStyle = result.infographicStyle || 'Auto-select';
             slideFormat = result.slideFormat || '詳細';
             slideLength = result.slideLength || 'デフォルト';
             if (result.prompts) {
@@ -266,16 +281,19 @@
                 quizDifficulty = changes.quizDifficulty.newValue || '';
             }
             if (changes.infographicLayout) {
-                infographicLayout = changes.infographicLayout.newValue || '';
+                infographicLayout = changes.infographicLayout.newValue || '横向き';
             }
             if (changes.infographicDetailLevel) {
-                infographicDetailLevel = changes.infographicDetailLevel.newValue || '';
+                infographicDetailLevel = changes.infographicDetailLevel.newValue || '標準';
+            }
+            if (changes.infographicStyle) {
+                infographicStyle = changes.infographicStyle.newValue || 'Auto-select';
             }
             if (changes.slideFormat) {
-                slideFormat = changes.slideFormat.newValue || '';
+                slideFormat = changes.slideFormat.newValue || '詳細';
             }
             if (changes.slideLength) {
-                slideLength = changes.slideLength.newValue || '';
+                slideLength = changes.slideLength.newValue || 'デフォルト';
             }
             if (changes.prompts) {
                 const newPrompts = changes.prompts.newValue;
@@ -635,16 +653,17 @@
                 }
 
                 // E. Auto-select infographic format
-                if (infographicLayout || infographicDetailLevel) {
+                if (infographicLayout || infographicDetailLevel || infographicStyle) {
                     const dialogs = document.querySelectorAll(SELECTORS.DIALOGS.INFOGRAPHIC);
                     const infoDialog = Array.from(dialogs).find(d => {
                         const text = d.innerText || '';
-                        return text.includes('インフォグラフィック') || text.includes('Infographic') || text.includes('Infografik');
+                        return text.includes('インフォグラフィック') || text.includes('Infographic') || text.includes('Infografik') || text.includes('インフォグラフィックのカスタマイズ');
                     });
 
                     if (infoDialog) {
                         let layoutDone = !infographicLayout;
                         let detailDone = !infographicDetailLevel;
+                        let styleDone = !infographicStyle;
 
                         const wrappers = infoDialog.querySelectorAll('.control-wrapper');
                         wrappers.forEach(wrapper => {
@@ -657,7 +676,6 @@
                                 const buttons = wrapper.querySelectorAll('mat-button-toggle button');
                                 const targetTexts = INFOGRAPHIC_LAYOUT_MAP[infographicLayout] || [infographicLayout];
                                 for (const btn of buttons) {
-                                    // .mat-button-toggle-label-content is inside the button
                                     const btnText = btn.innerText.trim();
                                     if (targetTexts.some(txt => btnText.includes(txt))) {
                                         const toggle = btn.closest('mat-button-toggle');
@@ -690,7 +708,27 @@
                             }
                         });
 
-                        if (layoutDone && detailDone) {
+                        // Visual Style - Use common carousel pattern (like Video Overview)
+                        if (infographicStyle && !styleDone) {
+                            const carouselLabels = infoDialog.querySelectorAll(SELECTORS.DIALOG_INTERNALS.CAROUSEL_LABEL);
+                            const targetTexts = INFOGRAPHIC_STYLE_MAP[infographicStyle] || [infographicStyle];
+                            
+                            for (const lbl of carouselLabels) {
+                                const radioText = lbl.innerText.trim();
+                                if (targetTexts.some(txt => txt && radioText.includes(txt))) {
+                                    const radio = lbl.closest('mat-radio-button');
+                                    if (radio && !radio.classList.contains('mat-mdc-radio-checked') && radio.getAttribute('aria-checked') !== 'true' && !radio.classList.contains('mat-radio-checked')) {
+                                        const input = radio.querySelector('input[type="radio"]');
+                                        if (input) input.click(); else radio.click();
+                                        log(`Auto-selected infographic style: ${infographicStyle}`);
+                                    }
+                                    styleDone = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (layoutDone && detailDone && styleDone) {
                             infoDialog.setAttribute('data-auto-formatted-infographic', 'true');
                         }
                     }
